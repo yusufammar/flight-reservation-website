@@ -2,7 +2,7 @@
 const express = require("express");
 const mongoose = require('mongoose');
 // THIS IS WRONG NEVER DO THAT !! Only for the task we put the DB Link here!! NEVER DO THAAAT AGAIN !!
-const MongoURI = 'mongodb+srv://Adham:1234@acl.tpg5t.mongodb.net/myFirstDatabase?retryWrites=true&w=majority' ;
+const MongoURI = 'mongodb+srv://Adham:1234@acl.tpg5t.mongodb.net/Airline?retryWrites=true&w=majority' ;
 
 
 //App variables
