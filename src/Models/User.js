@@ -18,6 +18,11 @@ const userSchema = new Schema({
     type: String,
     required: true
   },
+   
+  job: {
+    type: String,
+    required: true
+  }
  
 }, { timestamps: true });
 
