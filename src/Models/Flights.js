@@ -23,7 +23,7 @@ const FlightsSchema = new Schema({
     required: true
   },
  
-}, { timestamps: true }, { collection: 'Flights' });
+}, { timestamps: true });
 
 const Flight = mongoose.model('flights', FlightsSchema);   
 // first paramter is the collection name where the document/entry will be added it to || Note: the collection name must be in lowercase letters (if you entered uppercase letters the will changed to be all lowercase letters, & if it didn't find the collection specified it will create a new collection)
