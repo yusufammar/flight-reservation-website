@@ -54,6 +54,7 @@ app.get("/newFlight",(req,res)=>{
         }
 
         })
+        //searching in flights database
       
     
       
