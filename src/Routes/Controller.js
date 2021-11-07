@@ -36,7 +36,7 @@ router.route("/FlightsList").get((req,res)=>{
 
 router.route("/SearchFlight").get((req,res)=>
 {
-  flight.find($or[{Flight_No : req.body.Flight_No},{To :req.body.To},{From : req.body.From}])
+  flight.find([{Flight_No : req.body.Flight_No},{To :req.body.To},{From : req.body.From}])
   .then(foundflights => res.json(foundflights))
 
 
