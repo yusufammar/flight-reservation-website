@@ -1,7 +1,8 @@
 const router = require ('express').Router();
-let Flights = require ('..models/Flights');
+//let Flights = require ('..models/Flights');
+let Flights = require ('../Models/Flights');
 const { default: FlightsList } = require('../../frontend/src/components/FlightsList');
-const { update } = require('../models/Flights');
+const { update } = require('../Models/Flights');
 
 router.route('/getAllFlights').get(async(req,res)=>{
     const flights = await Flights.find()

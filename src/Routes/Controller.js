@@ -1,7 +1,8 @@
 const express = require("express");
-//const { default: FlightsList } = require("../../frontend/src/components/FlightsList");
+//const { FlightsList } = require("../../frontend/src/components/FlightsList");
 const router= express.Router();
-const flight = require('../Models/Flights');
+//const flight = require('../Models/Flights.js');
+const flight = require('../Models/Flights.js');
 
 router.route("/addFlight").post((req,res) => {
   const flightNo= req.body.flightNo;
