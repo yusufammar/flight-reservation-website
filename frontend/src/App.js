@@ -6,10 +6,24 @@ import Navbar from './components/Navbar';
 import Admin from './components/Admin';
 import AddFlight from './components/addFlight';   //imported object should start with uppercase letter
 import FlightsList from './components/FlightsList';
+import User from './components/User';
+import SearchFlight from './components/SearchFlight';
 function App() {
   return (
     <Router>
+
+<Route path="/User">
+<User/>
+ </Route>
+
+ <Route path="/SearchFlight">
+<SearchFlight/>
+ </Route>
+
      
+       
+       
+       
      
       <Route path="/admin">
         
