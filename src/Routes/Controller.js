@@ -1,5 +1,5 @@
 const express = require("express");
-const { default: FlightsList } = require("../../frontend/src/components/FlightsList");
+//const { default: FlightsList } = require("../../frontend/src/components/FlightsList");
 const router= express.Router();
 const flight = require('../Models/Flights');
 
