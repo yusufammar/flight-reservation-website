@@ -1,12 +1,12 @@
 import React, {useState} from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-
 function AddFlight(){
     const [input, setInput] = useState({
         flightNo:"", from: "" , to: "" , date: "", departure: "", arrival: "", firstSeats: "", businessSeats: "" , economySeats: ""  
     })
-
+   
+    
 
 function handleChange(event){
     const {name,value}=event.target;
@@ -28,6 +28,7 @@ function handleclick(event){
     axios.post('http://localhost:8000/addFlight', newFlight)
 }
 
+
 return (
 <div>
 <h1>Add Flight</h1>
@@ -47,9 +48,9 @@ return (
       <label>Economy Class Seats   <input onChange={handleChange} name="economySeats" type="number" value={input.economySeats}/>  </label> <br></br> <br></br>
 
       <input type="submit" value="Add" onClick={handleclick} /> 
+      
 </form>
 
-    
 
 
 

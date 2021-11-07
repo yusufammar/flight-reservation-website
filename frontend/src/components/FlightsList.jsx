@@ -1,4 +1,10 @@
 import react, {useEffect,useState} from "react";
+import axios from "axios";
+
+
+const deleteFlight = (id) => {
+    axios.delete(`http://localhost:3000/delete/${id}`)
+  };
 
 
 function FlightsList(){
@@ -40,6 +46,26 @@ function FlightsList(){
         Available Seats: First Class ({flight.First_Class_Seats}) | Business Class ({flight.Business_Class_Seats}) | Economy Class ({flight.Economy_Class_Seats})
        <br></br>
        </p>
+       <label>
+         Are you sure you want to delete? 
+          <input
+            name="isGoing"
+            type="checkbox"
+            />
+        </label>
+        <br></br>
+
+        <button
+                id="removeBtn"
+                onClick={() => {
+                  deleteFlight(FlightsList._id);
+                }}
+              >
+               Delete
+              </button>
+              {/* <button ><Link to= "/UpdatePage"> Update</Link></button> */}
+    
+     
 </div>
        )}
    </div>

@@ -1,5 +1,6 @@
 const router = require ('express').Router();
 let Flights = require ('..models/Flights');
+const { default: FlightsList } = require('../../frontend/src/components/FlightsList');
 const { update } = require('../models/Flights');
 
 router.route('/getAllFlights').get(async(req,res)=>{
@@ -24,4 +25,5 @@ router.patch('/:Id',async(req,res,next) => {
     }
 
 })
+
 module.exports=router;

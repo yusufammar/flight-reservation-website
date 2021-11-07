@@ -2,6 +2,8 @@ const express = require("express");
 const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
+const Flight = require("./models/Flights");
+const { default: FlightsList } = require("../frontend/src/components/FlightsList");
 
 app.use(cors());
 app.use(express.json());
@@ -20,8 +22,15 @@ app.get("/Home", (req, res) => {
   res.status(200).send("You have everything installed !");
 });
 
+app.delete('/delete/:id',async(req,res)=>{
+  const id =req.params.id;
+  await Flight.findByIdAndRemove(id).exec();
+  res.send("deleted");
+});
+
 
 const port = process.env.PORT || "8000";
 app.listen(port, () => {
     console.log(`Listening to requests on http://localhost:${port}`);
   });
+
