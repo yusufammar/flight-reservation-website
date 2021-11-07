@@ -25,17 +25,17 @@ function handleclick(event){
     event.preventDefault();
     console.log(input);
     const newFlight1= {flightNo: input.flightNo, from: input.from , to: input.to , date: input.date , departure: input.departure, arrival: input.arrival, firstSeats: input.firstSeats, businessSeats: input.businessSeats , economySeats: input.economySeats }  ;
-    axios.get('http://localhost:8000/addFlight', newFlight1);
+    axios.post('http://localhost:8000/addFlight', newFlight1);
 }
 
 
     
 
 
-const [flights1 , setflights] = useState([{
-    Flight_No:"",
-    From:"",
-    To:"",
+const [flights1 , setflights1] = useState([{
+    Flight_No:"1",
+    From:"1",
+    To:"1",
     FlightDate:"",
     Departure:"",
     Arrival:"",
@@ -52,7 +52,7 @@ useEffect(() =>{
          if(res.ok){
              return res.json();
          }
-     }).then(jsonRes => setflights(jsonRes));
+     }).then(jsonRes => setflights1(jsonRes));
 
  }
  )

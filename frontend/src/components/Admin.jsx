@@ -9,6 +9,7 @@ return (
 <br/>
 <p> <Link to="/addFlight">Add Flight</Link> </p>
 <p> <Link to="/FlightsList">Show Flights</Link> </p>
+<p> <Link to="/SearchFlight">SearchFlight</Link> </p>
 
 
     

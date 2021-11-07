@@ -1,5 +1,4 @@
 const express = require("express");
-//const { default: FlightsList } = require("../../frontend/src/components/FlightsList");
 const router= express.Router();
 const flight = require('../Models/Flights');
 
@@ -26,14 +25,32 @@ router.route("/addFlight").post((req,res) => {
     Economy_Class_Seats:  economySeats
    
   });
-
+  
   newFlight.save();
 });
 
 router.route("/FlightsList").get((req,res)=>{
   flight.find()
-  .then(foundflights => res.json(foundflights))
+  
 })
+
+router.route("/SearchFlight").get((req,res)=>
+{
+  flight.find($or[{Flight_No : req.body.Flight_No},{To :req.body.To},{From : req.body.From}])
+  .then(foundflights => res.json(foundflights))
+
+
+
+//   .then(result =>{
+// res.send(JSON.stringify(result,null,4))
+// console.log(result);
+
+
+
+//})
+})
+
+
 
 
 
