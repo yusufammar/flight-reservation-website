@@ -1,8 +1,10 @@
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button';
 import axios from 'axios'
+import { useHistory } from "react-router-dom";
 import { BrowserRouter as Router, useParams } from "react-router-dom";
 import { useState, useEffect } from 'react';
+
 
 const UpdatePage = () => {
 
@@ -21,6 +23,7 @@ const UpdatePage = () => {
     let { id } = useParams();
     const baseURL = `http://localhost8000/FlightsList/update/${id}`;
 
+    const history = useHistory();
     function ChangeValues(event) {
         console.log(checked);
         if (checked) {
@@ -38,6 +41,14 @@ const UpdatePage = () => {
             };
             console.log(values);
             axios.post('http://localhost:3000/UpdatePage', values);
+            
+
+
+    history.push({
+    pathname: '/FlightsList'
+    //state: {flightNo : input.flightNo, type: "flightNo"}
+});
+
         }
         else {
             console.log("Not Checked!");
