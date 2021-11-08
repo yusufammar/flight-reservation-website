@@ -9,9 +9,10 @@ const { findByIdAndRemove } = require("../src/Models/Flights");
 app.use(cors());
 app.use(express.json());
 
+const env = require("dotenv");
+env.config(); 
 
-
-const MongoURI = 'mongodb+srv://Adham:1234@acl.tpg5t.mongodb.net/Airline?retryWrites=true&w=majority' ;  // database mongodb url
+const MongoURI = process.env.DB; // database mongodb url
 
 
 
