@@ -2,10 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import {BrowserRouter as Router, Route} from "react-router-dom";  // react-router & react-router-dom v5.1.2
-import Navbar from './components/Navbar';
+
 import Admin from './components/Admin';
 import AddFlight from './components/addFlight';   //imported object should start with uppercase letter
 import FlightsList from './components/FlightsList';
+import SearchFlight from './components/SearchFlightByNo';
+import SearchResults from './components/SearchResults';
+
 function App() {
   return (
     <Router>
@@ -23,8 +26,14 @@ function App() {
       <Route path ="/FlightsList">
         <FlightsList/>
       </Route>
-    
-    
+      
+      <Route path ="/SearchFlight">
+        <SearchFlight/>
+      </Route>
+      
+      <Route path ="/SearchResults">
+        <SearchResults/>
+      </Route>
 
     </Router>
     

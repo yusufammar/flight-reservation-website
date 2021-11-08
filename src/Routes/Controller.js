@@ -1,7 +1,7 @@
 const express = require("express");
-//const { default: FlightsList } = require("../../frontend/src/components/FlightsList");
 const router= express.Router();
 const flight = require('../Models/Flights');
+
 
 router.route("/addFlight").post((req,res) => {
   const flightNo= req.body.flightNo;
@@ -30,13 +30,50 @@ router.route("/addFlight").post((req,res) => {
   newFlight.save();
 });
 
+
+router.route("/getFlightByNo").post((req, res) => {
+  const x = req.body.flightNo;
+  console.log(x);
+   flight.find({ Flight_No : x }).then(foundflights => res.send(foundflights))
+  });
+
+router.route("/getFlightByFrom").post((req, res) => {
+  const x = req.body.from;
+  console.log(x);
+  flight.find({ From : x}).then(foundflights => res.send(foundflights))
+  });
+
+  router.route("/getFlightByTo").post((req, res) => {
+    const x = req.body.to;
+    console.log(x);
+    flight.find({ To : x}).then(foundflights => res.send(foundflights))
+    });
+
+    router.route("/getFlightByDate").post((req, res) => {
+      const x = req.body.date;
+      console.log(x);
+      flight.find({ FlightDate : x}).then(foundflights => res.send(foundflights))
+      });
+
+      router.route("/getFlightByDeparture").post((req, res) => {
+        const x = req.body.departure;
+        console.log(x);
+        flight.find({ Departure : x}).then(foundflights => res.send(foundflights))
+        });
+
+        router.route("/getFlightByArrival").post((req, res) => {
+          const x = req.body.arrival;
+          console.log(x);
+          flight.find({ Arrival : x}).then(foundflights => res.send(foundflights))
+          });
+
 router.route("/FlightsList").get((req,res)=>{
   flight.find()
   .then(foundflights => res.json(foundflights))
 })
 
 
-
+module.exports= router;
 
 /*
 app.get("/newFlight",(req,res)=>{
@@ -50,4 +87,3 @@ app.get("/newFlight",(req,res)=>{
   me.save();  });
 */
 
-module.exports= router;

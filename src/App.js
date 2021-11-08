@@ -7,7 +7,6 @@ app.use(cors());
 app.use(express.json());
 
 
-
 const MongoURI = 'mongodb+srv://Adham:1234@acl.tpg5t.mongodb.net/Airline?retryWrites=true&w=majority' ;  // database mongodb url
 
 mongoose.connect(MongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -19,6 +18,11 @@ app.use("/",require("./Routes/Controller"));
 app.get("/Home", (req, res) => {
   res.status(200).send("You have everything installed !");
 });
+
+app.get("/getflight", (req, res) => {
+  flight.find({Flight_No : "3"}).then (result => 
+    res.send(result));
+  });
 
 
 const port = process.env.PORT || "8000";

@@ -1,4 +1,5 @@
 import react, {useEffect,useState} from "react";
+import { Link } from "react-router-dom";
 
 
 function FlightsList(){
@@ -17,7 +18,7 @@ function FlightsList(){
     }])
 
     useEffect(() =>{
-       // setLoading(true);
+      
         fetch("/FlightsList").then(res=>{
             if(res.ok){
                 return res.json();
@@ -27,8 +28,11 @@ function FlightsList(){
     }
     )
 
-   return <div className='container'>
+   return (<div className='container'>
        <h1>All Flights</h1>
+       <br></br>
+       <button><Link to="/admin">Back To Admin Page</Link></button>
+        <br></br><br></br>
       
        {flights.map(flight =>
        <div>
@@ -42,7 +46,7 @@ function FlightsList(){
        </p>
 </div>
        )}
-   </div>
+   </div>)
 
        
 
