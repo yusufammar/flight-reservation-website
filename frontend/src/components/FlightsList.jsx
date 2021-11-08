@@ -91,7 +91,7 @@ function FlightsList() {
             deleteFlight(flight._id);
           }}
         >
-          Delete
+          Delete </button>
        < button onClick = {() => UpdateFlight(flight._id)}>Update
 </button>
 
