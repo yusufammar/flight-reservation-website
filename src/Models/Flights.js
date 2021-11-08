@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const FlightsSchema = new Schema({
   
   Flight_No: {
-    type: Number ,
+    type: String ,
     required: true
   },
   From: {
@@ -28,15 +28,15 @@ const FlightsSchema = new Schema({
     required: true
   },
   First_Class_Seats: {
-    type: Number ,
+    type: String ,
     required: true
   },
   Business_Class_Seats: {
-    type: Number ,
+    type: String ,
     required: true
   },
   Economy_Class_Seats: {
-    type: Number ,
+    type: String ,
     required: true
   }
 

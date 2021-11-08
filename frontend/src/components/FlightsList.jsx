@@ -3,6 +3,16 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 
 
+var flightSelected = 0;
+
+function UpdateFlight(idOfFlight)
+{
+    const article = { id :  idOfFlight};
+    axios.post('http://localhost:3000/FlightsListVal', article)
+    .then();
+    window.location.href = "/UpdatePage";
+}
+
 let isChecked = false;
 let idDeleted = "";
 
@@ -82,16 +92,13 @@ function FlightsList() {
           }}
         >
           Delete
-        </button>
-        {/* <button ><Link to= "/UpdatePage"> Update</Link></button> */}
+       < button onClick = {() => UpdateFlight(flight._id)}>Update
+</button>
 
 
       </div>
     )}
   </div>
-
-
-
 
 
 

@@ -1,3 +1,4 @@
+import 'bootstrap/dist/css/bootstrap.min.css'
 import React from 'react';
 import ReactDOM from 'react-dom';
 
@@ -6,8 +7,11 @@ import {BrowserRouter as Router, Route} from "react-router-dom";  // react-route
 import Admin from './components/Admin';
 import AddFlight from './components/addFlight';   //imported object should start with uppercase letter
 import FlightsList from './components/FlightsList';
+
 import SearchFlight from './components/SearchFlightByNo';
 import SearchResults from './components/SearchResults';
+import UpdatePage from './components/UpdatePage';
+
 
 function App() {
   return (
@@ -26,6 +30,7 @@ function App() {
       <Route path ="/FlightsList">
         <FlightsList/>
       </Route>
+
       
       <Route path ="/SearchFlight">
         <SearchFlight/>
@@ -34,6 +39,16 @@ function App() {
       <Route path ="/SearchResults">
         <SearchResults/>
       </Route>
+
+
+      <Route path ="/UpdatePage">
+        <UpdatePage/>
+      </Route> 
+
+      
+    
+    
+
 
     </Router>
     
