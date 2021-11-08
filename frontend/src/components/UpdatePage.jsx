@@ -3,6 +3,7 @@ import Button from 'react-bootstrap/Button';
 import axios from 'axios'
 import { BrowserRouter as Router, useParams } from "react-router-dom";
 import { useState, useEffect } from 'react';
+import {Link} from "react-router-dom";
 
 const UpdatePage = () => {
 
@@ -91,7 +92,7 @@ const UpdatePage = () => {
                 <label class="form-check-label" for="exampleCheck1">Click To Confirm Update</label>
             </div>
 
-            <button type="submit" class="btn btn-primary" onClick={event => ChangeValues(event)}>Update</button>
+            <button type="submit" class="btn btn-primary" onClick={event => ChangeValues(event)}><Link to='/FlightsList'> Update </Link> </button>
         </div>
     );
 };

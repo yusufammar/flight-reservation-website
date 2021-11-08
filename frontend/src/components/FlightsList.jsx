@@ -11,6 +11,9 @@ function UpdateFlight(idOfFlight)
     .then();
     window.location.href = "/UpdatePage";
 }
+function refreshPage() {
+    window.location.reload(false);
+  }
 
 function FlightsList(){
     const [flights , setflights] = useState([{
@@ -40,6 +43,8 @@ function FlightsList(){
 
    return <div className='container'>
        <h1>All Flights</h1>
+       <button onClick={refreshPage}> Refresh</button>
+
       
        {flights.map(flight =>
        <div>
