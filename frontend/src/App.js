@@ -3,10 +3,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import {BrowserRouter as Router, Route} from "react-router-dom";  // react-router & react-router-dom v5.1.2
-import Navbar from './components/Navbar';
+
 import Admin from './components/Admin';
 import AddFlight from './components/addFlight';   //imported object should start with uppercase letter
 import FlightsList from './components/FlightsList';
+
+import SearchFlight from './components/SearchFlightByNo';
+import SearchResults from './components/SearchResults';
 import UpdatePage from './components/UpdatePage';
 
 
@@ -28,6 +31,16 @@ function App() {
         <FlightsList/>
       </Route>
 
+      
+      <Route path ="/SearchFlight">
+        <SearchFlight/>
+      </Route>
+      
+      <Route path ="/SearchResults">
+        <SearchResults/>
+      </Route>
+
+
       <Route path ="/UpdatePage">
         <UpdatePage/>
       </Route> 
@@ -35,6 +48,7 @@ function App() {
       
     
     
+
 
     </Router>
     

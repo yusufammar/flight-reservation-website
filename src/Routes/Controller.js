@@ -1,21 +1,22 @@
 const express = require("express");
 const { ConnectionPoolClosedEvent } = require("mongodb");
-//const { default: FlightsList } = require("../../frontend/src/components/FlightsList");
-//const { default: FlightsList } = require("../../frontend/src/components/FlightsList");
-const router = express.Router();
-const flight = require("../Models/Flights");
 
-router.route("/addFlight").post((req, res) => {
-  const flightNo = req.body.flightNo;
-  const from = req.body.from;
-  const to = req.body.to;
-  const date = req.body.date;
-  const departure = req.body.departure;
-  const arrival = req.body.arrival;
-  const firstSeats = req.body.firstSeats;
-  const businessSeats = req.body.businessSeats;
-  const economySeats = req.body.economySeats;
+const router= express.Router();
+const flight = require('../Models/Flights');
 
+
+router.route("/addFlight").post((req,res) => {
+  const flightNo= req.body.flightNo;
+  const from= req.body.from;
+  const to= req.body.to;
+  const date= req.body.date;
+  const departure= req.body.departure;
+  const arrival= req.body.arrival;
+  const firstSeats= req.body.firstSeats;
+  const businessSeats= req.body.businessSeats;
+  const economySeats= req.body.economySeats;
+
+ 
   const newFlight = new flight({
     Flight_No: flightNo,
     From: from,
@@ -31,6 +32,45 @@ router.route("/addFlight").post((req, res) => {
 
   newFlight.save();
 });
+
+
+router.route("/getFlightByNo").post((req, res) => {
+  const x = req.body.flightNo;
+  console.log(x);
+   flight.find({ Flight_No : x }).then(foundflights => res.send(foundflights))
+  });
+
+router.route("/getFlightByFrom").post((req, res) => {
+  const x = req.body.from;
+  console.log(x);
+  flight.find({ From : x}).then(foundflights => res.send(foundflights))
+  });
+
+  router.route("/getFlightByTo").post((req, res) => {
+    const x = req.body.to;
+    console.log(x);
+    flight.find({ To : x}).then(foundflights => res.send(foundflights))
+    });
+
+    router.route("/getFlightByDate").post((req, res) => {
+      const x = req.body.date;
+      console.log(x);
+      flight.find({ FlightDate : x}).then(foundflights => res.send(foundflights))
+      });
+
+      router.route("/getFlightByDeparture").post((req, res) => {
+        const x = req.body.departure;
+        console.log(x);
+        flight.find({ Departure : x}).then(foundflights => res.send(foundflights))
+        });
+
+        router.route("/getFlightByArrival").post((req, res) => {
+          const x = req.body.arrival;
+          console.log(x);
+          flight.find({ Arrival : x}).then(foundflights => res.send(foundflights))
+          });
+
+
 
 router.route("/FlightsList").get((req, res) => {
   flight.find()
@@ -54,6 +94,7 @@ router.route('/UpdatePage').post((req, res) => {
 
     if (flightVar.FlightFrom_.length != 0)
       docs["From"] = flightVar.FlightFrom_;
+
 
     if (flightVar.FlightTo_.length != 0)
       docs["To"] = flightVar.FlightTo_;
@@ -92,4 +133,6 @@ app.get("/newFlight",(req,res)=>{
   me.save();  });
 */
 
+
 module.exports = router;
+
