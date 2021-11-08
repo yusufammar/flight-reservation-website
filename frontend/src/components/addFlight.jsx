@@ -1,8 +1,10 @@
 import React, {useState} from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { useHistory } from "react-router-dom";
 
 function AddFlight(){
+    const history = useHistory();
     const [input, setInput] = useState({
         flightNo:"", from: "" , to: "" , date: "", departure: "", arrival: "", firstSeats: "", businessSeats: "" , economySeats: ""  
     })
@@ -27,7 +29,10 @@ function handleclick(event){
     const newFlight= {flightNo: input.flightNo, from: input.from , to: input.to , date: input.date , departure: input.departure, arrival: input.arrival, firstSeats: input.firstSeats, businessSeats: input.businessSeats , economySeats: input.economySeats }  ;
     axios.post('http://localhost:8000/addFlight', newFlight)
 
-   
+    history.push({
+        pathname: '/FlightsList'
+        //state: {flightNo : input.flightNo, type: "flightNo"}
+    });
 }
 
 return (
