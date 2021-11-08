@@ -1,0 +1,5 @@
+Adham El-sheikh => Showing all the flights for the admin - connection to DB - Creating our DB - Flights/user schema model
+Yusuf Ammar => Creating new Flights by admin - Searching for flights - connection to DB - Existing of an Admin-showing flights
+Shorouq => Deleting the selected flight - confirming the deletion of flights
+Mayar => Updating flights by administrators upon confirmation and changes appear in the database, moreover the admin can changed a single or more attributes in each flight. 
+Hosam Magdy => Updating flights schedule to show the changes made by administrators and helping in updating the flights by administrators
