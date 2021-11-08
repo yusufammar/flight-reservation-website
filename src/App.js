@@ -11,7 +11,10 @@ app.use(express.json());
 
 
 
-const MongoURI = 'mongodb+srv://Adham:1234@acl.tpg5t.mongodb.net/Airline?retryWrites=true&w=majority' ;  // database mongodb url
+const env = require("dotenv");
+env.config(); 
+
+const MongoURI = process.env.DB;  // database mongodb url
 
 
 
