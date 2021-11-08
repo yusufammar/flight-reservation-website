@@ -1,4 +1,5 @@
 import react, {useEffect,useState} from "react";
+import { Link } from 'react-router-dom';
 
 
 function FlightsList(){
@@ -40,7 +41,9 @@ function FlightsList(){
         Available Seats: First Class ({flight.First_Class_Seats}) | Business Class ({flight.Business_Class_Seats}) | Economy Class ({flight.Economy_Class_Seats})
        <br></br>
        </p>
-       <Link to="UpdatePage" className="btn btn-primary"> Update Flight </Link>
+     
+      < button> <Link to="/UpdatePage">Update</Link>
+</button>
 </div>
        )}
    </div>

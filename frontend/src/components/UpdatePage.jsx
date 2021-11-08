@@ -8,13 +8,14 @@ const UpdatePage = () => {
 
     const [updatedF, setupdatedF] = useState({});
     let { id } = useParams();
-    const baseURL = `http://localhost3000/flights/update/${id}`; 
+    const baseURL = `http://localhost8000/FlightsList/UpdatePage/${id}`; 
 
     function onSubmit() {
         axios.patch(baseURL, { updatedF }).then((response) => { })
     }
     return (
         <form>
+            <div class="form-check">
             <div class="form-group">
                 <label for="exampleInputEmail1">Flight No</label>
                 <input type="text" class="form-control" id="attribute1" aria-describedby="emailHelp" placeholder="Enter Flight Number" onChange={event => setupdatedF(Object.assign(updatedF, { ["Flight_No"]: event.target.value }))}/>
@@ -32,7 +33,7 @@ const UpdatePage = () => {
                 <label for="exampleInputPassword1">Flight Date</label>
                 <input type="date" class="form-control" id="attribute4" placeholder="Date" onChange={event => setupdatedF(Object.assign(updatedF, { ["FlightDate"]: event.target.value }))}/>
             </div>
-            <div class="form-check">
+           
             <div class="form-group">
                 <label for="exampleInputPassword1">Departure</label>
                 <input type="text" class="form-control" id="attribute5" placeholder="Dep Time" onChange={event => setupdatedF(Object.assign(updatedF, { ["Departure"]: event.target.value }))}/>
@@ -56,7 +57,7 @@ const UpdatePage = () => {
                 <input type="checkbox" class="form-check-input" id="exampleCheck1"/>
                 <label class ="form-check-label" for="exampleCheck1">Click To Confirm Update</label>
             </div>
-            <button type="submit" class="btn btn-primary" onClick = {onSubmit}  >Update</button>
+            <button type="submit" class="btn btn-primary" onClick = {onSubmit}>Update</button>
         </form>
     );
 };

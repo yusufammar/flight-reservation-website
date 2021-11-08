@@ -6,6 +6,7 @@ import Navbar from './components/Navbar';
 import Admin from './components/Admin';
 import AddFlight from './components/addFlight';   //imported object should start with uppercase letter
 import FlightsList from './components/FlightsList';
+import UpdatePage from './components/UpdatePage';
 function App() {
   return (
     <Router>
@@ -22,6 +23,10 @@ function App() {
 
       <Route path ="/FlightsList">
         <FlightsList/>
+      </Route>
+
+      <Route path ="/UpdatePage">
+        <UpdatePage/>
       </Route>
     
     
