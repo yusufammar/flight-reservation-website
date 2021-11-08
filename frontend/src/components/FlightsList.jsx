@@ -1,6 +1,16 @@
 import react, {useEffect,useState} from "react";
 import { Link } from 'react-router-dom';
+import axios from 'axios'
 
+var flightSelected = 0;
+
+function UpdateFlight(idOfFlight)
+{
+    const article = { id :  idOfFlight};
+    axios.post('http://localhost:3000/FlightsListVal', article)
+    .then();
+    window.location.href = "/UpdatePage";
+}
 
 function FlightsList(){
     const [flights , setflights] = useState([{
@@ -42,7 +52,7 @@ function FlightsList(){
        <br></br>
        </p>
      
-      < button> <Link to="/UpdatePage">Update</Link>
+      < button onClick = {() => UpdateFlight(flight._id)}>Update
 </button>
 </div>
        )}
