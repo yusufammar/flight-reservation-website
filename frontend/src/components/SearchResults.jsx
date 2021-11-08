@@ -82,6 +82,9 @@ function SearchResults(){
        <button><Link to="/admin">Back To Admin Page</Link></button>
         <br></br><br></br>
 
+        <button><Link to="/SearchFlight"> Search Again </Link></button>
+        <br></br><br></br>
+
        {flights.map(flight =>
        <div>
         <br/>

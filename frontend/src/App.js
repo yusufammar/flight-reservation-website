@@ -8,7 +8,7 @@ import Admin from './components/Admin';
 import AddFlight from './components/addFlight';   //imported object should start with uppercase letter
 import FlightsList from './components/FlightsList';
 
-import SearchFlight from './components/SearchFlightByNo';
+import SearchFlight from './components/SearchFlight';
 import SearchResults from './components/SearchResults';
 import UpdatePage from './components/UpdatePage';
 
