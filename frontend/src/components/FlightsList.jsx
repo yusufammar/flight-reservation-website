@@ -1,6 +1,6 @@
 import react, { useEffect, useState } from "react";
 import axios from "axios";
-
+import { Link } from "react-router-dom";
 
 
 let isChecked = false;
@@ -40,8 +40,7 @@ function FlightsList() {
   }])
 
   useEffect(() => {
-    // setLoading(true);
-    fetch("/FlightsList").then(res => {
+       fetch("/FlightsList").then(res => {
       if (res.ok) {
         return res.json();
       }
@@ -52,6 +51,9 @@ function FlightsList() {
 
   return <div className='container'>
     <h1>All Flights</h1>
+   <br></br>
+       <button><Link to="/admin">Back To Admin Page</Link></button>
+        <br></br><br></br>
 
     {flights.map(flight =>
       <div>
@@ -87,6 +89,7 @@ function FlightsList() {
       </div>
     )}
   </div>
+
 
 
 

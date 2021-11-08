@@ -11,7 +11,9 @@ app.use(express.json());
 
 
 
-const MongoURI = 'mongodb+srv://Adham:1234@acl.tpg5t.mongodb.net/Airline?retryWrites=true&w=majority';  // database mongodb url
+const MongoURI = 'mongodb+srv://Adham:1234@acl.tpg5t.mongodb.net/Airline?retryWrites=true&w=majority' ;  // database mongodb url
+
+
 
 mongoose.connect(MongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(result => console.log("MongoDB is now connected"))
@@ -23,6 +25,7 @@ app.get("/Home", (req, res) => {
   res.status(200).send("You have everything installed !");
 });
 
+
 app.delete('/delete/:id', async (req, res) => {
   const idNum = req.params.id;
  
@@ -33,6 +36,7 @@ app.delete('/delete/:id', async (req, res) => {
   });
   res.send("deleted");
 });
+
 
 
 const port = process.env.PORT || "8000";
