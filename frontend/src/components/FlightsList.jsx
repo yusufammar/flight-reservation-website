@@ -1,5 +1,16 @@
 import react, {useEffect,useState} from "react";
+import { Link } from 'react-router-dom';
+import axios from 'axios'
 
+var flightSelected = 0;
+
+function UpdateFlight(idOfFlight)
+{
+    const article = { id :  idOfFlight};
+    axios.post('http://localhost:3000/FlightsListVal', article)
+    .then();
+    window.location.href = "/UpdatePage";
+}
 
 function FlightsList(){
     const [flights , setflights] = useState([{
@@ -40,11 +51,14 @@ function FlightsList(){
         Available Seats: First Class ({flight.First_Class_Seats}) | Business Class ({flight.Business_Class_Seats}) | Economy Class ({flight.Economy_Class_Seats})
        <br></br>
        </p>
+     
+      < button onClick = {() => UpdateFlight(flight._id)}>Update
+</button>
 </div>
        )}
    </div>
 
-       
+        
 
    
 
