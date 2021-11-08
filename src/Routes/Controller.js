@@ -1,6 +1,8 @@
 const express = require("express");
+
 const router= express.Router();
-const flight = require('../Models/Flights');
+//const flight = require('../Models/Flights.js');
+const flight = require('../Models/Flights.js');
 
 
 router.route("/addFlight").post((req,res) => {
