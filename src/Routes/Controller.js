@@ -3,7 +3,27 @@ const { ConnectionPoolClosedEvent } = require("mongodb");
 
 const router= express.Router();
 const flight = require('../Models/Flights');
+const user = require('../Models/User');
 
+router.route("/addUser").post((req,res) => {
+  const name= req.body.name;
+  const email= req.body.email;
+  const password= req.body.password;
+ 
+  const newUser = new user({
+    Name : name,
+    Email : email,
+    Password : password,
+    Type: "Customer" 
+     });
+    newUser.save();
+});
+
+router.route("/SignIn").post((req, res) => {
+  const x = req.body.Email;  const y = req.body.Password;
+  console.log(x);
+   user.find({ Email : x , Password: y}).then(foundUser => res.send(foundUser))
+  });
 
 router.route("/addFlight").post((req,res) => {
   const flightNo= req.body.flightNo;
@@ -132,6 +152,7 @@ app.get("/newFlight",(req,res)=>{
 });
   me.save();  });
 */
+
 
 
 module.exports = router;

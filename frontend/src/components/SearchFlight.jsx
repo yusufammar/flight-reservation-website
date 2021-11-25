@@ -88,22 +88,22 @@ return (
         <br></br><br></br>
 
 <form>
-<label> &nbsp; Flight No <br></br> &nbsp;<input onChange={handleChange} name="flightNo"  type="number" value={input.flightNo} />  </label> &nbsp;&nbsp;&nbsp;
+<label> Flight No <br></br> <input onChange={handleChange} name="flightNo"  type="number" value={input.flightNo} />  </label> &nbsp;&nbsp;&nbsp;
 <input type="submit" value="Search" onClick={handleclick1} /> <br></br> <br></br>
 
-<label> &nbsp; From <br></br> &nbsp;<input onChange={handleChange} name="from" type="text" value={input.from} />  </label> &nbsp;&nbsp;&nbsp;
+<label> From <br></br> <input onChange={handleChange} name="from" type="text" value={input.from} />  </label> &nbsp;&nbsp;&nbsp;
 <input type="submit" value= 'Search'onClick={handleclick2} /> <br></br> <br></br>
 
-<label> &nbsp; To <br></br> &nbsp;<input onChange={handleChange} name="to" type="text" value={input.to} />  </label> &nbsp;&nbsp;&nbsp;
+<label> To <br></br> <input onChange={handleChange} name="to" type="text" value={input.to} />  </label> &nbsp;&nbsp;&nbsp;
 <input type="submit" value='Search' onClick={handleclick3} /> <br></br> <br></br>
 
-<label> &nbsp; Date <br></br> &nbsp;<input onChange={handleChange} name="date" type="date" value={input.date} />  </label> &nbsp;&nbsp;&nbsp;
+<label> Date <br></br> <input onChange={handleChange} name="date" type="date" value={input.date} />  </label> &nbsp;&nbsp;&nbsp;
 <input type="submit" value='Search' onClick={handleclick4} /> <br></br> <br></br>
 
-<label> &nbsp; Departure Time <br></br> &nbsp;<input onChange={handleChange} name="departure" type="time" value={input.departure} />  </label> &nbsp;&nbsp;&nbsp;
+<label> Departure Time <br></br> <input onChange={handleChange} name="departure" type="time" value={input.departure} />  </label> &nbsp;&nbsp;&nbsp;
 <input type="submit" value='Search' onClick={handleclick5} /> <br></br> <br></br>
 
-<label> &nbsp; Arrival Time <br></br> &nbsp; <input onChange={handleChange} name="arrival" type="time" value={input.arrival} />  </label> &nbsp;&nbsp;&nbsp;
+<label> Arrival Time <br></br> <input onChange={handleChange} name="arrival" type="time" value={input.arrival} />  </label> &nbsp;&nbsp;&nbsp;
 <input type="submit" value='Search' onClick={handleclick6} /> <br></br> <br></br>
 </form>
     

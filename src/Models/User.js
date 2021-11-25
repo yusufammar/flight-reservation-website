@@ -6,10 +6,6 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
-  Type: {
-    type: String,
-    required: true,
-  },
   Email: {
     type: String,
     required: true
@@ -18,13 +14,12 @@ const userSchema = new Schema({
     type: String,
     required: true
   },
-   
-  job: {
+  Type: {
     type: String,
-    required: true
+    required: true,
   }
  
 }, { timestamps: true });
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model('users', userSchema);  
 module.exports = User;
