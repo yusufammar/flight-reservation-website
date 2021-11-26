@@ -5,6 +5,7 @@ import { useHistory } from "react-router-dom";
 
 function AddFlight(){
     const history = useHistory();
+    
     const [input, setInput] = useState({
         flightNo:"", from: "" , to: "" , date: "", departure: "", arrival: "", firstSeats: "", businessSeats: "" , economySeats: ""  
     })

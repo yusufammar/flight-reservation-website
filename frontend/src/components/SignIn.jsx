@@ -26,14 +26,29 @@ function handleclick(event){
     event.preventDefault();
     console.log(input);
 
-    const user= {email : input.email , password : input.password  }  ;
-    axios.post('http://localhost:8000/SignIn', user).then(/* showing success message*/ );
+    const user= {Email : input.email , Password : input.password  }  ;
+    axios.post('http://localhost:8000/SignIn', user).then( res => {
+        if (res.data==2){ //found admin
+            history.push({
+                pathname: '/admin' ,
+                state: {email : input.email}
+        });
+        }    
+        if (res.data==1){ //found user
+        history.push({
+            pathname: '/User' ,
+            state: {email : input.email}
+        });
+        }
+        if (res.data==0){     //wrong email or password
+        alert("Wrong E-Mail or Password!");
+        history.push({
+            pathname: '/SignIn' 
+            });
+        }
+        });
 
-    history.push({
-        pathname: '/User' ,
-        state: {email : input.email , password : input.password  }
-    });
-}
+    }
 
 return (
 <div className='container'>
@@ -41,6 +56,8 @@ return (
 
 <br></br>
 <button><Link to="/SignUp">Sign Up Instead</Link></button>
+&nbsp;&nbsp;
+<button><Link to="/"> Back To Main Page </Link></button>
 <br></br><br></br>
 
 <form>
@@ -51,7 +68,10 @@ return (
       <input type="submit" value="Sign In" onClick={handleclick} /> 
 </form>
 
+
 <br></br> <br></br>
+
+<br></br><br></br>
 
 
     

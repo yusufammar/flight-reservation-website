@@ -1,7 +1,20 @@
-import React from "react";
+import react, {useEffect,useState} from "react";
+import { Route, Redirect, useLocation } from "react-router-dom";
+import { useHistory } from "react-router-dom";
+import axios from "axios";
 import { Link } from "react-router-dom";
 
 function Main(){
+    const history = useHistory();
+    function handleclick(event){
+        event.preventDefault();
+    
+        history.push({
+        pathname: '/guest' ,
+        state: {email : "Guest"}
+            });
+    }
+
 return (
 <div className='container'>
 
@@ -13,7 +26,7 @@ return (
 <button><Link to="/SignUp">Sign Up </Link></button>
 <br></br><br></br>
 
-<button><Link to="/Guest"> Continue As Guest </Link></button>
+<button onClick={handleclick}> <Link to="/Guest"> Continue As Guest </Link></button>
 <br></br><br></br>
 
 </div>

@@ -9,20 +9,48 @@ router.route("/addUser").post((req,res) => {
   const name= req.body.name;
   const email= req.body.email;
   const password= req.body.password;
- 
-  const newUser = new user({
-    Name : name,
-    Email : email,
-    Password : password,
-    Type: "Customer" 
-     });
-    newUser.save();
-});
+
+  user.find({ Email : email}).then(founduser => {  //all cases (actions) shoud be inside then statement (variable changes in then statement dont get apllied outside then statement)
+   if (founduser.length!= 0) 
+    res.send("1"); 
+   else {
+    
+    res.send("0"); 
+    const newUser = new user({
+      Name : name,
+      Email : email,
+      Password : password,
+      Type: "Customer" 
+       });
+      newUser.save();
+      
+    }  
+  
+  })
+ });
 
 router.route("/SignIn").post((req, res) => {
   const x = req.body.Email;  const y = req.body.Password;
   console.log(x);
-   user.find({ Email : x , Password: y}).then(foundUser => res.send(foundUser))
+   
+  user.find({ Email : x , Password: y}).then(founduser => {  //all cases (actions) shoud be inside then statement (variable changes in then statement dont get apllied outside then statement)
+ 
+    
+    if (founduser.length!= 0) {
+    
+    if (founduser[0].Type =="Admin"){
+    res.send("2");            // admin found -> sign in as admin
+    console.log("found admin");     
+  }
+    else{
+     res.send("1");    //user found -> sign in as user
+    console.log("found user");
+     }
+    }
+     else  
+     res.send("0");  //user not found -> don't sign in
+  })
+
   });
 
 router.route("/addFlight").post((req,res) => {

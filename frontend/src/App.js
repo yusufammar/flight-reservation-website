@@ -23,7 +23,7 @@ function App() {
   return (
     <Router>
      
-     <Route path="/main">
+     <Route exact path="/">          
       <Main/>
       </Route>
      
