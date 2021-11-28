@@ -3,7 +3,81 @@ const { ConnectionPoolClosedEvent } = require("mongodb");
 
 const router= express.Router();
 const flight = require('../Models/Flights');
+const User = require("../Models/User");
 const user = require('../Models/User');
+
+
+var iduser;
+var email ;
+var password = "";
+router.route("/Currentuserr").post((req,res) => { 
+  console.log("currentuserr");
+  const x = req.body.Email;
+  const y = req.body.password;
+//email = req.body.Email;
+//password = req.body.password;
+console.log(x);
+console.log(y);
+email = x ;
+console.log(email);
+// user.find({ Email : x , Password: y}).then(founduser => {
+//  iduser = founduser[0].id
+//  console.log(iduser);
+});
+
+
+router.route("/Updateinfo").post((req, res) => {
+  console.log("updateinfo");
+ console.log(email);
+ const z = req.body.Name;
+ const d = req.body.Password;
+ const s = req.body.Email;
+ const v = req.body.Type;
+ console.log(z);
+
+ User.findOne({Email: email}, function (err, user) {
+  user.Name = z;
+  user.Password = d;
+  user.Email = s;
+  user.Type = v;
+ 
+  user.save(function (err) {
+      if(err) {
+          console.error('ERROR!');
+      }
+  });
+});
+
+//  let doc = user.findOneAndUpdate({Email:email}, {$set:{Name:z}},{
+//   new: true})
+
+//   doc.save;
+  // User.findById(iduser , function (err, docs) {
+  //   console.log(docs);
+  //   var uservar = req.body;
+
+    
+  //     docs["Email"] = uservar.Email;
+
+    
+  //     docs["Password"] = uservar.Password;
+
+
+  
+  //     docs["Type"] = uservar.Type;
+
+  //     docs["Name"] = uservar.Name;
+
+   
+
+  //   docs.save();
+  // });
+  
+// const x = flight.find({Email:email});
+// x.Name = req.body.Name
+
+});
+
 
 router.route("/addUser").post((req,res) => {
   const name= req.body.name;
@@ -29,6 +103,7 @@ router.route("/addUser").post((req,res) => {
   })
  });
 
+var userid;
 router.route("/SignIn").post((req, res) => {
   const x = req.body.Email;  const y = req.body.Password;
   console.log(x);
@@ -45,6 +120,8 @@ router.route("/SignIn").post((req, res) => {
     else{
      res.send("1");    //user found -> sign in as user
     console.log("found user");
+    console.log(founduser[0].id);
+    userid = founduser[0].id;
      }
     }
      else  
@@ -119,6 +196,8 @@ router.route("/getFlightByFrom").post((req, res) => {
           });
 
 
+          
+
 
 router.route("/FlightsList").get((req, res) => {
   flight.find()
@@ -130,6 +209,9 @@ router.route('/FlightsListVal').post((req, res) => {
   selectedFlightID = req.body.id;
   console.log(selectedFlightID);
 });
+
+
+
 
 router.route('/UpdatePage').post((req, res) => {
   console.log(selectedFlightID);
@@ -168,6 +250,8 @@ router.route('/UpdatePage').post((req, res) => {
     docs.save();
   });
 });
+
+
 
 /*
 app.get("/newFlight",(req,res)=>{

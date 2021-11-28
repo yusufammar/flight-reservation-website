@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 
+
+
+
 function SignIn(){
     const history = useHistory();
     const [input, setInput] = useState({     //attribute names should be lowercase (for handle change to work & accept inputs) 
@@ -27,6 +30,11 @@ function handleclick(event){
     console.log(input);
 
     const user= {Email : input.email , Password : input.password  }  ;
+     axios.post('http://localhost:8000/currentuserr',user).then(
+          res => console.log(user));
+  
+   
+
     axios.post('http://localhost:8000/SignIn', user).then( res => {
         if (res.data==2){ //found admin
             history.push({
@@ -50,6 +58,8 @@ function handleclick(event){
 
     }
 
+    
+
 return (
 <div className='container'>
 <h1>Sign In</h1>
@@ -65,7 +75,7 @@ return (
       <label>Email <br></br>     <input onChange={handleChange} name="email" type="text" value={input.email} />  </label> <br></br> <br></br>
       <label>Password <br></br>  <input onChange={handleChange} name="password" type="password" value={input.password}/>  </label> <br></br> <br></br> <br></br> 
       
-      <input type="submit" value="Sign In" onClick={handleclick} /> 
+      <input type="submit" value="Sign In"   onClick={handleclick} /> 
 </form>
 
 

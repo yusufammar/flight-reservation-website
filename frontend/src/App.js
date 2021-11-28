@@ -4,34 +4,32 @@ import ReactDOM from 'react-dom';
 
 import {BrowserRouter as Router, Route} from "react-router-dom";  // react-router & react-router-dom v5.1.2
 
-import Main from './components/Main';
-import SignUp from './components/SignUp';
-import SignIn from './components/SignIn';
-import User from './components/User';
-import Guest from './components/Guest';
-
 import Admin from './components/Admin';
 import AddFlight from './components/addFlight';   //imported object should start with uppercase letter
 import FlightsList from './components/FlightsList';
 
 import SearchFlight from './components/SearchFlight';
+import Main from './components/Main';
+import Guest from './components/Guest';
+import SignIn from './components/SignIn';
+import SignUp from './components/SignUp';
 import SearchResults from './components/SearchResults';
 import UpdatePage from './components/UpdatePage';
+import Updateinfo from './components/Updateinfo';
+import User from './components/User';
 
 
 function App() {
   return (
     <Router>
-     
-     <Route exact path="/">          
+      <Route exact path="/">          
       <Main/>
       </Route>
-     
-     <Route path="/user">
+      <Route path="/User">
       <User/>
       </Route>
 
-      <Route path="/guest">
+      <Route path="/Guest">
       <Guest/>
       </Route>
 
@@ -42,9 +40,11 @@ function App() {
       <Route path="/SignIn">
       <SignIn/>
       </Route>
-
+     
+     
       <Route path="/admin">
-      <Admin/>
+        
+       <Admin/>
       </Route>
       
       <Route path="/addFlight">
@@ -67,7 +67,11 @@ function App() {
 
       <Route path ="/UpdatePage">
         <UpdatePage/>
-      </Route> 
+      </Route>
+
+      <Route path ="/Updateinfo">
+        <Updateinfo/>
+      </Route>
 
       
     

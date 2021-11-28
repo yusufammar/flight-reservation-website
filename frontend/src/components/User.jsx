@@ -22,6 +22,7 @@ return (
 
 <h1>Welcome</h1>
 <h8>Account: {x} </h8>
+<button><Link to="/Updateinfo"> Update my Information </Link></button>
 
 <br></br><br></br>
 <button><Link to="/"> Sign Out </Link></button>

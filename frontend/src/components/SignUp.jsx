@@ -79,6 +79,7 @@ return (
 
 </div>
 )
-} 
+}
+ 
 
 export default SignUp;
