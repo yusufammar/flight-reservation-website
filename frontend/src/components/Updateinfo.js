@@ -1,4 +1,4 @@
-import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/css/bootstrap.min.css';
 import React, {useState} from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -68,8 +68,22 @@ onSubmit(e){
     console.log(user)
     console.log("1")
     axios.post('http://localhost:8000/Updateinfo', user)
+    .then(res=>{
+        const { navigate } = this.props.navigation;
+        navigate('/SignIn')
+       ;
+
+       console.log("valid1");
+     //  window.location.assign("https://localhost3000/SignIn");
+       console.log("valid2");
+
+    })
+    const { navigate } = this.props.navigation;
+    navigate('/SignIn')
     
-    window.location = '/SignIn';
+    //this.props.history.push('/SignIn')
+
+    console.log("didn't redirect !");
 }
 
 render(){
@@ -111,13 +125,11 @@ return(
             <label>
                 Type:
             </label>
-            <input type = "text" required className="form-control" value={this.state.Type} onChange={this.onChangeType}/>
+            <input type = "text" required className="form-control" value={this.state.Type} onChange={this.onChangeType.bind(this)}/>
 
             
         </div>
-        <label>
-               submit:
-            </label>
+      
             <input type = "submit" required className="form-control"  className = "btn btn-primary"/>
 
 <div>

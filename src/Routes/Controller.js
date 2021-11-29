@@ -34,12 +34,13 @@ router.route("/Updateinfo").post((req, res) => {
  const s = req.body.Email;
  const v = req.body.Type;
  console.log(z);
-
+if(v!="admin"){
  User.findOne({Email: email}, function (err, user) {
   user.Name = z;
   user.Password = d;
   user.Email = s;
   user.Type = v;
+
  
   user.save(function (err) {
       if(err) {
@@ -47,6 +48,8 @@ router.route("/Updateinfo").post((req, res) => {
       }
   });
 });
+}
+
 
 //  let doc = user.findOneAndUpdate({Email:email}, {$set:{Name:z}},{
 //   new: true})
