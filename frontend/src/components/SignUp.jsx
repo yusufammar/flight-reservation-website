@@ -8,7 +8,7 @@ import { useHistory } from "react-router-dom";
 
 function SignUp(){
     const history = useHistory();
-    const [input, setInput] = useState({     //attribute names should be lowercase (for handle change to work & accept inputs) 
+    const [input, setInput] = useState({     //attribute names should be lowercase that will be use in the return statement {input.attributename} (for handle change to work & accept inputs) 
         name:"", email: "" , password: "" 
     })
 
@@ -67,15 +67,6 @@ return (
 </form>
 
 <br></br> <br></br>
-
-
-    
-
-
-
-
- 
-
 
 </div>
 )

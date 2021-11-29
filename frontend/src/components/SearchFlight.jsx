@@ -7,7 +7,7 @@ import { useHistory } from "react-router-dom";
 
 function SearchFlight(){
     const [input, setInput] = useState({
-        flightNo:"" , from:"" , to:"" , date:"" , departure: "", arrival: ""
+        flightNo: "" , from:"" , to:"" , date:"" , departure: "", arrival: ""
     })
 
 

@@ -6,14 +6,18 @@ import { Link } from "react-router-dom";
 
 function Main(){
     const history = useHistory();
+   
     function handleclick(event){
         event.preventDefault();
-    
-        history.push({
-        pathname: '/guest' ,
-        state: {email : "Guest"}
+          
+        axios.get('http://localhost:8000/addGuest').then( res => {
+             history.push({
+                pathname: '/guest' ,
+                state: {email : "Guest" + res.data }
+                    });
             });
-    }
+    } 
+ 
 
 return (
 <div className='container'>
@@ -26,7 +30,7 @@ return (
 <button><Link to="/SignUp">Sign Up </Link></button>
 <br></br><br></br>
 
-<button onClick={handleclick}> <Link to="/Guest"> Continue As Guest </Link></button>
+<button onClick={handleclick}> Continue As Guest </button> 
 <br></br><br></br>
 
 </div>

@@ -17,9 +17,12 @@ const userSchema = new Schema({
   Type: {
     type: String,
     required: true,
+  },
+  GuestNo: {
+    type: Number,
+    required: false,
   }
- 
-}, { timestamps: true });
+}, { timestamps: false });
 
 const User = mongoose.model('users', userSchema);  
 module.exports = User;

@@ -5,6 +5,23 @@ const router= express.Router();
 const flight = require('../Models/Flights');
 const user = require('../Models/User');
 
+
+router.route("/addGuest").get((req,res) => { //get becuase no input
+   user.find({ Type : "Guest"}).then(foundguests => {  //all cases (actions) shoud be inside then statement (variable changes in then statement dont get apllied outside then statement)
+     var x = foundguests.length + 1;
+    
+    const newGuest = new user({
+      Name : "Guest",
+      Email : "guest",
+      Password : "guest",
+      Type: "Guest", 
+      GuestNo: x 
+       });
+      newGuest.save();
+      res.send("" + x); 
+    })
+ });
+
 router.route("/addUser").post((req,res) => {
   const name= req.body.name;
   const email= req.body.email;
@@ -23,29 +40,28 @@ router.route("/addUser").post((req,res) => {
       Type: "Customer" 
        });
       newUser.save();
-      
-    }  
-  
-  })
+      }  
+    })
  });
 
 router.route("/SignIn").post((req, res) => {
   const x = req.body.Email;  const y = req.body.Password;
-  console.log(x);
-   
+
   user.find({ Email : x , Password: y}).then(founduser => {  //all cases (actions) shoud be inside then statement (variable changes in then statement dont get apllied outside then statement)
- 
-    
     if (founduser.length!= 0) {
     
-    if (founduser[0].Type =="Admin"){
-    res.send("2");            // admin found -> sign in as admin
-    console.log("found admin");     
-  }
-    else{
-     res.send("1");    //user found -> sign in as user
-    console.log("found user");
-     }
+      switch (founduser[0].Type){
+        case ("Admin"):{
+          res.send("2");            // admin found -> sign in as admin
+          console.log("found admin");  break;
+        }
+        case ("Customer"):{
+          res.send("1");    //user found -> sign in as user
+      console.log("found user"); break;
+        }
+        default:  {res.send("0"); break;}
+
+      }
     }
      else  
      res.send("0");  //user not found -> don't sign in
@@ -84,8 +100,7 @@ router.route("/addFlight").post((req,res) => {
 
 router.route("/getFlightByNo").post((req, res) => {
   const x = req.body.flightNo;
-  console.log(x);
-   flight.find({ Flight_No : x }).then(foundflights => res.send(foundflights))
+  flight.find({ Flight_No : x }).then(foundflights => res.send(foundflights))
   });
 
 router.route("/getFlightByFrom").post((req, res) => {
@@ -169,18 +184,136 @@ router.route('/UpdatePage').post((req, res) => {
   });
 });
 
-/*
-app.get("/newFlight",(req,res)=>{
-  const me = new flight({
-  From  : "Cairo",
-   To : "Berlin",
-    Cabin : "Economy",
-    FlightDate: 12-12-2021 ,
-    Available_Seats_on_Flight : 21
-});
-  me.save();  });
-*/
 
+router.route("/addFlightManual").get((req,res) => {
+  var d; var a;
+ 
+  function duration(departure, arrival){         //function for calculating duration
+    var x= departure.split(":"); var y= arrival.split(":");
+    var h= (y[0]-x[0]) ;  var m;   
+    
+    if (x[1]>y[1]){
+    h=h-1;
+    m= (60-x[1]) + parseInt(y[1]);      
+  }
+    else
+    m= (y[1]-x[1]); 
+  
+    h2=  h + ""; m2= m + "";
+    
+    if (h2.length<2) h2= "0" + h;   if (m2.length<2) m2= "0" + m;
+    
+    var duration= h2 + ":" + m2; 
+    return duration;
+    }
+   
+  d= "10:00"; a= "14:00";
+    
+    const newFlight1 = new flight({
+    Flight_No: 1,
+    From: "LAX",
+    To: "JFK",
+  
+    FlightDate: "2022-01-12",
+    Departure: d,
+    Arrival: a,
+    Duration: duration(d,a),
+  
+    First_Class_Seats: 6,
+    Business_Class_Seats: 10,
+    Economy_Class_Seats: 20,
+  
+    First_Class_BaggageAllowance: 4,
+    Business_Class_BaggageAllowance: 3,
+    Economy_Class_BaggageAllowance: 2,
+  
+    First_Class_Price: 5000,
+    Business_Class_Price: 3000,
+    Economy_Class_Price: 1500
+
+  });
+   newFlight1.save();
+
+   d= "10:00"; a= "14:00";
+   const newFlight2 = new flight({
+    Flight_No: 2,
+    From: "JFK",
+    To: "LAX",
+  
+    FlightDate: "2022-01-22",
+    Departure: d,
+    Arrival: a,
+    Duration: duration(d,a),
+  
+    First_Class_Seats: 16,
+    Business_Class_Seats: 15,
+    Economy_Class_Seats: 30,
+  
+    First_Class_BaggageAllowance: 4,
+    Business_Class_BaggageAllowance: 3,
+    Economy_Class_BaggageAllowance: 2,
+  
+    First_Class_Price: 5000,
+    Business_Class_Price: 3000,
+    Economy_Class_Price: 1500
+
+  });
+   newFlight2.save();
+
+   d= "10:00"; a= "12:00";
+   const newFlight3 = new flight({
+    Flight_No: 3,
+    From: "JFK",
+    To: "LHR",
+  
+    FlightDate: "2022-02-21",
+    Departure: d,
+    Arrival: a,
+    Duration: duration(d,a),
+  
+    First_Class_Seats: 5,
+    Business_Class_Seats: 2,
+    Economy_Class_Seats: 22,
+  
+    First_Class_BaggageAllowance: 4,
+    Business_Class_BaggageAllowance: 3,
+    Economy_Class_BaggageAllowance: 2,
+  
+    First_Class_Price: 2500,
+    Business_Class_Price: 1500,
+    Economy_Class_Price: 750
+
+  });
+   newFlight3.save();
+
+   d= "10:00"; a= "12:00";
+   const newFlight4 = new flight({
+    Flight_No: 4,
+    From: "LHR",
+    To: "JFK",
+  
+    FlightDate: "2022-03-06",
+    Departure: d,
+    Arrival: a,
+    Duration: duration(d,a),
+  
+    First_Class_Seats: 16,
+    Business_Class_Seats: 26,
+    Economy_Class_Seats: 43,
+  
+    First_Class_BaggageAllowance: 4,
+    Business_Class_BaggageAllowance: 3,
+    Economy_Class_BaggageAllowance: 2,
+  
+    First_Class_Price: 2500,
+    Business_Class_Price: 1500,
+    Economy_Class_Price: 750
+
+  });
+   newFlight4.save();
+
+   res.send("success");
+});
 
 
 module.exports = router;

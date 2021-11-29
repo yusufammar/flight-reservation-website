@@ -28,7 +28,7 @@ function handleclick(event){
 
     const user= {Email : input.email , Password : input.password  }  ;
     axios.post('http://localhost:8000/SignIn', user).then( res => {
-        if (res.data==2){ //found admin
+        if (res.data=="2"){ //found admin
             history.push({
                 pathname: '/admin' ,
                 state: {email : input.email}
