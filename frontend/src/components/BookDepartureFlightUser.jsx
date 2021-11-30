@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 
 
-function BookDepartureFlightUser(){
+function BookDepartureFlightUser(){   // for USER & GUEST
    const location = useLocation();
    const history = useHistory();
    
@@ -73,13 +73,19 @@ var dFrom; var dTo;
     }, [location]);
 
     function handleclick(event){
-      event.preventDefault();
-     
-      history.push({
-      pathname: '/user',
-      state: {email : x}
-  });
-  }
+        event.preventDefault();
+        if (x.includes("guest")){       // redirects to guest main page if email is guest email
+            history.push({
+                pathname: '/guest',
+                state: {email : x}  
+        })}
+        else {                        // redirects to user main page if email is user email
+        history.push({
+        pathname: '/user',
+        state: {email : x}
+        })
+    }
+    }
   function handleclick1(event){
    event.preventDefault();
   
@@ -107,7 +113,7 @@ function handleclick2(event){
        <h1>Select Return Flight</h1>
        
        <br></br>
-       <button onClick={handleclick}>Back To User Page</button>
+       <button onClick={handleclick}>Back To Main Page</button>
         <br></br><br></br>
 
         <button onClick={handleclick1}>Change Departure Flight</button>

@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
-function User(){
+function User(){            // USER MAIN PAGE
     const location = useLocation();
     const history = useHistory();
     if (location.state!=null){           //checking if session exists (no url jumping) (if location.state has variables passed)

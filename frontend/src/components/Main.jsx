@@ -11,9 +11,10 @@ function Main(){
         event.preventDefault();
           
         axios.get('http://localhost:8000/addGuest').then( res => {
-             history.push({
+        var guestEmail= res.data;     
+        history.push({
                 pathname: '/guest' ,
-                state: {email : "Guest" + res.data }
+                state: {email : guestEmail }
                     });
             });
     } 

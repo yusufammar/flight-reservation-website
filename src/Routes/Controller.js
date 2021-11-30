@@ -9,16 +9,17 @@ const user = require('../Models/User');
 router.route("/addGuest").get((req,res) => { //get becuase no input
    user.find({ Type : "Guest"}).then(foundguests => {  //all cases (actions) shoud be inside then statement (variable changes in then statement dont get apllied outside then statement)
      var x = foundguests.length + 1;
-    
-    const newGuest = new user({
+     var guestEmail= "guest"+ x;
+   
+     const newGuest = new user({
       Name : "Guest",
-      Email : "guest",
+      Email : guestEmail,
       Password : "guest",
       Type: "Guest", 
-      GuestNo: x 
+      
        });
       newGuest.save();
-      res.send("" + x); 
+      res.send(guestEmail); 
     })
  });
 

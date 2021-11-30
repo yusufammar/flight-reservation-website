@@ -4,24 +4,36 @@ import { useHistory } from "react-router-dom";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
-function Guest(){
+function Guest(){               // USER MAIN PAGE
     const location = useLocation();
     const history = useHistory();
     if (location.state!=null){           //checking if session exists (no url jumping) (if location.state has variables passed)
         var x= location.state.email;    
     }
     else{
-    alert("Access Denied");
+    alert("Access Denied, Please Sign In first or Select Continue As Guest!");
     history.push({
         pathname: '/' 
         });
     }
     
+    function handleclick(event){
+        event.preventDefault();
+        history.push({
+        pathname: '/SearchFlightsUser',
+        state: {email : x}
+    });
+    }
+
 return (
 <div className='container'>
 
 <h1>Welcome</h1>
 <h8>Account: {x} </h8>
+
+<br></br><br></br>
+<button  onClick={handleclick}> Search Flights </button>
+<br></br><br></br>
 
 <br></br><br></br>
 <button><Link to="/"> Sign Out </Link></button>
