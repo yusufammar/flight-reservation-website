@@ -17,11 +17,23 @@ function User(){
         });
     }
     
+    function handleclick(event){
+        event.preventDefault();
+        history.push({
+        pathname: '/SearchFlightsUser',
+        state: {email : x}
+    });
+    }
+
 return (
 <div className='container'>
 
 <h1>Welcome</h1>
 <h8>Account: {x} </h8>
+
+<br></br><br></br>
+<button  onClick={handleclick}> Search Flights </button>
+<br></br><br></br>
 
 <br></br><br></br>
 <button><Link to="/"> Sign Out </Link></button>

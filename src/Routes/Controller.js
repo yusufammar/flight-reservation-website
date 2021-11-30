@@ -184,7 +184,127 @@ router.route('/UpdatePage').post((req, res) => {
   });
 });
 
+router.route("/searchFlightUser").post((req, res) => {
+var SPflag= false;
 
+  const from= req.body.from;
+  const to= req.body.to;
+  const date= req.body.date;
+  const departure= req.body.departure;
+  const arrival= req.body.arrival;
+  const cabin= req.body.cabin;
+  const seats= req.body.seats;
+  const price= req.body.price;
+
+ var search={};
+if (from.length!=0) 
+search = { $and: [ search,  {From : from}  ] }; 
+
+if (to.length!=0) 
+search = { $and: [ search,  {To : to}  ] };
+
+if (date.length!=0) 
+search = { $and: [ search,  {FlightDate : date}  ] };
+
+if (departure.length!=0) 
+search = { $and: [ search,  {Departure : departure}  ] };
+
+if (arrival.length!=0) 
+search = { $and: [ search,  {Arrival : arrival}  ] };
+
+//Note when checking seats & price assume you always have var cabin
+
+if (seats.length!=0){      
+SPflag=true;     //         seat/price input without cabin 
+
+switch (cabin){
+ 
+case ("First"):{
+  search = { $and: [ search,  {First_Class_Seats : { $gte: seats}}  ] }; break;
+};
+case ("Business"):{
+  search = { $and: [ search,  {Bussiness_Class_Seats : { $gte: seats}}  ] }; break;
+}
+case ("Economy"):{
+  search = { $and: [ search,  {Economy_Class_Seats : { $gte: seats}}  ] }; break;
+}
+default: { res.send("0"); break;}
+}
+}
+
+if (price.length!=0){ 
+ 
+  SPflag=true;
+
+  switch (cabin){
+  case ("First"):{
+    search = { $and: [ search,  {First_Class_Price : { $lte: price}}  ] }; break;
+  };
+  case ("Business"):{
+    search = { $and: [ search,  {Bussiness_Class_Price : { $lte: price}}  ] }; break;
+  }
+  case ("Economy"):{
+    search = { $and: [ search,  {Economy_Class_Price : { $lte: price}}  ] }; break;
+  }
+  default: { res.send("0"); break;}
+  }
+  }
+
+//console.log(search);
+var s=false;
+
+if ( Object.keys(search).length != 0){   // if the search statement isn't empty to catch no reults error
+  var s=true;  
+  flight.find(search)
+     .then(foundflights => {
+      if (foundflights.length!=0)
+      res.json(foundflights); 
+      else
+      res.send("1");
+    });
+    
+    }
+
+   if (SPflag==false && s==false)   // if search statement was empty & no seat/price input without cabin 
+    res.send("1"); // no results (no search criteria was entered)
+ })
+
+ router.route("/selectReturnFlight").post((req, res) => {
+  const dflightNo= req.body.departureFlightNo;
+
+  flight.find({ Flight_No : dflightNo }).then(foundflights => {  //all cases (actions) shoud be inside then statement (variable changes in then statement dont get apllied outside then statement)
+      dFrom= foundflights[0].From;   dTo= foundflights[0].To;
+    res.send({dFrom:dFrom , dTo: dTo});
+    /*
+      console.log(dflightNo); console.log(dFrom); console.log(dTo);
+      flight.find({ From : dTo, To: dFrom }).then(foundflights2 => {  //all cases (actions) shoud be inside then statement (variable changes in then statement dont get apllied outside then statement)
+        console.log(foundflights2);
+        foundflights2 => {
+          if (foundflights2.length!=0)
+          res.json(foundflights2); 
+          else
+          res.send("1");
+        }
+        });
+        res.json(foundflights2); */
+      });
+ })
+ router.route("/selectReturnFlight2").post((req, res) => {
+  const dFrom= req.body.dFrom; const dTo= req.body.dTo;
+
+console.log(dFrom);
+
+      flight.find({ From : dTo, To: dFrom }).then(foundflights => {
+        
+          if (foundflights.length!=0)
+          res.json(foundflights); 
+          else
+          res.send("1");   // no return flights available
+        
+       
+      });
+ })
+/*
 router.route("/addFlightManual").get((req,res) => {
   var d; var a;
  
@@ -314,6 +434,7 @@ router.route("/addFlightManual").get((req,res) => {
 
    res.send("success");
 });
+*/
 
 
 module.exports = router;

@@ -18,6 +18,10 @@ import SearchFlight from './components/SearchFlight';
 import SearchResults from './components/SearchResults';
 import UpdatePage from './components/UpdatePage';
 
+import SearchFlightsUser from './components/SearchFlightsUser';
+import SearchResultsUser from './components/SearchResultsUser';
+
+import BookDepartureFlightUser from './components/BookDepartureFlightUser';
 
 function App() {
   return (
@@ -27,51 +31,59 @@ function App() {
       <Main/>
       </Route>
      
-     <Route path="/user">
+     <Route exact path="/user">
       <User/>
       </Route>
 
-      <Route path="/guest">
+      <Route exact path="/guest">
       <Guest/>
       </Route>
 
-      <Route path="/SignUp">
+      <Route exact path="/SignUp">
       <SignUp/>
       </Route>
 
-      <Route path="/SignIn">
+      <Route exact path="/SignIn">
       <SignIn/>
       </Route>
 
-      <Route path="/admin">
+      <Route exact path="/admin">
       <Admin/>
       </Route>
       
-      <Route path="/addFlight">
+      <Route exact path="/addFlight">
       <AddFlight/>
       </Route>
 
-      <Route path ="/FlightsList">
+      <Route exact path ="/FlightsList">
         <FlightsList/>
       </Route>
 
       
-      <Route path ="/SearchFlight">
+      <Route exact path ="/SearchFlight">
         <SearchFlight/>
       </Route>
       
-      <Route path ="/SearchResults">
+      <Route exact path ="/SearchResults">
         <SearchResults/>
       </Route>
 
 
-      <Route path ="/UpdatePage">
+      <Route exact path ="/UpdatePage">
         <UpdatePage/>
       </Route> 
 
+      <Route exact path ="/SearchFlightsUser">
+        <SearchFlightsUser/>
+      </Route>
       
-    
-    
+      <Route exact path ="/SearchResultsUser">
+        <SearchResultsUser/>
+      </Route>
+      
+      <Route exact path ="/BookDepartureFlightUser">
+        <BookDepartureFlightUser/>
+      </Route>
 
 
     </Router>
