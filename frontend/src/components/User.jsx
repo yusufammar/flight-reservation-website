@@ -24,12 +24,13 @@ function User(){            // USER MAIN PAGE
         state: {email : x}
     });
     }
+    var y=1;
 
 return (
 <div className='container'>
 
 <h1>Welcome</h1>
-<h8>Account: {x} </h8>
+<h8>Account: {x}  </h8>
 
 <br></br><br></br>
 <button  onClick={handleclick}> Search Flights </button>

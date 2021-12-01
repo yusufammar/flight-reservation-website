@@ -213,10 +213,11 @@ search = { $and: [ search,  {Departure : departure}  ] };
 if (arrival.length!=0) 
 search = { $and: [ search,  {Arrival : arrival}  ] };
 
-//Note when checking seats & price assume you always have var cabin
+
+//Note: when checking seats & price assume you user must select cabin
 
 if (seats.length!=0){      
-SPflag=true;     //         seat/price input without cabin 
+SPflag=true;                                        // seat/price input  
 
 switch (cabin){
  
@@ -229,13 +230,14 @@ case ("Business"):{
 case ("Economy"):{
   search = { $and: [ search,  {Economy_Class_Seats : { $gte: seats}}  ] }; break;
 }
-default: { res.send("0"); break;}
+default: { res.send("0"); break;}                  // no cabin input -> error in frontend
 }
 }
 
 if (price.length!=0){ 
  
-  SPflag=true;
+  SPflag=true;                                     // seat/price input  
+
 
   switch (cabin){
   case ("First"):{
@@ -247,15 +249,14 @@ if (price.length!=0){
   case ("Economy"):{
     search = { $and: [ search,  {Economy_Class_Price : { $lte: price}}  ] }; break;
   }
-  default: { res.send("0"); break;}
+  default: { res.send("0"); break;}                // no cabin input -> error in frontend
   }
   }
 
-//console.log(search);
-var s=false;
+var s=false;                              //search statement used in find statement is by default empty
 
 if ( Object.keys(search).length != 0){   // if the search statement isn't empty to catch no reults error
-  var s=true;  
+  var s=true;                             //search statement used in find statement isn't empty
   flight.find(search)
      .then(foundflights => {
       if (foundflights.length!=0)
@@ -266,8 +267,8 @@ if ( Object.keys(search).length != 0){   // if the search statement isn't empty 
     
     }
 
-   if (SPflag==false && s==false)   // if search statement was empty & no seat/price input without cabin 
-    res.send("1"); // no results (no search criteria was entered)
+   if (SPflag==false && s==false)   // if search statement was empty & no seat/price input
+    res.send("1");                  // no results (no search criteria was entered)
  })
 
  router.route("/selectReturnFlight").post((req, res) => {
@@ -276,35 +277,20 @@ if ( Object.keys(search).length != 0){   // if the search statement isn't empty 
   flight.find({ Flight_No : dflightNo }).then(foundflights => {  //all cases (actions) shoud be inside then statement (variable changes in then statement dont get apllied outside then statement)
       dFrom= foundflights[0].From;   dTo= foundflights[0].To;
     res.send({dFrom:dFrom , dTo: dTo});
-    /*
-      console.log(dflightNo); console.log(dFrom); console.log(dTo);
-      flight.find({ From : dTo, To: dFrom }).then(foundflights2 => {  //all cases (actions) shoud be inside then statement (variable changes in then statement dont get apllied outside then statement)
-        console.log(foundflights2);
-        foundflights2 => {
-          if (foundflights2.length!=0)
-          res.json(foundflights2); 
-          else
-          res.send("1");
-        }
-        });
-        res.json(foundflights2); */
-      });
+       });
  })
+
  router.route("/selectReturnFlight2").post((req, res) => {
   const dFrom= req.body.dFrom; const dTo= req.body.dTo;
-
-console.log(dFrom);
-
-      flight.find({ From : dTo, To: dFrom }).then(foundflights => {
+  flight.find({ From : dTo, To: dFrom }).then(foundflights => {
         
           if (foundflights.length!=0)
           res.json(foundflights); 
           else
           res.send("1");   // no return flights available
         
-       
-      });
  })
+})
 /*
 router.route("/addFlightManual").get((req,res) => {
   var d; var a;
