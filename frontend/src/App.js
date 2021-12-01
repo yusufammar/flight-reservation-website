@@ -22,6 +22,8 @@ import SearchFlightsUser from './components/SearchFlightsUser';
 import SearchResultsUser from './components/SearchResultsUser';
 
 import BookDepartureFlightUser from './components/BookDepartureFlightUser';
+import Booking from './components/Booking';
+import ConfirmBooking from './components/ConfirmBooking';
 
 function App() {
   return (
@@ -83,6 +85,14 @@ function App() {
       
       <Route exact path ="/BookDepartureFlightUser">
         <BookDepartureFlightUser/>
+      </Route>
+
+      <Route exact path="/Booking">
+        <Booking/>
+      </Route>
+
+      <Route exact path="/ConfirmBooking">
+        <ConfirmBooking/>
       </Route>
 
 

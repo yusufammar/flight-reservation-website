@@ -291,6 +291,52 @@ if ( Object.keys(search).length != 0){   // if the search statement isn't empty 
         
  })
 })
+
+router.route("/getDFLight").post((req,res)=>{
+  const departureFlightNo = req.body.DepartureFlightNo;
+
+  flight.find({ Flight_No : departureFlightNo}).then(foundflights => {
+    console.log(foundflights);
+    if (foundflights.length!=0)
+    res.json(foundflights); 
+    else
+    res.send("0"); // not found
+  })
+
+});
+router.route("/getRFLight").post((req,res)=>{
+  const returnFlightNo = req.body.ReturnFlightNo;
+
+  flight.find({ Flight_No : returnFlightNo}).then(foundflights => {
+    console.log(foundflights);
+    if (foundflights.length!=0)
+    res.json(foundflights); 
+    else
+    res.send("0"); // not found
+  })
+
+});
+
+router.route("/getPrice").post((req,res)=>{
+  const dFlightNo = req.body.departureFlightNo;
+  const rFlightNo = req.body.returnFlightNo;
+  const cabin = req.body.cabin;
+  const adults = req.body.adults;
+  const children = req.body.children;
+  const returnFlightNo = req.body.ReturnFlightNo;
+
+  //check if seats available
+
+  flight.find({ Flight_No : returnFlightNo}).then(foundflights => {
+    console.log(foundflights);
+    if (foundflights.length!=0)
+    res.json(foundflights); 
+    else
+    res.send("0"); // not found
+  })
+
+});
+
 /*
 router.route("/addFlightManual").get((req,res) => {
   var d; var a;

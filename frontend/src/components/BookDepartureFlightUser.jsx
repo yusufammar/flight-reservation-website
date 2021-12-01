@@ -102,7 +102,11 @@ function handleclick2(event){
    // console.log(event.target.id);   // to get id of the button clicked (jsx/react/frontend)
     history.push({
     pathname: '/Booking',
-    state: {email : x, returnFlightNo: flightNumber, departureFlightNo: departureFlightNo}
+    state: {email : x, returnFlightNo: flightNumber, departureFlightNo: departureFlightNo,
+        from: from1 , to: to1 , date: date1 , departure: departure1 , arrival: arrival1, 
+        cabin: cabin1 , seats: seats1, price: price1
+    
+    }
     
     
  });
