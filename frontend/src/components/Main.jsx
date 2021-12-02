@@ -13,7 +13,7 @@ function Main(){
         axios.get('http://localhost:8000/addGuest').then( res => {
         var guestEmail= res.data;     
         history.push({
-                pathname: '/guest' ,
+                pathname: '/user' ,
                 state: {email : guestEmail }
                     });
             });

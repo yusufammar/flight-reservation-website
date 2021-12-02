@@ -5,13 +5,15 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 
 
-
 function Booking(){           //for USER & GUEST
    const location = useLocation();
    const history = useHistory();
+   var flag=false;
    
-   if (location.state!=null){           //checking if session exists (no url jumping) (if location.state has variables passed)
-       var x= location.state.email;    
+   if (location.state!=null){           //checking if session exists (no url jumping) (if location.state has variables passed), if session exists -> extract state variables
+    flag=true;   
+    var x= location.state.email;   
+       var rflightNo=location.state.returnFlightNo; var dflightNo= location.state.departureFlightNo; 
    }
    else{
    alert("Access Denied, Please Sign In first!");
@@ -21,9 +23,9 @@ function Booking(){           //for USER & GUEST
    }
 
     
-   const [input, setInput] = useState({
-    cabin: "", adults: "",  children: ""  
-})
+    const [input, setInput] = useState({
+        cabin: "", adults: "",  children: ""  
+    })
 
 
 function handleChange(event){
@@ -37,6 +39,8 @@ setInput(prevInput => {
 })
 
 }
+const [priceshow , setpriceshow] = useState(false);   // initialing priceshow=false
+const [price , setprice] = useState(); 
 
     const [flights1 , setflights1] = useState([{ 
         Flight_No:"", From:"", To:"", FlightDate:"" , Departure:"" , Arrival:"", Duration:"", 
@@ -53,9 +57,10 @@ setInput(prevInput => {
     }])
     
     
-    var rflightNo=location.state.returnFlightNo; var dflightNo= location.state.departureFlightNo;
+    
 
    useEffect(() => {
+       if (flag==true){                                     //if session exists
     const article1 = {DepartureFlightNo: dflightNo};
     axios.post('http://localhost:8000/getDFLight', article1)
     .then(jsonRes =>{
@@ -67,16 +72,17 @@ setInput(prevInput => {
         (setflights2(jsonRes.data)) 
     })
 
-
+       } 
     }, [location]);
 
+
+    //let priceshow=false; //console.log(priceshow);
+    
     function handleclick(event){
-        event.preventDefault();
-       
-            history.push({
+    history.push({
                 pathname: '/SearchFlightsUser',
                 state: {email : x}  
-        })
+        }) 
        
     }
 
@@ -87,18 +93,61 @@ setInput(prevInput => {
   
    history.push({
    pathname: '/BookDepartureFlightUser',
-   state: {email : x, departureFlightNo: dflightNo, returnFlightNo: rflightNo}
+   state: {email : x, departureFlightNo: dflightNo}
 });
 }
 
-function handleclick2(event){
-    event.preventDefault();
-    history.push({
-    pathname: '/ConfirmBooking',
-    state: {email : x, departureFlightNo: dflightNo, returnFlightNo: rflightNo, adults: input.adults,
-        children: input.children, cabin: input.cabin}
+function handleclick2(event){ // booking functionality
+
+    if (input.cabin!="" && (input.adults!="" || input.children!="")){
+
+    if (  (input.adults!="" && input.adults<=0 )  ||  (input.children!="" &&  input.children<=0) )
+    alert("Please Reserve Atleast 1 Seat");
+    else{
+     
+    var article4= {departureFlightNo: dflightNo, returnFlightNo: rflightNo, cabin: input.cabin,  
+        adults: input.adults, children: input.children}
+
+        axios.post('http://localhost:8000/booking',article4)
+        .then(res =>{ 
+            
+            //if res.send (0) -> no seats & if res.send (1) -> seats available & setprice(res.data)
+            if (res.data==0){
+            alert("Seats Not Available");
+            setpriceshow(false); }
+            else{
+            setpriceshow(true); 
+            setprice(res.data); }
+            
+        })
+    }
+    }
+
+    if (input.cabin=="" && (input.children!="" || input.adults!=""))
+    alert("Please Select Cabin");
+
+    if (input.adults=="" && input.children=="" && input.cabin!="")
+    alert("Please Reserve Atleast 1 Seat");
     
- });
+    if (input.adults=="" && input.children=="" && input.cabin=="")
+    alert("Please Select Cabin & Reserve Atleast 1 Seat");
+}    
+function handleclick3(event){
+    var article5= {departureFlightNo: dflightNo, returnFlightNo: rflightNo, cabin: input.cabin,  
+        adults: input.adults, children: input.children, price: price, email: x};
+    
+        axios.put('http://localhost:8000/confirmBooking',article5)
+       .then(res =>{ 
+        if (res.data==1){
+        alert("Booking Done Successful");
+        history.push({
+        pathname: '/User',
+        state: {email : x}
+         });   
+        }
+        
+         })
+
  }
  
 
@@ -121,7 +170,7 @@ function handleclick2(event){
         First Class: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Seats Available ({flight.First_Class_Seats}) | Baggage Allowance ({flight.First_Class_BaggageAllowance}) | Price ({flight.First_Class_Price}) <br></br>  
         
         
-        Business Class: &nbsp;&nbsp;Seats Available ({flight.Business_Class_Seats}) | Baggage Allowance ({flight.Business_Class_BaggageAllowance}) | Price ({flight.Business_Class_Price})  <br></br>
+        Business Class: &nbsp;&nbsp;&nbsp;Seats Available ({flight.Business_Class_Seats}) | Baggage Allowance ({flight.Business_Class_BaggageAllowance}) | Price ({flight.Business_Class_Price})  <br></br>
                 
         Economy Class: &nbsp;&nbsp;Seats Available ({flight.Economy_Class_Seats}) | Baggage Allowance ({flight.Economy_Class_BaggageAllowance}) | Price ({flight.Economy_Class_Price})  <br></br> 
       
@@ -144,7 +193,7 @@ function handleclick2(event){
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <button onClick={handleclick1}>Change Return Flight</button>
         <br></br>
         
-        Business Class: &nbsp;&nbsp;Seats Available ({flight.Business_Class_Seats}) | Baggage Allowance ({flight.Business_Class_BaggageAllowance}) | Price ({flight.Business_Class_Price})  <br></br>
+        Business Class: &nbsp;&nbsp;&nbsp;Seats Available ({flight.Business_Class_Seats}) | Baggage Allowance ({flight.Business_Class_BaggageAllowance}) | Price ({flight.Business_Class_Price})  <br></br>
                 
         Economy Class: &nbsp;&nbsp;Seats Available ({flight.Economy_Class_Seats}) | Baggage Allowance ({flight.Economy_Class_BaggageAllowance}) | Price ({flight.Economy_Class_Price})  <br></br> 
        
@@ -172,6 +221,17 @@ function handleclick2(event){
 
    <button onClick={handleclick2}>Book</button>
         <br></br><br></br>
+
+     {priceshow==true &&
+     <div>
+     <label style={{fontWeight:"bold"}}>Price: </label> 
+     <label style={{fontWeight:"bold"}}>{price} </label> 
+     
+     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     <button onClick={handleclick3} >Confirm Booking</button>
+        
+     </div>
+    }   
    
    </div>
 

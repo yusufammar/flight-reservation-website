@@ -9,9 +9,13 @@ import { Link } from "react-router-dom";
 function SearchResultsUser(){           //for USER & GUEST
    const location = useLocation();
    const history = useHistory();
-   
+   var flag=false;
    if (location.state!=null){           //checking if session exists (no url jumping) (if location.state has variables passed)
-       var x= location.state.email;    
+    flag=true;   
+    var x= location.state.email;  
+       //passed state variable (search criteria)
+       var from1= location.state.from; var to1= location.state.to; var date1= location.state.date; var departure1= location.state.departure;
+   var arrival1= location.state.arrival; var cabin1= location.state.cabin; var seats1= location.state.seats; var price1= location.state.price;   
    }
    else{
    alert("Access Denied, Please Sign In first!");
@@ -30,10 +34,10 @@ function SearchResultsUser(){           //for USER & GUEST
     }])
     
     
-    var from1= location.state.from; var to1= location.state.to; var date1= location.state.date; var departure1= location.state.departure;
-   var arrival1= location.state.arrival; var cabin1= location.state.cabin; var seats1= location.state.seats; var price1= location.state.price; 
+    
     
    useEffect(() => {
+       if (flag==true){
         const article = { from: from1 , to: to1 , date: date1 , departure: departure1 , arrival: arrival1, 
       cabin: cabin1 , seats: seats1, price: price1 };
     axios.post('http://localhost:8000/searchFlightUser', article)
@@ -57,6 +61,7 @@ function SearchResultsUser(){           //for USER & GUEST
         (setflights(jsonRes.data)) }
     
     );
+}
     }, [location]);
 
     function handleclick(event){

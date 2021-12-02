@@ -8,22 +8,22 @@ import Main from './components/Main';
 import SignUp from './components/SignUp';
 import SignIn from './components/SignIn';
 import User from './components/User';
-import Guest from './components/Guest';
 
-import Admin from './components/Admin';
-import AddFlight from './components/addFlight';   //imported object should start with uppercase letter
-import FlightsList from './components/FlightsList';
 
-import SearchFlight from './components/SearchFlight';
-import SearchResults from './components/SearchResults';
-import UpdatePage from './components/UpdatePage';
+import Admin from './components/Admin/Admin';
+import AddFlight from './components/Admin/addFlight';   //imported object should start with uppercase letter
+import FlightsList from './components/Admin/FlightsList';
+
+import SearchFlight from './components/Admin/SearchFlight';
+import SearchResults from './components/Admin/SearchResults';
+import UpdatePage from './components/Admin/UpdatePage';
 
 import SearchFlightsUser from './components/SearchFlightsUser';
 import SearchResultsUser from './components/SearchResultsUser';
 
 import BookDepartureFlightUser from './components/BookDepartureFlightUser';
 import Booking from './components/Booking';
-import ConfirmBooking from './components/ConfirmBooking';
+
 
 function App() {
   return (
@@ -35,10 +35,6 @@ function App() {
      
      <Route exact path="/user">
       <User/>
-      </Route>
-
-      <Route exact path="/guest">
-      <Guest/>
       </Route>
 
       <Route exact path="/SignUp">
@@ -91,9 +87,7 @@ function App() {
         <Booking/>
       </Route>
 
-      <Route exact path="/ConfirmBooking">
-        <ConfirmBooking/>
-      </Route>
+     
 
 
     </Router>
