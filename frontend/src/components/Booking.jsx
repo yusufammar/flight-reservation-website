@@ -136,7 +136,7 @@ function handleclick3(event){
     var article5= {departureFlightNo: dflightNo, returnFlightNo: rflightNo, cabin: input.cabin,  
         adults: input.adults, children: input.children, price: price, email: x};
     
-        axios.put('http://localhost:8000/confirmBooking',article5)
+        axios.post('http://localhost:8000/confirmBooking',article5)
        .then(res =>{ 
         if (res.data==1){
         alert("Booking Done Successful");

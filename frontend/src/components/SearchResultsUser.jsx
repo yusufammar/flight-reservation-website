@@ -40,6 +40,7 @@ function SearchResultsUser(){           //for USER & GUEST
        if (flag==true){
         const article = { from: from1 , to: to1 , date: date1 , departure: departure1 , arrival: arrival1, 
       cabin: cabin1 , seats: seats1, price: price1 };
+      //console.log(article);
     axios.post('http://localhost:8000/searchFlightUser', article)
     .then(jsonRes =>{ 
         if (jsonRes.data == 0){

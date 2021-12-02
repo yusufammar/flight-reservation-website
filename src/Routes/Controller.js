@@ -387,7 +387,7 @@ var search= { $or: [{Flight_No: dFlightNo},{Flight_No: rFlightNo} ] }
 
 });
 
-router.route("/confirmBooking").put((req,res)=>{ // update available seats in flights collection & make booking in booking collection
+router.route("/confirmBooking").post((req,res)=>{ // update available seats in flights collection & make booking in booking collection
   const email= req.body.email;
   const dFlightNo = req.body.departureFlightNo;
   const rFlightNo = req.body.returnFlightNo;
