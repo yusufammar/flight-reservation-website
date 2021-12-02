@@ -4,6 +4,7 @@ const { ConnectionPoolClosedEvent } = require("mongodb");
 const router= express.Router();
 const flight = require('../Models/Flights');
 const user = require('../Models/User');
+const booking = require('../Models/Booking');
 
 
 router.route("/addGuest").get((req,res) => { //get becuase no input
@@ -291,6 +292,188 @@ if ( Object.keys(search).length != 0){   // if the search statement isn't empty 
         
  })
 })
+
+router.route("/getDFLight").post((req,res)=>{
+  const departureFlightNo = req.body.DepartureFlightNo;
+
+  flight.find({ Flight_No : departureFlightNo}).then(foundflights => {
+    //console.log(foundflights);
+    if (foundflights.length!=0)
+    res.json(foundflights); 
+    else
+    res.send("0"); // not found
+  })
+
+});
+router.route("/getRFLight").post((req,res)=>{
+  const returnFlightNo = req.body.ReturnFlightNo;
+
+  flight.find({ Flight_No : returnFlightNo}).then(foundflights => {
+    //console.log(foundflights);
+    if (foundflights.length!=0)
+    res.json(foundflights); 
+    else
+    res.send("0"); // not found
+  })
+
+});
+
+router.route("/booking").post((req,res)=>{ //check if seats available & calculate price
+  const dFlightNo = req.body.departureFlightNo;
+  const rFlightNo = req.body.returnFlightNo;
+  const cabin = req.body.cabin;
+  var adults = req.body.adults;
+  var children = req.body.children;
+  
+  if (adults=="") adults=0; if (children=="") children=0;
+  
+    //check seats available then calculate price //check if seats available (& res.send(0))
+var search= { $or: [{Flight_No: dFlightNo},{Flight_No: rFlightNo} ] }
+  flight.find(search).then(foundflights => {
+    //console.log(foundflights);
+    
+    var DFirstSeats = foundflights[0].First_Class_Seats;
+    var DBusinessSeats = foundflights[0].Business_Class_Seats;
+    var DEconomySeats = foundflights[0].Economy_Class_Seats;
+    
+    var RFirstSeats = foundflights[1].First_Class_Seats;
+    var RBusinessSeats = foundflights[1].Business_Class_Seats;
+    var REconomySeats = foundflights[1].Economy_Class_Seats;
+   
+    
+    var DFirstPrice = foundflights[0].First_Class_Price;
+    var DBusinessPrice = foundflights[0].Business_Class_Price;
+    var DEconomyPrice = foundflights[0].Economy_Class_Price;
+    
+    var RFirstPrice = foundflights[1].First_Class_Price;
+    var RBusinessPrice = foundflights[1].Business_Class_Price;
+    var REconomyPrice = foundflights[1].Economy_Class_Price;
+
+    var price;
+    var seatsavailable=false;
+    var seats= parseInt(adults) + parseInt(children);            //parseInt is used for int var from req.body to make sure they are read as int
+    
+    switch(cabin){
+      case("First"):{
+      if ( (seats <= DFirstSeats) && (seats <= RFirstSeats) ) {
+        price = (adults*DFirstPrice)+(children*DFirstPrice*0.7)+(adults*RFirstPrice)+(children*RFirstPrice*0.7); 
+        seatsavailable=true; }
+        break;  }
+      
+        case("Business"):{
+      if ((seats <= DBusinessSeats) && (seats <= RBusinessSeats))  { 
+        price = (adults*DBusinessPrice)+(children*DBusinessPrice*0.7)+(adults*RBusinessPrice)+(children*RBusinessPrice*0.7); 
+        seatsavailable=true; }
+        break;  }
+
+      case("Economy"):{
+        if ( ( seats <= DEconomySeats ) && ( seats <= REconomySeats)  )  {   
+        price = (adults*DEconomyPrice)+(children*DEconomyPrice*0.7)+(adults*REconomyPrice)+(children*REconomyPrice*0.7);
+        seatsavailable=true;}
+         break;  }
+
+      }
+
+      if (seatsavailable==true){
+        //console.log(price);
+        var price1= price+"";
+        res.send(price1);   // seats available --> show price in frontend
+      }
+      else
+      res.send("0");   // seats not available -> alert in frontend
+
+      
+    })
+
+});
+
+router.route("/confirmBooking").post((req,res)=>{ // update available seats in flights collection & make booking in booking collection
+  const email= req.body.email;
+  const dFlightNo = req.body.departureFlightNo;
+  const rFlightNo = req.body.returnFlightNo;
+  const cabin = req.body.cabin;
+  var adults = req.body.adults;
+  var children = req.body.children;
+  const price = req.body.price;
+
+
+  if (adults=="") adults=0; if (children=="") children=0;
+  
+  var bookingNo;
+  booking.find().then(foundBookings => {
+   if (foundBookings.length==0)
+   bookingNo=1;
+   else 
+   bookingNo= foundBookings[foundBookings.length-1].BookingNo + 1; //ensures unique booking no (even when canceling bookings)
+   
+   const newBooking = new booking({
+    BookingNo: bookingNo,
+    Email: email, 
+    DepartureFlightNo: dFlightNo ,
+    ReturnFlightNo: rFlightNo ,
+    Cabin: cabin,
+    AdultSeats: adults ,
+    ChildrenSeats: children,
+    Price: price
+    });
+    newBooking.save();
+    res.send("1"); // booking successful
+    })
+
+    
+
+  var search= { $or: [{Flight_No: dFlightNo},{Flight_No: rFlightNo} ] }
+  flight.find(search).then(foundflights => {
+    //console.log(foundflights);
+    
+    var DFirstSeats = foundflights[0].First_Class_Seats;
+    var DBusinessSeats = foundflights[0].Business_Class_Seats;
+    var DEconomySeats = foundflights[0].Economy_Class_Seats;
+    
+    var RFirstSeats = foundflights[1].First_Class_Seats;
+    var RBusinessSeats = foundflights[1].Business_Class_Seats;
+    var REconomySeats = foundflights[1].Economy_Class_Seats;
+   
+    var seats= parseInt(adults) + parseInt(children);
+
+    console.log(seats);
+    switch(cabin){
+      case("First"):{
+      var DFirstSeatsUpdate = DFirstSeats - seats;
+      var RFirstSeatsUpdate = RFirstSeats - seats;
+      
+      flight.findOneAndUpdate({Flight_No:dFlightNo},{First_Class_Seats:DFirstSeatsUpdate},{ new: true, upsert: true }).then(res);
+      flight.findOneAndUpdate({Flight_No:rFlightNo},{First_Class_Seats:RFirstSeatsUpdate},{ new: true, upsert: true }).then(res);
+        break;  }
+      
+        case("Business"):{
+
+          var DBusinessSeatsUpdate = DBusinessSeats - seats;
+          var RBusinessSeatsUpdate = RBusinessSeats - seats;
+          
+          flight.findOneAndUpdate({Flight_No:dFlightNo},{Business_Class_Seats:DBusinessSeatsUpdate},{ new: true, upsert: true }).then(res);
+          flight.findOneAndUpdate({Flight_No:rFlightNo},{Business_Class_Seats:RBusinessSeatsUpdate},{ new: true, upsert: true }).then(res);
+   
+        break;  }
+
+      case("Economy"):{
+        var DEconomySeatsUpdate = DEconomySeats - seats;
+        var REconomySeatsUpdate = REconomySeats - seats;
+        
+        flight.findOneAndUpdate({Flight_No:dFlightNo},{Economy_Class_Seats:DEconomySeatsUpdate},{ new: true, upsert: true }).then(res);
+        flight.findOneAndUpdate({Flight_No:rFlightNo},{Economy_Class_Seats:REconomySeatsUpdate},{ new: true, upsert: true }).then(res);
+       
+         break;  }
+
+      }
+    
+         
+    }) 
+});
+
+
+
+
 /*
 router.route("/addFlightManual").get((req,res) => {
   var d; var a;

@@ -10,8 +10,14 @@ function BookDepartureFlightUser(){   // for USER & GUEST
    const location = useLocation();
    const history = useHistory();
    
-   if (location.state!=null){           //checking if session exists (no url jumping) (if location.state has variables passed)
-       var x= location.state.email;    
+   var flag=false;
+   if (location.state!=null){ 
+       flag=true;          //checking if session exists (no url jumping) (if location.state has variables passed)
+       var x= location.state.email;   
+       var departureFlightNo= location.state.departureFlightNo; 
+         // searching creteria from search page
+    var from1= location.state.from; var to1= location.state.to; var date1= location.state.date; var departure1= location.state.departure;
+    var arrival1= location.state.arrival; var cabin1= location.state.cabin; var seats1= location.state.seats; var price1= location.state.price;  
    }
    else{
    alert("Access Denied, Please Sign In first!");
@@ -29,18 +35,14 @@ function BookDepartureFlightUser(){   // for USER & GUEST
         First_Class_Price:"", Business_Class_Price:"",  Economy_Class_Price:"" 
     }])
     
-    var departureFlightNo= location.state.departureFlightNo; 
+   
 
-    // searching creteria from search page
-    var from1= location.state.from; var to1= location.state.to; var date1= location.state.date; var departure1= location.state.departure;
-    var arrival1= location.state.arrival; var cabin1= location.state.cabin; var seats1= location.state.seats; var price1= location.state.price; 
+  
     
     useEffect(() => {
-   
-       
-        
-      
-var dFrom; var dTo;
+    if (flag==true){
+    
+    var dFrom; var dTo;
 
     const article = { departureFlightNo: departureFlightNo };
     axios.post('http://localhost:8000/selectReturnFlight', article)
@@ -61,16 +63,10 @@ var dFrom; var dTo;
             });
     }
         setflights(jsonRes.data)
-
-    })
-        
-
+   })
     });
-   
-
-   
-
-    }, [location]);
+}
+}, [location]);
 
     function handleclick(event){
         event.preventDefault();
@@ -102,7 +98,11 @@ function handleclick2(event){
    // console.log(event.target.id);   // to get id of the button clicked (jsx/react/frontend)
     history.push({
     pathname: '/Booking',
-    state: {email : x, returnFlightNo: flightNumber, departureFlightNo: departureFlightNo}
+    state: {email : x, returnFlightNo: flightNumber, departureFlightNo: departureFlightNo,
+        from: from1 , to: to1 , date: date1 , departure: departure1 , arrival: arrival1, 
+        cabin: cabin1 , seats: seats1, price: price1
+    
+    }
     
     
  });
