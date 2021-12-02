@@ -5,25 +5,50 @@ const router= express.Router();
 const flight = require('../Models/Flights');
 const User = require("../Models/User");
 const user = require('../Models/User');
+const booking = require ('../Models/booking');
 
 
 var iduser;
 var email ;
 var password = "";
+
+
+
 router.route("/Currentuserr").post((req,res) => { 
   console.log("currentuserr");
   const x = req.body.Email;
   const y = req.body.password;
-//email = req.body.Email;
-//password = req.body.password;
+
 console.log(x);
 console.log(y);
 email = x ;
 console.log(email);
-// user.find({ Email : x , Password: y}).then(founduser => {
-//  iduser = founduser[0].id
-//  console.log(iduser);
+
 });
+
+
+router.route("/UpdateBookingUser").post((req, res) => {
+  console.log("UpdateBookingUser");
+ console.log(email);
+ const z = req.body.Name;
+ const d = req.body.Password;
+ const s = req.body.Email;
+ const v = req.body.Type;
+ console.log(z);
+
+ booking.find({userEmail : email}, function (err, docs) {
+  console.log("TEST BEFORE");
+   console.log(docs);
+   console.log("TEST AFTER");
+  //docs.save();
+});
+
+ booking.updateMany({userEmail:email},{$set:{Client_name:z}})
+ 
+ booking.updateMany({userEmail:email},{$set:{userEmail:s}})
+
+});
+
 
 
 router.route("/Updateinfo").post((req, res) => {
@@ -50,36 +75,42 @@ if(v!="admin"){
 });
 }
 
-
-//  let doc = user.findOneAndUpdate({Email:email}, {$set:{Name:z}},{
-//   new: true})
-
-//   doc.save;
-  // User.findById(iduser , function (err, docs) {
-  //   console.log(docs);
-  //   var uservar = req.body;
-
-    
-  //     docs["Email"] = uservar.Email;
-
-    
-  //     docs["Password"] = uservar.Password;
+});
 
 
-  
-  //     docs["Type"] = uservar.Type;
 
-  //     docs["Name"] = uservar.Name;
 
-   
 
-  //   docs.save();
-  // });
-  
-// const x = flight.find({Email:email});
-// x.Name = req.body.Name
+
+router.route("/Updateinfo").post((req, res) => {
+  console.log("updateinfo");
+ console.log(email);
+ const z = req.body.Name;
+ const d = req.body.Password;
+ const s = req.body.Email;
+ const v = req.body.Type;
+ console.log(z);
+if(v!="admin"){
+ User.findOne({Email: email}, function (err, user) {
+  user.Name = z;
+  user.Password = d;
+  user.Email = s;
+  user.Type = v;
+
+ 
+  user.save(function (err) {
+      if(err) {
+          console.error('ERROR!');
+      }
+  });
+});
+}
 
 });
+
+
+
+
 
 
 router.route("/addUser").post((req,res) => {

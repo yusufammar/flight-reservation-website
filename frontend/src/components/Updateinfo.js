@@ -65,22 +65,20 @@ onSubmit(e){
         Type : this.state.Type
 
     }
+
+    axios.post('http://localhost:8000/UpdateBookingUser', user)
     console.log(user)
     console.log("1")
     axios.post('http://localhost:8000/Updateinfo', user)
     .then(res=>{
-        const { navigate } = this.props.navigation;
-        navigate('/SignIn')
-       ;
+       
 
        console.log("valid1");
-     //  window.location.assign("https://localhost3000/SignIn");
+       window.location.href("https://localhost3000/SignIn");
        console.log("valid2");
 
     })
-    const { navigate } = this.props.navigation;
-    navigate('/SignIn')
-    
+   
     //this.props.history.push('/SignIn')
 
     console.log("didn't redirect !");
