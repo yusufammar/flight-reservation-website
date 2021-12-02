@@ -2,35 +2,35 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const BookingSchema = new Schema({
-  userEmail: {
+  BookingNo: {
     type: String,
     required: true
   },
-  bookingNo: {
+  Email: {
     type: String,
     required: true
   },
-  dFlightNo: {
+  DepartureFlightNo: {
     type: String,
     required: true,
   },
-  rFlightNo: {
+  ReturnFlightNo: {
     type: String,
     required: true,
   },
-  cabin: {
+  Cabin: {
       type: String,
       require:true
   },
-  adultSeats: {
+  AdultSeats: {
       type: String,
       require: true     
   },
-  childrenSeats:{
+  ChildrenSeats:{
       type: String,
       require: true
   },
-  Client_name:{
+  Price:{
     type: String,
     require: true
 },

@@ -71,6 +71,8 @@ onSubmit(e){
     console.log("1")
     axios.post('http://localhost:8000/Updateinfo', user)
     
+    console.log("Redirecting");
+
 }
 
 render(){
@@ -119,7 +121,7 @@ return(
         <label>
                submit:
             </label>
-            <input type = "submit" required className="form-control"  className = "btn btn-primary"/>
+            <input type = "submit" required className="form-control"  className = "btn btn-primary"/ >
 
 <div>
 

@@ -5,6 +5,7 @@ const router= express.Router();
 const flight = require('../Models/Flights');
 const User = require("../Models/User");
 const user = require('../Models/User');
+const booking = require('../Models/booking');
 
 
 var iduser;
@@ -25,6 +26,32 @@ console.log(email);
 //  console.log(iduser);
 });
 
+router.route("/UpdateBookingUser").post((req, res) => {
+  console.log("UpdateBookingUser");
+ console.log(email);
+ const z = req.body.Name;
+ const d = req.body.Password;
+ const s = req.body.Email;
+ const v = req.body.Type;
+ console.log(z);
+
+ booking.find({Email : email}, function (err, docs) {
+  console.log("TEST BEFORE");
+   console.log(docs);
+   console.log("TEST AFTER");
+   for(let i = 0; i < docs.length; i++)
+   {
+     docs[i]["Email"] = s;
+     docs[i].save();
+   }
+ 
+  
+});
+
+// booking.updateMany({Email : email},{Email:email})
+
+})
+
 
 router.route("/Updateinfo").post((req, res) => {
   console.log("updateinfo");
@@ -34,22 +61,20 @@ router.route("/Updateinfo").post((req, res) => {
  const s = req.body.Email;
  const v = req.body.Type;
  console.log(z);
-if(v!="admin"){
+
  User.findOne({Email: email}, function (err, user) {
   user.Name = z;
   user.Password = d;
   user.Email = s;
   user.Type = v;
-
  
   user.save(function (err) {
       if(err) {
           console.error('ERROR!');
       }
   });
+  
 });
-}
-
 
 //  let doc = user.findOneAndUpdate({Email:email}, {$set:{Name:z}},{
 //   new: true})
