@@ -66,7 +66,7 @@ router.route("/Updateinfo").post((req, res) => {
   user.Name = z;
   user.Password = d;
   user.Email = s;
-  user.Type = v;
+  // user.Type = v;
  
   user.save(function (err) {
       if(err) {

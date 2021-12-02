@@ -2,8 +2,9 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import React, {useState} from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { useHistory } from "react-router-dom";
+import { useHistory,useLocation } from "react-router-dom";
 import { Component } from "react";
+
 
 export default class Updateinfo extends Component{
     constructor(props){
@@ -12,7 +13,7 @@ export default class Updateinfo extends Component{
         this.onChangeEmail = this.onChangeEmail.bind(this);
         this.onChangePassword = this.onChangePassword.bind(this);
         this.onChangeName = this.onChangeName.bind(this);
-        this.onChangeType = this.onChangeType.bind(this);
+       this.onChangeType = this.onChangeType.bind(this);
        
 
 
@@ -21,9 +22,22 @@ export default class Updateinfo extends Component{
             Name:'',
             Email:'',
             Password:'',
-            Type:''
+            Type:'Customer'
         }
+
+
+
+
+        
+     
     }
+
+//   if(this.state=null){
+//             alert("access denied , you are not logged in")
+//             window.location.href("./");
+//         }
+     
+   
 
 onChangeName(e) {
     this.setState({
@@ -56,13 +70,13 @@ onChangeType(e) {
 
 
 onSubmit(e){
-    // e.PreventDefault();
+    e.preventDefault();
     console.log("1")
     const user = {
         Name : this.state.Name,
         Email : this.state.Email,
         Password : this.state.Password,
-        Type : this.state.Type
+        // Type : this.state.Type
 
     }
 
@@ -72,7 +86,14 @@ onSubmit(e){
     axios.post('http://localhost:8000/Updateinfo', user)
     
     console.log("Redirecting");
+    return false ;
 
+}
+
+Redirect()
+{   
+    alert("You have updated your informations successfully!");
+    window.location.href = "/SignIn";
 }
 
 render(){
@@ -119,9 +140,9 @@ return(
             
         </div>
         <label>
-               submit:
+               
             </label>
-            <input type = "submit" required className="form-control"  className = "btn btn-primary"/ >
+            <input type = "submit" required className="form-control" onClick= {this.Redirect} className = "btn btn-primary"/ >
 
 <div>
 
