@@ -6,7 +6,10 @@ import { useHistory,useLocation } from "react-router-dom";
 import { Component } from "react";
 
 
+
+
 export default class Updateinfo extends Component{
+    
     constructor(props){
         super(props);
 
@@ -25,12 +28,13 @@ export default class Updateinfo extends Component{
             Type:'Customer'
         }
 
-
+       
 
 
         
      
     }
+    
 
 //   if(this.state=null){
 //             alert("access denied , you are not logged in")
@@ -70,6 +74,11 @@ onChangeType(e) {
 
 
 onSubmit(e){
+    
+
+    
+
+
     e.preventDefault();
     console.log("1")
     const user = {
@@ -80,27 +89,36 @@ onSubmit(e){
 
     }
 
+
     axios.post('http://localhost:8000/UpdateBookingUser', user)
     console.log(user)
     console.log("1")
     axios.post('http://localhost:8000/Updateinfo', user)
-    
+    alert('informations has been updated successfully');
+    window.location.href = "/SignIn";
     console.log("Redirecting");
+    if(user.Email==''||user.Name==''||user.Password==''){
+    alert("please fill in all the fields to update your informations")
+}
+else{
+    
+}
     return false ;
 
 }
 
 Redirect()
 {   
-    alert("You have updated your informations successfully!");
-    window.location.href = "/SignIn";
+    // alert("You have updated your informations successfully!");
+    // window.location.href = "/SignIn";
+ 
 }
 
 render(){
 return(
     <div>
     <h3>You are updating your info</h3>
-    <form onSubmit = {this.onSubmit.bind(this)}>
+    <form onSubmit = {this.onSubmit.bind(this)}  onClick= {this.Redirect}>
         <div className = "form-group">
             <label>
                 Name:
@@ -142,7 +160,7 @@ return(
         <label>
                
             </label>
-            <input type = "submit" required className="form-control" onClick= {this.Redirect} className = "btn btn-primary"/ >
+            <input type = "submit" required className="form-control" className = "btn btn-primary" />
 
 <div>
 

@@ -16,13 +16,20 @@ function User(){
         pathname: '/SignIn' 
         });
     }
+  function  handleclick(){
+       <Redirect to = {{
+           pathname:'/Updateinfo',
+           state:{email:location.state.email}
+          }}
+       />
+    }
     
 return (
 <div className='container'>
 
 <h1>Welcome</h1>
 <h8>Account: {x} </h8>
-<button><Link to="/Updateinfo"> Update my Information </Link></button>
+<button onClick={handleclick}><Link to="/Updateinfo"> Update my Information </Link></button>
 
 <br></br><br></br>
 <button><Link to="/"> Sign Out </Link></button>
