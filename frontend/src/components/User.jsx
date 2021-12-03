@@ -24,6 +24,15 @@ function User(){            // USER MAIN PAGE
         state: {email : x}
     });
     }
+
+    function showBookings(event)
+    {
+        event.preventDefault();
+        history.push({
+        pathname: '/MyFlights',
+        state: {email : x}
+    }); 
+    }
     var y=1;
 
 return (
@@ -34,6 +43,11 @@ return (
 
 <br></br><br></br>
 <button  onClick={handleclick}> Search Flights </button>
+<br></br><br></br>
+
+
+<br></br><br></br>
+<button  onClick={showBookings}> Show My Bookings </button>
 <br></br><br></br>
 
 <br></br><br></br>

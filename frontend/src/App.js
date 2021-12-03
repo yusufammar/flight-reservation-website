@@ -8,6 +8,7 @@ import Main from './components/Main';
 import SignUp from './components/SignUp';
 import SignIn from './components/SignIn';
 import User from './components/User';
+import MyFlights from './components/MyFlights';
 
 
 import Admin from './components/Admin/Admin';
@@ -39,6 +40,10 @@ function App() {
 
       <Route exact path="/SignUp">
       <SignUp/>
+      </Route>
+
+      <Route exact path="/MyFlights">
+      <MyFlights/>
       </Route>
 
       <Route exact path="/SignIn">
