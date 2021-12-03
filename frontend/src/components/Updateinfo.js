@@ -25,7 +25,8 @@ export default class Updateinfo extends Component{
             Name:'',
             Email:'',
             Password:'',
-            Type:'Customer'
+            Type:'Customer',
+            useremail:''
         }
 
        
@@ -74,6 +75,8 @@ onChangeType(e) {
 
 
 onSubmit(e){
+
+    if(this.state.useremail!=''){
     
 
     
@@ -97,14 +100,20 @@ onSubmit(e){
     alert('informations has been updated successfully');
     window.location.href = "/SignIn";
     console.log("Redirecting");
-    if(user.Email==''||user.Name==''||user.Password==''){
-    alert("please fill in all the fields to update your informations")
-}
-else{
-    
-}
+  
+
     return false ;
 
+}
+
+else
+{
+e.preventDefault();
+alert("access denied");
+window.location.href = "/SignIn";
+return false;
+
+}
 }
 
 Redirect()

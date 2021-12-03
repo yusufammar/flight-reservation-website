@@ -19,7 +19,7 @@ function User(){
   function  handleclick(){
        <Redirect to = {{
            pathname:'/Updateinfo',
-           state:{email:location.state.email}
+           state:{useremail:location.state.email}
           }}
        />
     }
