@@ -156,34 +156,34 @@ router.route("/MyBookings").get((req, res) => {
 
 router.route("/SendCancelEmail").post( async (req, res) => {
 
-  console.log("Hamaddaaa");
-  console.log(req);
   const details = req.body.details;
   const From = req.body.From;
   const To = req.body.To;
-  let testAccount = await nodemailer.createTestAccount();
+
   const transporter = nodemailer.createTransport({
-    host: 'smtp.ethereal.email',
-    port: 587,
+    service: 'gmail',
     auth: {
-        user: 'kiana.ryan36@ethereal.email',
-        pass: 'BxEqFHCUPC636EeTmK'
+      user: 'fakeEmailACL@gmail.com',
+      pass: 'Fake1234' // naturally, replace both with your real credentials or an application-specific password
     }
-});
-
-      let mess = 'Amount to be refunded: ' + details.Price + "Booking Number: "  + details.BookingNo + " Departure From: " + From[0] + " || To: " + To[0] + " \n Return From: " + From[1] + " || To: " + To[1] ;
-      let info = await transporter.sendMail({
-        from: '"Fred Foo 👻" <foo@example.com>', // sender address
-        to: details.Email, // list of receivers
-        subject: "Cancelled Flight ", // Subject line
-        text: mess, // plain text body
-        html: "<b>" + mess +"</b>", // html body
-      }).catch(console.error);
-      transporter.sendMail();
-
-      console.log("Message sent: %s", info.messageId);
+  });
   
-      console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+  let mess = 'Amount to be refunded: ' + details.Price +'\n'+ "Booking Number: "  + details.BookingNo + " Departure From: " + From[0] + " || To: " + To[0] + " \n Return From: " + From[1] + " || To: " + To[1] ;
+  const mailOptions = {
+    from: 'ACL_SAMYH_TEAM@GUC.com',
+    to: details.Email,
+    subject: 'Your cancelled reservation',
+    text:mess 
+  };
+  
+  transporter.sendMail(mailOptions, function(error, info){
+    if (error) {
+    console.log(error);
+    } else {
+      console.log('Email sent: ' + info.response);
+    }
+  });
+
 })
 
 var selectedFlightID = "";
