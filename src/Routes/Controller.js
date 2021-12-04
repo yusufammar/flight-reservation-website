@@ -1,3 +1,4 @@
+const nodemailer = require("nodemailer");
 const express = require("express");
 const { ConnectionPoolClosedEvent } = require("mongodb");
 
@@ -46,8 +47,14 @@ router.route("/addUser").post((req,res) => {
     })
  });
 
+ var currentUserEmail = "";
+
+
 router.route("/SignIn").post((req, res) => {
   const x = req.body.Email;  const y = req.body.Password;
+
+
+  currentUserEmail = x;
 
   user.find({ Email : x , Password: y}).then(founduser => {  //all cases (actions) shoud be inside then statement (variable changes in then statement dont get apllied outside then statement)
     if (founduser.length!= 0) {
@@ -140,6 +147,43 @@ router.route("/getFlightByFrom").post((req, res) => {
 router.route("/FlightsList").get((req, res) => {
   flight.find()
     .then(foundflights => res.json(foundflights))
+})
+
+router.route("/MyBookings").get((req, res) => {
+  booking.find({Email : currentUserEmail})
+    .then(foundBookings => res.json(foundBookings))
+})
+
+router.route("/SendCancelEmail").post( async (req, res) => {
+
+  const details = req.body.details;
+  const From = req.body.From;
+  const To = req.body.To;
+
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'fakeEmailACL@gmail.com',
+      pass: 'Fake1234' // naturally, replace both with your real credentials or an application-specific password
+    }
+  });
+  
+  let mess = 'Amount to be refunded: ' + details.Price +'\n'+ "Booking Number: "  + details.BookingNo + " Departure From: " + From[0] + " || To: " + To[0] + " \n Return From: " + From[1] + " || To: " + To[1] ;
+  const mailOptions = {
+    from: 'ACL_SAMYH_TEAM@GUC.com',
+    to: details.Email,
+    subject: 'Your cancelled reservation',
+    text:mess 
+  };
+  
+  transporter.sendMail(mailOptions, function(error, info){
+    if (error) {
+    console.log(error);
+    } else {
+      console.log('Email sent: ' + info.response);
+    }
+  });
+
 })
 
 var selectedFlightID = "";
@@ -606,6 +650,4 @@ router.route("/addFlightManual").get((req,res) => {
 });
 */
 
-
 module.exports = router;
-

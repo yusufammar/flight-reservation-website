@@ -23,7 +23,9 @@
     "express": "^4.17.1",
     "mongodb": "^4.1.4",
     "mongoose": "^6.0.12",
+    "nodemailer": "^6.7.2",
     "nodemon": "^2.0.15",
+    "react-modal": "^3.14.4",
     "react-router-dom": "^6.0.1"
   }
 }

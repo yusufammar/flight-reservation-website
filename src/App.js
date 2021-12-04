@@ -3,9 +3,11 @@ const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
 const Flight = require('../src/Models/Flights');
+const Booking = require('../src/Models/Booking');
 const User = require('../src/Models/User');
 const { findByIdAndRemove } = require("../src/Models/Flights");
 
+const nodemailer = require("nodemailer");
 
 app.use(cors());
 app.use(express.json());
@@ -35,6 +37,17 @@ app.delete('/delete/:id', async (req, res) => {
   res.send("deleted");
 });
 
+
+
+app.delete('/cancel/:id', async (req, res) => {
+  const idNum = req.params.id;
+  console.log(idNum);
+   await Booking.findOneAndDelete({_id : idNum}, function (err, docs) {
+    console.log(err);
+  
+   });
+  res.send("canceled");
+});
 
 app.get("/addAdmin",(req,res)=>{   //adding Admin to user database (one time thing)
   const me = new User({
