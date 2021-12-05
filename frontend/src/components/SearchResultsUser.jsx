@@ -10,17 +10,32 @@ function SearchResultsUser(){           //for USER & GUEST
    const location = useLocation();
    const history = useHistory();
    var flag=false;
+   
+  
+    axios.defaults.withCredentials = true;
+    useEffect(() => {
+        axios.get('http://localhost:8000/currentUser').then(res =>{ 
+        if (res.data=="0" || res.data.type=="Admin"){
+        alert("Access Denied, Please Sign In First");
+        history.push({pathname:"/SignIn"});
+        }
+       //else go to page
+     })
+    }, [location]);
+
+
+   
    if (location.state!=null){           //checking if session exists (no url jumping) (if location.state has variables passed)
     flag=true;   
-    var x= location.state.email;  
+      
        //passed state variable (search criteria)
        var from1= location.state.from; var to1= location.state.to; var date1= location.state.date; var departure1= location.state.departure;
    var arrival1= location.state.arrival; var cabin1= location.state.cabin; var seats1= location.state.seats; var price1= location.state.price;   
    }
    else{
-   alert("Access Denied, Please Sign In first!");
+   alert("Please Search For A Flight First");
    history.push({
-       pathname: '/SignIn' 
+       pathname: '/SearchFlightsUser' 
        });
    }
 
@@ -47,15 +62,13 @@ function SearchResultsUser(){           //for USER & GUEST
         alert("Please Select Cabin, when searching by seats or price");
         history.push({
             pathname: '/SearchFlightsUser',
-            state: {email: x }                // for session 
-                 
+                       
         });
     }
         if (jsonRes.data == 1){
             alert("No results, Please Search again");
             history.push({
-                pathname: '/SearchFlightsUser',
-                state: {email: x }                // for session 
+                pathname: '/SearchFlightsUser'
                      
             });
     }
@@ -69,8 +82,7 @@ function SearchResultsUser(){           //for USER & GUEST
         event.preventDefault();
                          // redirects to user main page if email is user email
         history.push({
-        pathname: '/user',
-        state: {email : x}
+        pathname: '/user'
         })
     
     }
@@ -79,8 +91,7 @@ function SearchResultsUser(){           //for USER & GUEST
    event.preventDefault();
   
    history.push({
-   pathname: '/SearchFlightsUser',
-   state: {email : x}
+   pathname: '/SearchFlightsUser'
 });
 }
 
@@ -90,7 +101,7 @@ function handleclick2(event){
    // console.log(event.target.id);   // to get id of the button clicked (jsx/react/frontend)
     history.push({
     pathname: '/BookDepartureFlightUser',
-    state: {email : x, departureFlightNo: flightNumber, 
+    state: {departureFlightNo: flightNumber, 
         from: from1 , to: to1 , date: date1 , departure: departure1 , arrival: arrival1, 
         cabin: cabin1 , seats: seats1, price: price1}
     

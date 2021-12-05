@@ -25,6 +25,8 @@ import SearchResultsUser from './components/SearchResultsUser';
 import BookDepartureFlightUser from './components/BookDepartureFlightUser';
 import Booking from './components/Booking';
 
+import UpdateUser from './components/UpdateUser';
+
 
 function App() {
   return (
@@ -92,7 +94,9 @@ function App() {
         <Booking/>
       </Route>
 
-     
+      <Route exact path="/UpdateUser">
+        <UpdateUser/>
+      </Route>
 
 
     </Router>

@@ -1,13 +1,28 @@
 import react, {useEffect,useState} from "react";
-import { Route, Redirect, useLocation } from "react-router-dom";
-import { useHistory } from "react-router-dom";
-import axios from "axios";
+import React from "react";
 import { Link } from "react-router-dom";
+import { Route, Redirect, useLocation } from "react-router-dom";
+import axios from "axios";
+import { useHistory } from "react-router-dom";
 
 
 function SearchResults(){
+
+      const location = useLocation();
+    const history = useHistory();
+
+    axios.defaults.withCredentials = true;
     
-    const location = useLocation();
+    useEffect(() => {
+        
+     axios.get('http://localhost:8000/currentUser').then(res =>{ 
+        if (res.data=="0" || res.data.type=="Customer" || res.data.type=="Guest" ){
+        alert("Access Denied, Please Sign In First");
+        history.push({pathname:"/SignIn"});
+        }
+        // else go to admin page
+     })
+    }, [location]);
    
     const [flights , setflights] = useState([{ 
         Flight_No:"",
@@ -25,7 +40,7 @@ function SearchResults(){
     
     
     useEffect(() => {
-   
+   if (location.state!=null){
         var type= location.state.type;  
    console.log(type);
     
@@ -71,6 +86,12 @@ function SearchResults(){
         axios.post('http://localhost:8000/getFlightByArrival', article)
         .then(jsonRes => (setflights(jsonRes.data)) );
      }
+   }
+   else{
+      alert("Please Search for a flight first");
+        history.push({pathname:"/SearchFlight"});
+   }
+
 
     }, [location]);
 

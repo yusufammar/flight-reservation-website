@@ -1,5 +1,8 @@
 const nodemailer = require("nodemailer");
 const express = require("express");
+
+const cors = require('cors');
+
 const { ConnectionPoolClosedEvent } = require("mongodb");
 
 const router= express.Router();
@@ -7,14 +10,58 @@ const flight = require('../Models/Flights');
 const user = require('../Models/User');
 const booking = require('../Models/Booking');
 
-var currentUserEmail = ""
+router.use(express.json());
+
+const session=require("express-session");
+router.use(session({secret:'secret', resave:false , saveUninitialized:false}));
+
+router.use(cors({                          // for axios post to not destroy session (credentials is where the sessions is saved as cookie)
+  origin:['http://localhost:3000'],     // is the origin of the axios requests (frontend url port)
+  methods:['GET','POST'],
+  credentials: true // enable set cookie
+}));
+
+//--------------------------------------------------------------------------------------------
+
+router.route("/logout").get((req, res) => {
+  req.session.destroy();              // destroying session
+   });
+
+router.route("/SignIn").post((req, res) => {
+var x = req.body.Email;  const y = req.body.Password;
+
+ user.find({ Email : x , Password: y}).then(founduser => {  //all cases (actions) shoud be inside then statement (variable changes in then statement dont get apllied outside then statement)
+   if (founduser.length!= 0 && founduser[0].type!="Guest") {
+     //req.session.user = x; req.session.save();    //setting session (if admin or user) & saving session variable without sending it
+     //res.send(req.session.user);
+     switch (founduser[0].Type){
+     case("Customer"): {req.session.email = x; req.session.type = founduser[0].Type; req.session.save();res.send("1"); break;};
+     case("Admin"): {req.session.email = x; req.session.type = founduser[0].Type; req.session.save();res.send("2"); break;};
+     default:  {res.send("0"); break;};
+     }
+   }
+   else  
+   res.send("0");  //user is guest or not found -> don't sign in 
+   })
+});
+
+router.route("/currentUser").get((req, res) => {
+   if (req.session.email){
+     const user= {email: req.session.email, type: req.session.type  }
+     res.send(user);  
+   }
+   else
+   res.send("0");
+   });
+
+
 
 
 router.route("/addGuest").get((req,res) => { //get becuase no input
    user.find({ Type : "Guest"}).then(foundguests => {  //all cases (actions) shoud be inside then statement (variable changes in then statement dont get apllied outside then statement)
      var x = foundguests.length + 1;
      var guestEmail= "guest"+ x;
-     currentUserEmail= guestEmail;
+     //req.session.email= guestEmail;
    
      const newGuest = new user({
       Name : "Guest",
@@ -23,8 +70,10 @@ router.route("/addGuest").get((req,res) => { //get becuase no input
       Type: "Guest", 
       
        });
+
       newGuest.save();
-      res.send(guestEmail); 
+      req.session.email = guestEmail; req.session.type="Guest"; res.send(req.session);
+      //res.send(guestEmail); 
     })
  });
 
@@ -52,108 +101,8 @@ router.route("/addUser").post((req,res) => {
 
 ;
 
-
-router.route("/SignIn").post((req, res) => {
-  const x = req.body.Email;  const y = req.body.Password;
-
-
-  currentUserEmail = x;
-
-  user.find({ Email : x , Password: y}).then(founduser => {  //all cases (actions) shoud be inside then statement (variable changes in then statement dont get apllied outside then statement)
-    if (founduser.length!= 0) {
-    
-      switch (founduser[0].Type){
-        case ("Admin"):{
-          res.send("2");            // admin found -> sign in as admin
-          console.log("found admin");  break;
-        }
-        case ("Customer"):{
-          res.send("1");    //user found -> sign in as user
-      console.log("found user"); break;
-        }
-        default:  {res.send("0"); break;}
-
-      }
-    }
-     else  
-     res.send("0");  //user not found -> don't sign in
-  })
-
-  });
-
-router.route("/addFlight").post((req,res) => {
-  const flightNo= req.body.flightNo;
-  const from= req.body.from;
-  const to= req.body.to;
-  const date= req.body.date;
-  const departure= req.body.departure;
-  const arrival= req.body.arrival;
-  const firstSeats= req.body.firstSeats;
-  const businessSeats= req.body.businessSeats;
-  const economySeats= req.body.economySeats;
-
- 
-  const newFlight = new flight({
-    Flight_No: flightNo,
-    From: from,
-    To: to,
-    FlightDate: date,
-    Departure: departure,
-    Arrival: arrival,
-    First_Class_Seats: firstSeats,
-    Business_Class_Seats: businessSeats,
-    Economy_Class_Seats: economySeats
-
-  });
-
-  newFlight.save();
-});
-
-
-router.route("/getFlightByNo").post((req, res) => {
-  const x = req.body.flightNo;
-  flight.find({ Flight_No : x }).then(foundflights => res.send(foundflights))
-  });
-
-router.route("/getFlightByFrom").post((req, res) => {
-  const x = req.body.from;
-  console.log(x);
-  flight.find({ From : x}).then(foundflights => res.send(foundflights))
-  });
-
-  router.route("/getFlightByTo").post((req, res) => {
-    const x = req.body.to;
-    console.log(x);
-    flight.find({ To : x}).then(foundflights => res.send(foundflights))
-    });
-
-    router.route("/getFlightByDate").post((req, res) => {
-      const x = req.body.date;
-      console.log(x);
-      flight.find({ FlightDate : x}).then(foundflights => res.send(foundflights))
-      });
-
-      router.route("/getFlightByDeparture").post((req, res) => {
-        const x = req.body.departure;
-        console.log(x);
-        flight.find({ Departure : x}).then(foundflights => res.send(foundflights))
-        });
-
-        router.route("/getFlightByArrival").post((req, res) => {
-          const x = req.body.arrival;
-          console.log(x);
-          flight.find({ Arrival : x}).then(foundflights => res.send(foundflights))
-          });
-
-
-
-router.route("/FlightsList").get((req, res) => {
-  flight.find()
-    .then(foundflights => res.json(foundflights))
-})
-
 router.route("/MyBookings").get((req, res) => {
-  booking.find({Email : currentUserEmail})
+  booking.find({Email : req.session.email})
     .then(foundBookings => res.send(foundBookings))
 })
 
@@ -167,81 +116,6 @@ router.route("/getBooking").post((req, res) => {
   
 })
 
-router.route("/SendCancelEmail").post( async (req, res) => {
-
-  const details = req.body.details;
-  const From = req.body.From;
-  const To = req.body.To;
-
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: 'fakeEmailACL@gmail.com',
-      pass: 'Fake1234' // naturally, replace both with your real credentials or an application-specific password
-    }
-  });
-  
-  let mess = 'Amount to be refunded: ' + details.Price +'\n'+ "Booking Number: "  + details.BookingNo + " Departure From: " + From[0] + " || To: " + To[0] + " \n Return From: " + From[1] + " || To: " + To[1] ;
-  const mailOptions = {
-    from: 'ACL_SAMYH_TEAM@GUC.com',
-    to: details.Email,
-    subject: 'Your cancelled reservation',
-    text:mess 
-  };
-  
-  transporter.sendMail(mailOptions, function(error, info){
-    if (error) {
-    console.log(error);
-    } else {
-      console.log('Email sent: ' + info.response);
-    }
-  });
-
-})
-
-var selectedFlightID = "";
-router.route('/FlightsListVal').post((req, res) => {
-  selectedFlightID = req.body.id;
-  console.log(selectedFlightID);
-});
-
-router.route('/UpdatePage').post((req, res) => {
-  console.log(selectedFlightID);
-  flight.findById(selectedFlightID, function (err, docs) {
-    console.log(docs);
-    var flightVar = req.body;
-
-    if (flightVar.FlightNo_.length != 0)
-      docs["Flight_No"] = flightVar.FlightNo_;
-
-    if (flightVar.FlightFrom_.length != 0)
-      docs["From"] = flightVar.FlightFrom_;
-
-
-    if (flightVar.FlightTo_.length != 0)
-      docs["To"] = flightVar.FlightTo_;
-
-    if (flightVar.FlightDate_.length != 0)
-      docs["FlightDate"] = flightVar.FlightDate_;
-
-    if (flightVar.FlightDep_.length != 0)
-      docs["Departure"] = flightVar.FlightDep_;
-
-    if (flightVar.FlightArr_.length != 0)
-      docs["Arrival"] = flightVar.FlightArr_;
-
-    if (flightVar.FlightFirst_.length != 0)
-      docs["First_Class_Seats"] = flightVar.FlightFirst_;
-
-    if (flightVar.FlightBus_.length != 0)
-      docs["Business_Class_Seats"] = flightVar.FlightBus_;
-
-    if (flightVar.FlightEco_.length != 0)
-      docs["Economy_Class_Seats"] = flightVar.FlightEco_;
-
-    docs.save();
-  });
-});
 
 router.route("/searchFlightUser").post((req, res) => {
 var SPflag= false;
@@ -445,7 +319,7 @@ var search= { $or: [{Flight_No: dFlightNo},{Flight_No: rFlightNo} ] }
 });
 
 router.route("/confirmBooking").post((req,res)=>{ // update available seats in flights collection & make booking in booking collection
-  const email= req.body.email;
+  const email= req.session.email;
   const dFlightNo = req.body.departureFlightNo;
   const rFlightNo = req.body.returnFlightNo;
   const cabin = req.body.cabin;
@@ -531,6 +405,138 @@ router.route("/confirmBooking").post((req,res)=>{ // update available seats in f
     }) 
 });
 
+//------------------------------------------------------------------------------------------------------------------------
+//adham
+router.route("/UpdateBookingUser").post((req, res) => {
+  //console.log("UpdateBookingUser");
+ //console.log(email);
+
+ const z = req.body.name;
+ const d = req.body.password;
+ const s = req.body.email;
+ 
+ console.log(z);
+
+ booking.find({Email : req.session.email}, function (err, docs) {
+  //console.log("TEST BEFORE");
+ //  console.log(docs);
+  // console.log("TEST AFTER");
+   for(let i = 0; i < docs.length; i++)
+   {
+     docs[i]["Email"] = s;
+     docs[i].save();
+   }
+ 
+  
+});
+})
+
+
+router.route("/Updateinfo").post((req, res) => {
+  //console.log("updateinfo");
+ //console.log(email);
+ const z = req.body.name;
+ const d = req.body.password;
+ const s = req.body.email;
+
+
+
+
+ user.findOne({Email: req.session.email}, function (err, user) {
+  user.Name = z;
+  user.Password = d;
+  user.Email = s;
+  
+   user.save(function (err) {
+      if(err) {
+         // console.error('ERROR!');
+      }
+  });
+  req.session.email=s; res.send("req.session.email");
+});
+
+})
+
+
+//---------------------------------------------------------------------------------------------------------------------
+//mayar & shorouk
+router.route("/SendCancelEmail").post( async (req, res) => {
+
+  const details = req.body.details;
+  const From = req.body.From;
+  const To = req.body.To;
+
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'fakeEmailACL@gmail.com',
+      pass: 'Fake1234' // naturally, replace both with your real credentials or an application-specific password
+    }
+  });
+  
+  let mess = "Your booking has been cancelled. \nBooking Number: "  + details.BookingNo + "\nRefund: " + details.Price;
+  const mailOptions = {
+    from: 'ACL_SAMYH_TEAM@GUC.com',
+    to: details.Email,
+    subject: 'Your cancelled reservation',
+    text:mess 
+  };
+  
+  transporter.sendMail(mailOptions, function(error, info){
+    if (error) {
+    console.log(error);
+    } else {
+      console.log('Email sent: ' + info.response);
+    }
+  });
+
+})
+
+var selectedFlightID = "";
+router.route('/FlightsListVal').post((req, res) => {
+  selectedFlightID = req.body.id;
+  console.log(selectedFlightID);
+});
+
+router.route('/UpdatePage').post((req, res) => {
+  console.log(selectedFlightID);
+  flight.findById(selectedFlightID, function (err, docs) {
+    console.log(docs);
+    var flightVar = req.body;
+
+    if (flightVar.FlightNo_.length != 0)
+      docs["Flight_No"] = flightVar.FlightNo_;
+
+    if (flightVar.FlightFrom_.length != 0)
+      docs["From"] = flightVar.FlightFrom_;
+
+
+    if (flightVar.FlightTo_.length != 0)
+      docs["To"] = flightVar.FlightTo_;
+
+    if (flightVar.FlightDate_.length != 0)
+      docs["FlightDate"] = flightVar.FlightDate_;
+
+    if (flightVar.FlightDep_.length != 0)
+      docs["Departure"] = flightVar.FlightDep_;
+
+    if (flightVar.FlightArr_.length != 0)
+      docs["Arrival"] = flightVar.FlightArr_;
+
+    if (flightVar.FlightFirst_.length != 0)
+      docs["First_Class_Seats"] = flightVar.FlightFirst_;
+
+    if (flightVar.FlightBus_.length != 0)
+      docs["Business_Class_Seats"] = flightVar.FlightBus_;
+
+    if (flightVar.FlightEco_.length != 0)
+      docs["Economy_Class_Seats"] = flightVar.FlightEco_;
+
+    docs.save();
+  });
+});
+
+
 router.route('/cancel').post(async(req, res) => {
   const idNum = req.body.ID;
   console.log(idNum);
@@ -590,6 +596,87 @@ booking.findOneAndDelete({_id : idNum}).then(res);
   });
 
 });
+
+//mayar & shorouk
+
+
+
+
+
+//admin
+
+router.route("/addFlight").post((req,res) => {
+  const flightNo= req.body.flightNo;
+  const from= req.body.from;
+  const to= req.body.to;
+  const date= req.body.date;
+  const departure= req.body.departure;
+  const arrival= req.body.arrival;
+  const firstSeats= req.body.firstSeats;
+  const businessSeats= req.body.businessSeats;
+  const economySeats= req.body.economySeats;
+
+ 
+  const newFlight = new flight({
+    Flight_No: flightNo,
+    From: from,
+    To: to,
+    FlightDate: date,
+    Departure: departure,
+    Arrival: arrival,
+    First_Class_Seats: firstSeats,
+    Business_Class_Seats: businessSeats,
+    Economy_Class_Seats: economySeats
+
+  });
+
+  newFlight.save();
+});
+
+
+router.route("/getFlightByNo").post((req, res) => {
+  const x = req.body.flightNo;
+  flight.find({ Flight_No : x }).then(foundflights => res.send(foundflights))
+  });
+
+router.route("/getFlightByFrom").post((req, res) => {
+  const x = req.body.from;
+  console.log(x);
+  flight.find({ From : x}).then(foundflights => res.send(foundflights))
+  });
+
+  router.route("/getFlightByTo").post((req, res) => {
+    const x = req.body.to;
+    console.log(x);
+    flight.find({ To : x}).then(foundflights => res.send(foundflights))
+    });
+
+    router.route("/getFlightByDate").post((req, res) => {
+      const x = req.body.date;
+      console.log(x);
+      flight.find({ FlightDate : x}).then(foundflights => res.send(foundflights))
+      });
+
+      router.route("/getFlightByDeparture").post((req, res) => {
+        const x = req.body.departure;
+        console.log(x);
+        flight.find({ Departure : x}).then(foundflights => res.send(foundflights))
+        });
+
+        router.route("/getFlightByArrival").post((req, res) => {
+          const x = req.body.arrival;
+          console.log(x);
+          flight.find({ Arrival : x}).then(foundflights => res.send(foundflights))
+          });
+
+
+
+router.route("/FlightsList").get((req, res) => {
+  flight.find()
+    .then(foundflights => res.json(foundflights))
+});
+
+//admin
 
 
 
@@ -724,5 +811,6 @@ router.route("/addFlightManual").get((req,res) => {
    res.send("success");
 });
 */
+
 
 module.exports = router;

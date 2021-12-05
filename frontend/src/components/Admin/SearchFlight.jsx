@@ -1,11 +1,27 @@
-import React, {useState} from "react";
+import react, {useEffect,useState} from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import { Route, Redirect, useLocation } from "react-router-dom";
+import axios from "axios";
 import { useHistory } from "react-router-dom";
 
-
 function SearchFlight(){
+    const location = useLocation();
+    const history = useHistory();
+
+    axios.defaults.withCredentials = true;
+    
+    useEffect(() => {
+        
+     axios.get('http://localhost:8000/currentUser').then(res =>{ 
+        if (res.data=="0" || res.data.type=="Customer" || res.data.type=="Guest" ){
+        alert("Access Denied, Please Sign In First");
+        history.push({pathname:"/SignIn"});
+        }
+        // else go to admin page
+     })
+    }, [location]);
+
     const [input, setInput] = useState({
         flightNo: "" , from:"" , to:"" , date:"" , departure: "", arrival: ""
     })
@@ -23,7 +39,7 @@ function handleChange(event){
     
 }
 
-const history = useHistory();
+
 
 function handleclick1(event){
     event.preventDefault();

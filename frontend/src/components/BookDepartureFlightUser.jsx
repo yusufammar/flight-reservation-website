@@ -10,19 +10,30 @@ function BookDepartureFlightUser(){   // for USER & GUEST
    const location = useLocation();
    const history = useHistory();
    
+   axios.defaults.withCredentials = true;
+   useEffect(() => {
+       axios.get('http://localhost:8000/currentUser').then(res =>{ 
+       if (res.data=="0" || res.data.type=="Admin"){
+       alert("Access Denied, Please Sign In First");
+       history.push({pathname:"/SignIn"});
+       }
+      //else go to page
+    })
+   }, [location]);
+   
    var flag=false;
    if (location.state!=null){ 
        flag=true;          //checking if session exists (no url jumping) (if location.state has variables passed)
-       var x= location.state.email;   
+   
        var departureFlightNo= location.state.departureFlightNo; 
          // searching creteria from search page
     var from1= location.state.from; var to1= location.state.to; var date1= location.state.date; var departure1= location.state.departure;
     var arrival1= location.state.arrival; var cabin1= location.state.cabin; var seats1= location.state.seats; var price1= location.state.price;  
    }
    else{
-   alert("Access Denied, Please Sign In first!");
+   alert("Please Select Departure & Return Flight First!");
    history.push({
-       pathname: '/SignIn' 
+       pathname: '/SearchFlightsUser' 
        });
    }
 
@@ -57,8 +68,7 @@ function BookDepartureFlightUser(){   // for USER & GUEST
         if (jsonRes.data == 1){
             alert("No Return Flights For The Selected Departure Flight, Please Select Another Departure Flight");
             history.push({
-                pathname: '/SearchFlightsUser',
-                state: {email: x }                // for session 
+                pathname: '/SearchFlightsUser'
                      
             });
     }
@@ -72,8 +82,7 @@ function BookDepartureFlightUser(){   // for USER & GUEST
         event.preventDefault();
                               // redirects to user main page if email is user email
         history.push({
-        pathname: '/user',
-        state: {email : x}
+        pathname: '/user'
         })
     
     }
@@ -82,7 +91,7 @@ function BookDepartureFlightUser(){   // for USER & GUEST
   
    history.push({
    pathname: '/SearchResultsUser',
-   state: {email : x,
+   state: {
     from: from1 , to: to1 , date: date1 , departure: departure1 , arrival: arrival1, 
     cabin: cabin1 , seats: seats1, price: price1}
 });
@@ -93,7 +102,7 @@ function handleclick2(event){
    // console.log(event.target.id);   // to get id of the button clicked (jsx/react/frontend)
     history.push({
     pathname: '/Booking',
-    state: {email : x, returnFlightNo: flightNumber, departureFlightNo: departureFlightNo,
+    state: {returnFlightNo: flightNumber, departureFlightNo: departureFlightNo,
         from: from1 , to: to1 , date: date1 , departure: departure1 , arrival: arrival1, 
         cabin: cabin1 , seats: seats1, price: price1
     
@@ -101,7 +110,7 @@ function handleclick2(event){
     
     
  });
- console.log({email : x, returnFlightNo: flightNumber, departureFlightNo: departureFlightNo});
+ console.log({returnFlightNo: flightNumber, departureFlightNo: departureFlightNo});
  }
 
    return( <div className='container'>

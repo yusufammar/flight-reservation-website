@@ -5,24 +5,45 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 
 function User(){            // USER MAIN PAGE
+    
+   
     const location = useLocation();
     const history = useHistory();
-    if (location.state!=null){           //checking if session exists (no url jumping) (if location.state has variables passed)
-        var x= location.state.email;    
-    }
-    else{
-    alert("Access Denied, Please Sign In first!");
-    history.push({
-        pathname: '/SignIn' 
-        });
-    }
-    
+    const [x,setUser]=useState();
+    axios.defaults.withCredentials = true;
+    useEffect(() => {
+        axios.get('http://localhost:8000/currentUser').then(res =>{ 
+        if (res.data=="0" || res.data.type=="Admin"){
+        alert("Access Denied, Please Sign In First");
+        history.push({pathname:"/SignIn"});
+        }
+        else
+         setUser(res.data.email);
+     })
+    }, [location]);
+
     function handleclick(event){
         event.preventDefault();
         history.push({
-        pathname: '/SearchFlightsUser',
-        state: {email : x}
+        pathname: '/SearchFlightsUser'
     });
+    }
+
+    function handleclick1(event){
+        event.preventDefault();
+        history.push({pathname: '/UpdateUser' });
+    }
+
+    function handleclick3(event){
+        event.preventDefault();
+        console.log("so");
+        
+        axios.get('http://localhost:8000/logout').then(
+        history.push({
+            pathname: '/'
+        })
+        )
+     
     }
 
     function showBookings(event)
@@ -33,13 +54,17 @@ function User(){            // USER MAIN PAGE
         state: {email : x}
     }); 
     }
-    var y=1;
+   
 
 return (
 <div className='container'>
 
 <h1>Welcome</h1>
 <h8>Account: {x}  </h8>
+
+<br></br><br></br>
+<button  onClick={handleclick1}> Update Account Info </button>
+<br></br><br></br>
 
 <br></br><br></br>
 <button  onClick={handleclick}> Book Flight </button>
@@ -51,7 +76,7 @@ return (
 <br></br><br></br>
 
 <br></br><br></br>
-<button><Link to="/"> Sign Out </Link></button>
+<button onClick={handleclick3}> Sign Out </button>
 <br></br><br></br>
 </div>
 )

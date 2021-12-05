@@ -5,18 +5,16 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 
 function Main(){
+    axios.defaults.withCredentials = true;
     const history = useHistory();
    
     function handleclick(event){
         event.preventDefault();
           
-        axios.get('http://localhost:8000/addGuest').then( res => {
-        var guestEmail= res.data;     
-        history.push({
-                pathname: '/user' ,
-                state: {email : guestEmail }
-                    });
-            });
+        axios.get('http://localhost:8000/addGuest').then(res=>
+            history.push({ pathname: '/user' })
+        );
+        
     } 
  
 

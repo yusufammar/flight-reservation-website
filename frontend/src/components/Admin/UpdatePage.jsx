@@ -1,14 +1,32 @@
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button';
-import axios from 'axios'
-import { useHistory } from "react-router-dom";
 import { BrowserRouter as Router, useParams } from "react-router-dom";
-import { useState, useEffect } from 'react';
+import react, {useEffect,useState} from "react";
+import React from "react";
+import { Link } from "react-router-dom";
+import { Route, Redirect, useLocation } from "react-router-dom";
+import axios from "axios";
+import { useHistory } from "react-router-dom";
 
 
 const UpdatePage = () => {
 
+    const location = useLocation();
+    const history = useHistory();
 
+    axios.defaults.withCredentials = true;
+    
+    useEffect(() => {
+        
+     axios.get('http://localhost:8000/currentUser').then(res =>{ 
+        if (res.data=="0" || res.data.type=="Customer" || res.data.type=="Guest" ){
+        alert("Access Denied, Please Sign In First");
+        history.push({pathname:"/SignIn"});
+        }
+        // else go to admin page
+     })
+    }, [location]);
+    
     const [FlightNo, setFlightNo] = useState("");
     const [FlightFrom, setFlightFrom] = useState("");
     const [FlightTo, setFlightTo] = useState("");
@@ -23,7 +41,7 @@ const UpdatePage = () => {
     let { id } = useParams();
     const baseURL = `http://localhost8000/FlightsList/update/${id}`;
 
-    const history = useHistory();
+
     function ChangeValues(event) {
         console.log(checked);
         if (checked) {

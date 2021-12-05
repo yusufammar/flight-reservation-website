@@ -3,7 +3,12 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 
+
+
 function SignIn(){
+    axios.defaults.withCredentials = true; // (write inside big function of component/page) instead of adding  {withCredentials: true} (beside url request) to each axios request
+    // Like this ->  axios.post('http://localhost:8000/SignIn', user, {withCredentials: true})
+
     const history = useHistory();
     const [input, setInput] = useState({     //attribute names should be lowercase (for handle change to work & accept inputs) 
         email: "" , password: "" 
@@ -21,34 +26,28 @@ function handleChange(event){
     })
     
 }
+const [x,setUser]=useState();
 
 function handleclick(event){
     event.preventDefault();
     console.log(input);
 
-    const user= {Email : input.email , Password : input.password  }  ;
-    axios.post('http://localhost:8000/SignIn', user).then( res => {
-        if (res.data=="2"){ //found admin
-            history.push({
-                pathname: '/admin' ,
-                state: {email : input.email}
-        });
-        }    
-        if (res.data==1){ //found user
-        history.push({
-            pathname: '/User' ,
-            state: {email : input.email}
-        });
-        }
-        if (res.data==0){     //wrong email or password
-        alert("Wrong E-Mail or Password!");
-        history.push({
-            pathname: '/SignIn' 
-            });
-        }
-        });
 
-    }
+    const user= {Email : input.email , Password : input.password  }  ;
+    
+    axios.post('http://localhost:8000/SignIn', user)
+    .then(res => {
+        console.log(res.data);
+        if (res.data==0)
+        alert("Wrong Email or Password!");
+        if (res.data==1)
+        history.push({
+        pathname: "/user" });
+        if (res.data==2)
+        history.push({
+        pathname: "/Admin" });
+    }    
+    )}
 
 return (
 <div className='container'>

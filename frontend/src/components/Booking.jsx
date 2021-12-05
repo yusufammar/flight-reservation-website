@@ -11,15 +11,27 @@ function Booking(){           //for USER & GUEST
    var flag=false;
    var confirmbookingclicked=false;
    
+   axios.defaults.withCredentials = true;
+   useEffect(() => {
+       axios.get('http://localhost:8000/currentUser').then(res =>{ 
+       if (res.data=="0" || res.data.type=="Admin"){
+       alert("Access Denied, Please Sign In First");
+       history.push({pathname:"/SignIn"});
+       }
+      //else go to page
+    })
+   }, [location]);
+
+
    if (location.state!=null){           //checking if session exists (no url jumping) (if location.state has variables passed), if session exists -> extract state variables
     flag=true;   
-    var x= location.state.email;   
+      
        var rflightNo=location.state.returnFlightNo; var dflightNo= location.state.departureFlightNo; 
    }
    else{
-   alert("Access Denied, Please Sign In first!");
+   alert("Please Select Departure & Return Flights First!");
    history.push({
-       pathname: '/SignIn' 
+       pathname: '/SearchFlightsUser' 
        });
    }
 
@@ -81,8 +93,7 @@ const [price , setprice] = useState();
     
     function handleclick(event){
     history.push({
-                pathname: '/SearchFlightsUser',
-                state: {email : x}  
+                pathname: '/SearchFlightsUser'
         }) 
        
     }
@@ -91,8 +102,7 @@ const [price , setprice] = useState();
         event.preventDefault();
        
         history.push({
-        pathname: '/user',
-        state: {email : x}
+        pathname: '/user'
      });
      }
 
@@ -103,7 +113,7 @@ const [price , setprice] = useState();
   
    history.push({
    pathname: '/BookDepartureFlightUser',
-   state: {email : x, departureFlightNo: dflightNo}
+   state: {departureFlightNo: dflightNo}
 });
 }
 
@@ -151,15 +161,14 @@ function handleclick3(event){
     if (confirmbookingclicked==false){  //to avoid registering the boooking more than once if the user clicked on booking button more than once
         confirmbookingclicked=true;
     var article5= {departureFlightNo: dflightNo, returnFlightNo: rflightNo, cabin: input.cabin,  
-        adults: input.adults, children: input.children, price: price, email: x};
+        adults: input.adults, children: input.children, price: price};
     
         axios.post('http://localhost:8000/confirmBooking',article5)
        .then(res =>{ 
         if (res.data==1){
         alert("Booking Done Successful");
         history.push({
-        pathname: '/User',
-        state: {email : x}
+        pathname: '/User'
          });   
         }
         

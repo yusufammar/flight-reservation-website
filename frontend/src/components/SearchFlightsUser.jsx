@@ -9,15 +9,16 @@ function SearchFlightsUser(){      //for USER & GUEST
     const location = useLocation();
     const history = useHistory();
     
-    if (location.state!=null){           //checking if session exists (no url jumping) (if location.state has variables passed)
-        var x= location.state.email;    
-    }
-    else{
-    alert("Access Denied, Please Sign In first!");
-    history.push({
-        pathname: '/SignIn' 
-        });
-    }
+    axios.defaults.withCredentials = true;
+    useEffect(() => {
+        axios.get('http://localhost:8000/currentUser').then(res =>{ 
+        if (res.data=="0" || res.data.type=="Admin"){
+        alert("Access Denied, Please Sign In First");
+        history.push({pathname:"/SignIn"});
+        }
+        //else go to page
+     })
+    }, [location]);
 
     const [input, setInput] = useState({
         from:"" , to:"" , date:"" , departure: "", arrival: "", cabin: "" , seats: "", price: ""
@@ -40,8 +41,7 @@ function handleclick(event){
     event.preventDefault();
                           // redirects to user main page if email is user email
     history.push({
-    pathname: '/user',
-    state: {email : x}
+    pathname: '/user'
     })
 
 }
@@ -52,7 +52,7 @@ function handleclick1(event){
    //console.log(f);
     history.push({
     pathname: '/SearchResultsUser',
-    state: {email: x,                 // for session
+    state: {
         from: input.from , to: input.to , date: input.date , departure: input.departure , arrival: input.arrival, 
         cabin: input.cabin , seats: input.seats, price: input.price }
         
@@ -64,7 +64,7 @@ function handleclick1(event){
 
 return (
 <div className='container'>
-<h1>Search Flights </h1>
+<h1>Book Flight </h1>
 
 <br></br><br></br> 
        <button onClick={handleclick}>Back To Main Page</button>

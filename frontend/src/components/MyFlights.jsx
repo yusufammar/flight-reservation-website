@@ -18,6 +18,20 @@ require("react-bootstrap/ModalHeader")
 
 function MyFlights() {
 
+    const location = useLocation();
+    const history = useHistory();
+
+    axios.defaults.withCredentials = true;
+    useEffect(() => {
+        axios.get('http://localhost:8000/currentUser').then(res =>{ 
+        if (res.data=="0" || res.data.type=="Admin"){
+        alert("Access Denied, Please Sign In First");
+        history.push({pathname:"/SignIn"});
+        }
+       //else go to page
+     })
+    }, [location]);
+
     var flightSelected = 0;
 
 function SendMail(details, From, To) {
@@ -51,9 +65,6 @@ function handleChange(e, id) {
     var [bookingActive, setBookingActive] = useState({});
 
 
-    const location = useLocation();
-    const history = useHistory();
-
     const [show, setShow] = useState(false);
     
     function handleShow(event){
@@ -76,11 +87,10 @@ function handleChange(e, id) {
             var art= {ID: id};
             axios.post(`http://localhost:3000/cancel`,art);
 
-            var x = location.state.email;
+            
             event.preventDefault();
             history.push({
-                pathname: '/MyFlights',
-                state: { email: x }
+                pathname: '/MyFlights'
             });
             SendMail(details, from, to);
             alert("Booking Canceled Successfully \nYou'll recieve an email with the cancelation details along with the refund amount");    
@@ -90,11 +100,10 @@ function handleChange(e, id) {
     };
 
     function Redirect(event) {
-        var x = location.state.email;
+      
         event.preventDefault();
         history.push({
-            pathname: '/User',
-            state: { email: x }
+            pathname: '/User'
         });
     }
 

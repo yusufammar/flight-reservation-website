@@ -1,28 +1,29 @@
 const express = require("express");
 const app = express();
 const mongoose = require('mongoose');
-const cors = require('cors');
+
+const nodemailer = require("nodemailer");
 const Flight = require('../src/Models/Flights');
 const Booking = require('../src/Models/Booking');
 const User = require('../src/Models/User');
+
 const { findByIdAndRemove } = require("../src/Models/Flights");
 
-const nodemailer = require("nodemailer");
-
-app.use(cors());
+app.use("/", require("./Routes/Controller"));
 app.use(express.json());
 
+/*
+const cors = require('cors');
+const session=require("express-session");
+app.use(session({secret:'secret', resave:false , saveUninitialized:false}));
 
+app.use(cors({                          // for axios post to not destroy session (credentials is where the sessions is saved as cookie)
+  origin:['http://localhost:3000'],     // is the origin of the axios requests (frontend url port)
+  methods:['GET','POST'],
+  credentials: true // enable set cookie
+}));
 
-const MongoURI = 'mongodb+srv://Adham:1234@acl.tpg5t.mongodb.net/Airline?retryWrites=true&w=majority' ;  // database mongodb url
-
-
-
-mongoose.connect(MongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(result => console.log("MongoDB is now connected"))
-  .catch(err => console.log(err));
-
-app.use("/", require("./Routes/Controller"));
+*/
 
 app.get("/Home", (req, res) => {
   res.status(200).send("You have everything installed !");
@@ -36,8 +37,6 @@ app.delete('/delete/:id', async (req, res) => {
    });
   res.send("deleted");
 });
-
-
 
 /*
 
@@ -59,6 +58,12 @@ app.get("/addUsers",(req,res)=>{
    });
     me.save();  });
 */
+
+const MongoURI = 'mongodb+srv://Adham:1234@acl.tpg5t.mongodb.net/Airline?retryWrites=true&w=majority' ;  // database mongodb url
+
+mongoose.connect(MongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(result => console.log("MongoDB is now connected"))
+  .catch(err => console.log(err));
 
 const port = process.env.PORT || "8000";
 app.listen(port, () => {

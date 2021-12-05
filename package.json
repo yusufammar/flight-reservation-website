@@ -19,13 +19,17 @@
   "homepage": "https://github.com/ahmedalaaseif/ACL_Tasks#readme",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "connect-redis": "^6.0.0",
+    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "express-session": "^1.17.2",
     "mongodb": "^4.1.4",
     "mongoose": "^6.0.12",
     "nodemailer": "^6.7.2",
     "nodemon": "^2.0.15",
     "react-modal": "^3.14.4",
-    "react-router-dom": "^6.0.1"
+    "react-router-dom": "^6.0.1",
+    "redis": "^4.0.0"
   }
 }

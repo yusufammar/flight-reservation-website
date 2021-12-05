@@ -1,21 +1,38 @@
+import react, {useEffect,useState} from "react";
 import React from "react";
 import { Link } from "react-router-dom";
 import { Route, Redirect, useLocation } from "react-router-dom";
+import axios from "axios";
 import { useHistory } from "react-router-dom";
 
 function Admin(){
-
     const location = useLocation();
     const history = useHistory();
-    if (location.state!=null){           //checking if session exists (no url jumping) (if location.state has variables passed)
-        var x= location.state.email;    
+
+    axios.defaults.withCredentials = true;
+    
+    useEffect(() => {
+        
+     axios.get('http://localhost:8000/currentUser').then(res =>{ 
+        if (res.data=="0" || res.data.type=="Customer" || res.data.type=="Guest" ){
+        alert("Access Denied, Please Sign In First");
+        history.push({pathname:"/SignIn"});
+        }
+        // else go to admin page
+     })
+    }, [location]);
+
+    function handleclick3(event){
+        event.preventDefault();
+        console.log("so");
+        
+        axios.get('http://localhost:8000/logout').then(
+        history.push({
+            pathname: '/'
+        })
+        )
+     
     }
-    else{
-    alert("Access Denied, Please Sign In first!");
-    history.push({
-        pathname: '/SignIn' 
-        });
-    }    
 
 return (
 <div className='container'>
@@ -28,7 +45,7 @@ return (
 
     
 <br></br><br></br>
-<button><Link to="/SignIn"> Sign Out </Link></button>
+<button onClick={handleclick3}> Sign Out </button>
 <br></br><br></br>
 </div>
 )
