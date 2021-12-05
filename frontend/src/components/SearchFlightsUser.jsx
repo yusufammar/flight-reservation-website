@@ -38,31 +38,22 @@ function handleChange(event){
 
 function handleclick(event){
     event.preventDefault();
-    if (x.includes("guest")){       // redirects to guest main page if email is guest email
-        history.push({
-            pathname: '/guest',
-            state: {email : x}  
-    })}
-    else {                        // redirects to user main page if email is user email
+                          // redirects to user main page if email is user email
     history.push({
     pathname: '/user',
     state: {email : x}
     })
-}
+
 }
 
 function handleclick1(event){
     event.preventDefault();
-   var f=""; var t="";
-    if (input.from!="")
-    f= "" + input.from[0] + input.from[1] +input.from[2]; 
-    if (input.to!="")
-    t= "" + input.to[0] + input.to[1] +input.to[2];
-   console.log(f);
+  
+   //console.log(f);
     history.push({
     pathname: '/SearchResultsUser',
     state: {email: x,                 // for session
-        from: f , to: t, date: input.date , departure: input.departure , arrival: input.arrival, 
+        from: input.from , to: input.to , date: input.date , departure: input.departure , arrival: input.arrival, 
         cabin: input.cabin , seats: input.seats, price: input.price }
         
 });

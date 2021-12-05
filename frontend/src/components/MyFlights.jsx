@@ -14,7 +14,11 @@ require("react-bootstrap/ModalHeader")
 
 
 
-var flightSelected = 0;
+
+
+function MyFlights() {
+
+    var flightSelected = 0;
 
 function SendMail(details, From, To) {
 
@@ -44,22 +48,33 @@ function handleChange(e, id) {
 }
 
 
-function MyFlights() {
-
+    var [bookingActive, setBookingActive] = useState({});
 
 
     const location = useLocation();
     const history = useHistory();
 
     const [show, setShow] = useState(false);
-    const handleShow = () => setShow(true);
+    
+    function handleShow(event){
+    var bookingNumber= event.target.id;
+    var article= {bookingNo: bookingNumber}
+    axios.post('http://localhost:8000/getBooking',article)
+        .then(res =>{ 
+            
+        setBookingActive(res.data);
+              setShow(true); 
+        })
+        
+    }
     const handleClose = () => setShow(false);
 
 
     const deleteFlight = (event, id, details, from, to) => {
 
         if (isChecked && idDeleted == id) {
-            axios.delete(`http://localhost:3000/cancel/${id}`)
+            var art= {ID: id};
+            axios.post(`http://localhost:3000/cancel`,art);
 
             var x = location.state.email;
             event.preventDefault();
@@ -68,7 +83,10 @@ function MyFlights() {
                 state: { email: x }
             });
             SendMail(details, from, to);
+            alert("Booking Canceled Successfully \nYou'll recieve an email with the cancelation details along with the refund amount");    
         }
+        else 
+        alert("Make sure confirmation checkbox is checked, to cancel booking!");
     };
 
     function Redirect(event) {
@@ -81,20 +99,7 @@ function MyFlights() {
     }
 
 
-    const [flights, setflights] = useState([{
-        _id: "",
-        Flight_No: "",
-        From: "",
-        To: "",
-        FlightDate: "",
-        Departure: "",
-        Arrival: "",
-        First_Class_Seats: "",
-        Business_Class_Seats: "",
-        Economy_Class_Seats: "",
-
-
-    }])
+    const [bookings, setbookings] = useState([{}]) //bookings found for user
 
     const [depFlights, setDepFlights] = useState([]);
 
@@ -104,15 +109,18 @@ function MyFlights() {
             if (res.ok) {
                 return res.json();
             }
-        }).then(jsonRes => setflights(jsonRes));
+        }).then(jsonRes => {setbookings(jsonRes); console.log(bookings)});
 
         fetch("/FlightsList").then(res => {
             if (res.ok) {
                 return res.json();
             }
         }).then(jsonRes => setDepFlights(jsonRes));
-    }
-    )
+
+      
+       
+    }, [location]);
+    
 
     function GetFlight(FlightNumber) {
 
@@ -124,57 +132,88 @@ function MyFlights() {
         }
         return [];
     }
+  //var x= GetFlight(bookings.DepartureFlightNo).FlightDate +"";
+   //console.log(x.substr(0,10));
+  
+
 
     return <div className='container'>
-        <h1>My Flights</h1>
+        <h1>Bookings</h1>
         <br></br>
         <button onClick={Redirect}>Back To Main Page</button>
         <br></br><br></br>
-
-        {flights.map(flight =>
+        {bookings.length==0 &&  <h6> <br></br> No Bookings To Show! </h6>}
+        {bookings.map(booking =>
             <div>
                 <br />
                 <p>
-                    Booking No.: {flight.BookingNo}
-                    <br></br>
-                    Departure Flight From : {GetFlight(flight.DepartureFlightNo).From}  ||  To: {GetFlight(flight.DepartureFlightNo).To}
+                    <label style={{fontWeight:"bold"}} >{GetFlight(booking.DepartureFlightNo).From}  &#8596; {GetFlight(booking.DepartureFlightNo).To} </label> 
                     <br />
-                    Return Flight From : {GetFlight(flight.ReturnFlightNo).From}   || To: {GetFlight(flight.ReturnFlightNo).To}
-                </p>
+                   
+                    Booking No: {booking.BookingNo}   &nbsp;&nbsp;&nbsp;|  &nbsp;&nbsp;&nbsp; Departure Date: {(""+ GetFlight(booking.DepartureFlightNo).FlightDate).substr(0,10)}  &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Return Date: {(""+ GetFlight(booking.ReturnFlightNo).FlightDate).substr(0,10)}
+                    
+               </p>
                 <label>
-                    Are you sure you want to cancel this flight?
+                    Are you sure you want to cancel this booking?
                     <input
                         name="isClicked"
                         type="checkbox"
-                        onChange={e => handleChange(e, flight._id)}
+                        onChange={e => handleChange(e, booking._id)}
                     />
-                </label>
+                </label>  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+                <button id="removeBtn1" onClick={(e) => {
+                            deleteFlight(e, booking._id, booking, GetFlight(booking.DepartureFlightNo), GetFlight(booking.ReturnFlightNo));}}>
+                Cancel Booking </button> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+                <button style={{marginRight : '20px'}} id={booking.BookingNo} onClick={handleShow}>More Details</button>
                 <br></br>
 
+       
 
+                <div  >
+                 
 
-                <Modal show={show} onHide={handleClose}>
+                   
+                </div>
+            </div>
+
+        )}
+
+         
+        <Modal show={show} onHide={handleClose}>
                     <Modal.Header closeButton>
-                        <Modal.Title>Flight Number {flight.BookingNo} Details</Modal.Title>
+                        <Modal.Title>Booking Details</Modal.Title>
                     </Modal.Header>
 
-                    <Modal.Body> Booking No.: {flight.BookingNo}<br />  Cabin: {flight.Cabin}  <br /> Adult Seats: {flight.AdultSeats} |  Children Seats: {flight.ChildrenSeats}
+                    <Modal.Body> 
+                        Booking No: {bookingActive.BookingNo}<br />  Cabin: {bookingActive.Cabin}  <br />  Seats: {bookingActive.AdultSeats>0 && bookingActive.AdultSeats + " (Adults)"} {(bookingActive.AdultSeats>0 && bookingActive.ChildrenSeats>0) && " | " } {bookingActive.ChildrenSeats>0 && bookingActive.ChildrenSeats + " (Children)"} 
 
-                        <br />Price: {flight.Price}<br></br>
+                        <br />Price: {bookingActive.Price}<br></br>
+                        <br />
+                        
                         <br />
                         <h5>Departure Flight</h5>
-                        Flight Date: {GetFlight(flight.DepartureFlightNo).FlightDate}<br></br>
-                        Departure Flight From : {GetFlight(flight.DepartureFlightNo).From}  ||  To: {GetFlight(flight.DepartureFlightNo).To}<br />
-                        Departure Time: {GetFlight(flight.DepartureFlightNo).Departure}<br></br>
-                        Arrival Time: {GetFlight(flight.DepartureFlightNo).Arrival}<br></br>
+                        Flight No: {GetFlight(bookingActive.DepartureFlightNo).Flight_No}  &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Date: { (""+GetFlight(bookingActive.DepartureFlightNo).FlightDate).substr(0,10)}<br></br>
+                        From: {GetFlight(bookingActive.DepartureFlightNo).From}  <br></br>
+                        To: {GetFlight(bookingActive.DepartureFlightNo).To} <br/>
+                        Departure: {GetFlight(bookingActive.DepartureFlightNo).Departure} &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Arrival: {GetFlight(bookingActive.DepartureFlightNo).Arrival} &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+                        Duration: {GetFlight(bookingActive.DepartureFlightNo).Duration} <br/>
+                        Baggage Allowance:  &nbsp; 
+                        {bookingActive.Cabin=="First" && GetFlight(bookingActive.DepartureFlightNo).First_Class_BaggageAllowance}
+                        {bookingActive.Cabin=="Business" && GetFlight(bookingActive.DepartureFlightNo).Business_Class_BaggageAllowance}
+                        {bookingActive.Cabin=="Economy" && GetFlight(bookingActive.DepartureFlightNo).Economy_Class_BaggageAllowance}
                         <br />
 
                         <br />
                         <h5>Return Flight</h5>
-                        Flight Date: {GetFlight(flight.ReturnFlightNo).FlightDate}<br></br>
-                        Return Flight From : {GetFlight(flight.ReturnFlightNo).From}   || To: {GetFlight(flight.ReturnFlightNo).To}<br />
-                        Departure Time: {GetFlight(flight.ReturnFlightNo).Departure}<br></br>
-                        Arrival Time: {GetFlight(flight.ReturnFlightNo).Arrival}<br></br>
+                        Flight No: {GetFlight(bookingActive.ReturnFlightNo).Flight_No}  &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Date: { (""+GetFlight(bookingActive.ReturnFlightNo).FlightDate).substr(0,10)}<br></br>
+                        From: {GetFlight(bookingActive.ReturnFlightNo).From}  <br></br>
+                        To: {GetFlight(bookingActive.ReturnFlightNo).To} <br/>
+                        Departure: {GetFlight(bookingActive.ReturnFlightNo).Departure} &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Arrival: {GetFlight(bookingActive.ReturnFlightNo).Arrival} &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+                        Duration: {GetFlight(bookingActive.ReturnFlightNo).Duration} <br/>
+                        Baggage Allowance:  &nbsp; 
+                        {bookingActive.Cabin=="First" && GetFlight(bookingActive.ReturnFlightNo).First_Class_BaggageAllowance}
+                        {bookingActive.Cabin=="Business" && GetFlight(bookingActive.ReturnFlightNo).Business_Class_BaggageAllowance}
+                        {bookingActive.Cabin=="Economy" && GetFlight(bookingActive.ReturnFlightNo).Economy_Class_BaggageAllowance}
                         <br />
                     </Modal.Body>
                     <Modal.Footer>
@@ -183,22 +222,10 @@ function MyFlights() {
                         </button>
                     </Modal.Footer>
                 </Modal>
+              
+           
 
-                <div  >
-                    <button style={{marginRight : '20px'}}  onClick={handleShow}>
-                        Views Details</button>
-
-                    <button
-                        id="removeBtn1"
-                        onClick={(e) => {
-                            deleteFlight(e, flight._id, flight, GetFlight(flight.DepartureFlightNo), GetFlight(flight.ReturnFlightNo));
-                        }}
-                    >
-                        Cancel </button>
-                </div>
-            </div>
-
-        )}
+             
     </div>
 
 

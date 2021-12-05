@@ -42,12 +42,12 @@ return (
 <h8>Account: {x}  </h8>
 
 <br></br><br></br>
-<button  onClick={handleclick}> Search Flights </button>
+<button  onClick={handleclick}> Book Flight </button>
 <br></br><br></br>
 
 
 <br></br><br></br>
-<button  onClick={showBookings}> Show My Bookings </button>
+<button  onClick={showBookings}> My Bookings </button>
 <br></br><br></br>
 
 <br></br><br></br>

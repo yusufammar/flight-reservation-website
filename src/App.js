@@ -39,15 +39,7 @@ app.delete('/delete/:id', async (req, res) => {
 
 
 
-app.delete('/cancel/:id', async (req, res) => {
-  const idNum = req.params.id;
-  console.log(idNum);
-   await Booking.findOneAndDelete({_id : idNum}, function (err, docs) {
-    console.log(err);
-  
-   });
-  res.send("canceled");
-});
+/*
 
 app.get("/addAdmin",(req,res)=>{   //adding Admin to user database (one time thing)
   const me = new User({
@@ -66,7 +58,7 @@ app.get("/addUsers",(req,res)=>{
   Type: "Customer" 
    });
     me.save();  });
-
+*/
 
 const port = process.env.PORT || "8000";
 app.listen(port, () => {

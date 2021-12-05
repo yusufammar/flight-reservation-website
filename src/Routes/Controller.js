@@ -7,11 +7,14 @@ const flight = require('../Models/Flights');
 const user = require('../Models/User');
 const booking = require('../Models/Booking');
 
+var currentUserEmail = ""
+
 
 router.route("/addGuest").get((req,res) => { //get becuase no input
    user.find({ Type : "Guest"}).then(foundguests => {  //all cases (actions) shoud be inside then statement (variable changes in then statement dont get apllied outside then statement)
      var x = foundguests.length + 1;
      var guestEmail= "guest"+ x;
+     currentUserEmail= guestEmail;
    
      const newGuest = new user({
       Name : "Guest",
@@ -47,7 +50,7 @@ router.route("/addUser").post((req,res) => {
     })
  });
 
- var currentUserEmail = "";
+;
 
 
 router.route("/SignIn").post((req, res) => {
@@ -151,7 +154,17 @@ router.route("/FlightsList").get((req, res) => {
 
 router.route("/MyBookings").get((req, res) => {
   booking.find({Email : currentUserEmail})
-    .then(foundBookings => res.json(foundBookings))
+    .then(foundBookings => res.send(foundBookings))
+})
+
+router.route("/getBooking").post((req, res) => {
+  bookingNo= req.body.bookingNo;
+  console.log(bookingNo);
+  booking.find({BookingNo : bookingNo}).then(foundBookings => {
+    res.send(foundBookings[0])
+    console.log(foundBookings[0]);  
+  })
+  
 })
 
 router.route("/SendCancelEmail").post( async (req, res) => {
@@ -468,19 +481,22 @@ router.route("/confirmBooking").post((req,res)=>{ // update available seats in f
 
   var search= { $or: [{Flight_No: dFlightNo},{Flight_No: rFlightNo} ] }
   flight.find(search).then(foundflights => {
+    var departureFlight={}; var returnFlight={};
+    if (foundflights[0].Flight_No == dFlightNo) { departureFlight=foundflights[0]; returnFlight=foundflights[1]; }
+    else { departureFlight=foundflights[1]; returnFlight=foundflights[0]; }
     //console.log(foundflights);
     
-    var DFirstSeats = foundflights[0].First_Class_Seats;
-    var DBusinessSeats = foundflights[0].Business_Class_Seats;
-    var DEconomySeats = foundflights[0].Economy_Class_Seats;
+    var DFirstSeats = departureFlight.First_Class_Seats;
+    var DBusinessSeats =departureFlight.Business_Class_Seats;
+    var DEconomySeats =departureFlight.Economy_Class_Seats;
     
-    var RFirstSeats = foundflights[1].First_Class_Seats;
-    var RBusinessSeats = foundflights[1].Business_Class_Seats;
-    var REconomySeats = foundflights[1].Economy_Class_Seats;
+    var RFirstSeats =returnFlight.First_Class_Seats;
+    var RBusinessSeats =returnFlight.Business_Class_Seats;
+    var REconomySeats = returnFlight.Economy_Class_Seats;
    
     var seats= parseInt(adults) + parseInt(children);
 
-    console.log(seats);
+    //console.log(seats);
     switch(cabin){
       case("First"):{
       var DFirstSeatsUpdate = DFirstSeats - seats;
@@ -515,6 +531,65 @@ router.route("/confirmBooking").post((req,res)=>{ // update available seats in f
     }) 
 });
 
+router.route('/cancel').post(async(req, res) => {
+  const idNum = req.body.ID;
+  console.log(idNum);
+
+  var booking1={};
+  var departureFlight={}; var returnFlight={};
+  
+  await booking.findOne({_id : idNum}).then(res => booking1=res);
+
+  var dFlightNo=booking1.DepartureFlightNo; var rFlightNo=booking1.ReturnFlightNo;
+  var seats= booking1.AdultSeats + booking1.ChildrenSeats;
+  
+  var search= { $or: [{Flight_No: dFlightNo},{Flight_No: rFlightNo} ] }
+  
+  flight.find(search).then(res => {
+    if (res[0].Flight_No == dFlightNo) { departureFlight=res[0]; returnFlight=res[1]; }
+    else { departureFlight=res[1]; returnFlight=res[0]; }
+
+    
+    console.log(booking1); console.log("Departure Flight " + departureFlight); console.log("Return Flight " +returnFlight); 
+  
+   
+
+  switch(booking1.Cabin){
+  case("First"):{
+  var DFirstSeatsUpdate = (departureFlight.First_Class_Seats) + seats;
+  var RFirstSeatsUpdate = (returnFlight.First_Class_Seats) + seats;
+  
+ flight.findOneAndUpdate({Flight_No:dFlightNo},{First_Class_Seats:DFirstSeatsUpdate},{ new: true, upsert: true }).then(res);
+ flight.findOneAndUpdate({Flight_No:rFlightNo},{First_Class_Seats:RFirstSeatsUpdate},{ new: true, upsert: true }).then(res);
+    break;  }
+  
+    case("Business"):{
+
+      var DBusinessSeatsUpdate = (departureFlight.Business_Class_Seats) + seats;
+      var RBusinessSeatsUpdate = (returnFlight.Business_Class_Seats) + seats;
+      
+      flight.findOneAndUpdate({Flight_No:dFlightNo},{Business_Class_Seats:DBusinessSeatsUpdate},{ new: true, upsert: true }).then(res);
+      flight.findOneAndUpdate({Flight_No:rFlightNo},{Business_Class_Seats:RBusinessSeatsUpdate},{ new: true, upsert: true }).then(res);
+
+    break;  }
+
+  case("Economy"):{
+    var DEconomySeatsUpdate = (departureFlight.Economy_Class_Seats) + seats;
+    var REconomySeatsUpdate = (returnFlight.Economy_Class_Seats) + seats;
+    
+    flight.findOneAndUpdate({Flight_No:dFlightNo},{Economy_Class_Seats:DEconomySeatsUpdate},{ new: true, upsert: true }).then(res);
+    flight.findOneAndUpdate({Flight_No:rFlightNo},{Economy_Class_Seats:REconomySeatsUpdate},{ new: true, upsert: true }).then(res);
+   
+     break;  }
+
+  }
+
+
+booking.findOneAndDelete({_id : idNum}).then(res);
+
+  });
+
+});
 
 
 

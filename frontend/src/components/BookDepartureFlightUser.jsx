@@ -70,17 +70,12 @@ function BookDepartureFlightUser(){   // for USER & GUEST
 
     function handleclick(event){
         event.preventDefault();
-        if (x.includes("guest")){       // redirects to guest main page if email is guest email
-            history.push({
-                pathname: '/guest',
-                state: {email : x}  
-        })}
-        else {                        // redirects to user main page if email is user email
+                              // redirects to user main page if email is user email
         history.push({
         pathname: '/user',
         state: {email : x}
         })
-    }
+    
     }
   function handleclick1(event){
    event.preventDefault();
@@ -113,8 +108,8 @@ function handleclick2(event){
        <h1>Select Return Flight</h1>
        
        <br></br>
-       <button onClick={handleclick}>Back To Main Page</button>
-        <br></br><br></br>
+       <button onClick={handleclick}>Back To Main Page</button> &nbsp;&nbsp;&nbsp;&nbsp;
+        
 
         <button onClick={handleclick1}>Change Departure Flight</button>
         <br></br><br></br>
@@ -123,14 +118,13 @@ function handleclick2(event){
        <div>
         <br/>
         <p> 
-        Flight No: {flight.Flight_No}  | From: {flight.From}  | To: {flight.To}  | Date: {flight.FlightDate}  <br></br> 
-        Departure Time: {flight.Departure}  | Arrival Time: {flight.Arrival}  | Duration: {flight.Duration}   <br></br>
+       <label style={{fontWeight:"bold"}} > {flight.From} &#10140; {flight.To} </label>    <br></br> 
+       Flight No: {flight.Flight_No}  &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; Date: {flight.FlightDate.substr(0,10)} &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Departure Time: {flight.Departure}  &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Arrival Time: {flight.Arrival} &nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp; Duration: {flight.Duration}   <br></br>        
+        First Class: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Seats Available ({flight.First_Class_Seats}) | Baggage Allowance ({flight.First_Class_BaggageAllowance}) | Price ({flight.First_Class_Price}) <br></br>  
         
-        First Class: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Seats Available ({flight.First_Class_Seats}) | Baggage Allowance ({flight.First_Class_BaggageAllowance}) | Price ({flight.First_Class_Price})   
-        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <button  id={flight.Flight_No} onClick={handleclick2}> Select Return Flight </button>    <br></br>
         
-        Business Class: &nbsp;&nbsp;Seats Available ({flight.Business_Class_Seats}) | Baggage Allowance ({flight.Business_Class_BaggageAllowance}) | Price ({flight.Business_Class_Price})  <br></br>
-                
+        Business Class: &nbsp;&nbsp;Seats Available ({flight.Business_Class_Seats}) | Baggage Allowance ({flight.Business_Class_BaggageAllowance}) | Price ({flight.Business_Class_Price}) 
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <button  id={flight.Flight_No} onClick={handleclick2}> Select Return Flight </button>    <br></br>        
         Economy Class: &nbsp;Seats Available ({flight.Economy_Class_Seats}) | Baggage Allowance ({flight.Economy_Class_BaggageAllowance}) | Price ({flight.Economy_Class_Price})  <br></br> 
       
        <br></br>

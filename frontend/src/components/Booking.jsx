@@ -9,6 +9,7 @@ function Booking(){           //for USER & GUEST
    const location = useLocation();
    const history = useHistory();
    var flag=false;
+   var confirmbookingclicked=false;
    
    if (location.state!=null){           //checking if session exists (no url jumping) (if location.state has variables passed), if session exists -> extract state variables
     flag=true;   
@@ -86,6 +87,15 @@ const [price , setprice] = useState();
        
     }
 
+    function handleclick4(event){
+        event.preventDefault();
+       
+        history.push({
+        pathname: '/user',
+        state: {email : x}
+     });
+     }
+
     //change departure flight (optional)
 
   function handleclick1(event){
@@ -98,11 +108,14 @@ const [price , setprice] = useState();
 }
 
 function handleclick2(event){ // booking functionality
-
+  
+    
     if (input.cabin!="" && (input.adults!="" || input.children!="")){
+        
 
-    if (  (input.adults!="" && input.adults<=0 )  ||  (input.children!="" &&  input.children<=0) )
+    if (  (input.adults!="" && input.adults<=0 )  ||  (input.children!="" &&  input.children<=0) ){
     alert("Please Reserve Atleast 1 Seat");
+    setpriceshow(false); }
     else{
      
     var article4= {departureFlightNo: dflightNo, returnFlightNo: rflightNo, cabin: input.cabin,  
@@ -121,18 +134,22 @@ function handleclick2(event){ // booking functionality
             
         })
     }
+    
+
     }
 
-    if (input.cabin=="" && (input.children!="" || input.adults!=""))
-    alert("Please Select Cabin");
+    if (input.cabin=="" && (input.children!="" || input.adults!="")){
+    setpriceshow(false); alert("Please Select Cabin");  } 
 
-    if (input.adults=="" && input.children=="" && input.cabin!="")
-    alert("Please Reserve Atleast 1 Seat");
+    if (input.adults=="" && input.children=="" && input.cabin!=""){
+    setpriceshow(false); alert("Please Reserve Atleast 1 Seat");  }
     
-    if (input.adults=="" && input.children=="" && input.cabin=="")
-    alert("Please Select Cabin & Reserve Atleast 1 Seat");
+    if (input.adults=="" && input.children=="" && input.cabin==""){
+    setpriceshow(false); alert("Please Select Cabin & Reserve Atleast 1 Seat"); setpriceshow(false); }
 }    
 function handleclick3(event){
+    if (confirmbookingclicked==false){  //to avoid registering the boooking more than once if the user clicked on booking button more than once
+        confirmbookingclicked=true;
     var article5= {departureFlightNo: dflightNo, returnFlightNo: rflightNo, cabin: input.cabin,  
         adults: input.adults, children: input.children, price: price, email: x};
     
@@ -149,30 +166,30 @@ function handleclick3(event){
          })
 
  }
+}
  
 
    return( <div className='container'>
        <h1>Book Flight</h1>
        
        <br></br>
+       <button onClick={handleclick4}>Back To Main Page</button>
+       &nbsp;&nbsp;&nbsp;
        <button onClick={handleclick}>Change Flights</button>
         <br></br><br></br>   <br></br>
 
 
        { flights1.map(flight =>
        <div>
-        <h5>Departure Flight</h5>   
+        <h5 style={{color:"blue"}}>Departure Flight</h5>   
         <br/>
-       <p> 
-        Flight No: {flight.Flight_No}  | From: {flight.From}  | To: {flight.To}  | Date: {flight.FlightDate}  <br></br> 
-        Departure Time: {flight.Departure}  | Arrival Time: {flight.Arrival}  | Duration: {flight.Duration}   <br></br>
+        <p> 
+       <label style={{fontWeight:"bold"}} > {flight.From} &#10140; {flight.To} </label>    <br></br> 
+        Flight No: {flight.Flight_No}  &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; Date: {flight.FlightDate.substr(0,10)} &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Departure Time: {flight.Departure}  &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Arrival Time: {flight.Arrival} &nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp; Duration: {flight.Duration}   <br></br>
         
-        First Class: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Seats Available ({flight.First_Class_Seats}) | Baggage Allowance ({flight.First_Class_BaggageAllowance}) | Price ({flight.First_Class_Price}) <br></br>  
-        
-        
-        Business Class: &nbsp;&nbsp;&nbsp;Seats Available ({flight.Business_Class_Seats}) | Baggage Allowance ({flight.Business_Class_BaggageAllowance}) | Price ({flight.Business_Class_Price})  <br></br>
-                
-        Economy Class: &nbsp;&nbsp;Seats Available ({flight.Economy_Class_Seats}) | Baggage Allowance ({flight.Economy_Class_BaggageAllowance}) | Price ({flight.Economy_Class_Price})  <br></br> 
+        First Class: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Seats Available ({flight.First_Class_Seats}) | Baggage Allowance ({flight.First_Class_BaggageAllowance}) | Price ({flight.First_Class_Price}) <br></br>  
+        Business Class: &nbsp;&nbsp;Seats Available ({flight.Business_Class_Seats}) | Baggage Allowance ({flight.Business_Class_BaggageAllowance}) | Price ({flight.Business_Class_Price})  <br></br> 
+        Economy Class: &nbsp;Seats Available ({flight.Economy_Class_Seats}) | Baggage Allowance ({flight.Economy_Class_BaggageAllowance}) | Price ({flight.Economy_Class_Price})  <br></br> 
       
        <br></br>
        </p>
@@ -183,20 +200,19 @@ function handleclick3(event){
 
        {flights2.map(flight =>
        <div>
-        <h5>Return Flight</h5> 
+        <h5 style={{color:"blue"}}>Return Flight</h5> 
         <br/>
-       <p> 
-        Flight No: {flight.Flight_No}  | From: {flight.From}  | To: {flight.To}  | Date: {flight.FlightDate}  <br></br> 
-        Departure Time: {flight.Departure}  | Arrival Time: {flight.Arrival}  | Duration: {flight.Duration}   <br></br>
-        
-        First Class: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Seats Available ({flight.First_Class_Seats}) | Baggage Allowance ({flight.First_Class_BaggageAllowance}) | Price ({flight.First_Class_Price})
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <button onClick={handleclick1}>Change Return Flight</button>
-        <br></br>
-        
-        Business Class: &nbsp;&nbsp;&nbsp;Seats Available ({flight.Business_Class_Seats}) | Baggage Allowance ({flight.Business_Class_BaggageAllowance}) | Price ({flight.Business_Class_Price})  <br></br>
-                
-        Economy Class: &nbsp;&nbsp;Seats Available ({flight.Economy_Class_Seats}) | Baggage Allowance ({flight.Economy_Class_BaggageAllowance}) | Price ({flight.Economy_Class_Price})  <br></br> 
        
+       <p> 
+       <label style={{fontWeight:"bold"}} > {flight.From} &#10140; {flight.To} </label>    <br></br> 
+        Flight No: {flight.Flight_No}  &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; Date: {flight.FlightDate.substr(0,10)} &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Departure Time: {flight.Departure}  &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Arrival Time: {flight.Arrival} &nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp; Duration: {flight.Duration}   <br></br>
+        
+        First Class: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Seats Available ({flight.First_Class_Seats}) | Baggage Allowance ({flight.First_Class_BaggageAllowance}) | Price ({flight.First_Class_Price}) 
+        <br></br>  
+        Business Class: &nbsp;&nbsp;Seats Available ({flight.Business_Class_Seats}) | Baggage Allowance ({flight.Business_Class_BaggageAllowance}) | Price ({flight.Business_Class_Price})  
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <button onClick={handleclick1}>Change Return Flight</button><br></br> 
+        Economy Class: &nbsp;Seats Available ({flight.Economy_Class_Seats}) | Baggage Allowance ({flight.Economy_Class_BaggageAllowance}) | Price ({flight.Economy_Class_Price})  <br></br> 
+      
        <br></br>
        </p>
 </div>
