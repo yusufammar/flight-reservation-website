@@ -1,5 +1,5 @@
-import Form from 'react-bootstrap/Form'
-import Button from 'react-bootstrap/Button';
+//import Form from 'react-bootstrap/Form'
+//import Button from 'react-bootstrap/Button';
 import { BrowserRouter as Router, useParams } from "react-router-dom";
 import react, {useEffect,useState} from "react";
 import React from "react";
@@ -13,7 +13,6 @@ const UpdatePage = () => {
 
     const location = useLocation();
     const history = useHistory();
-
     axios.defaults.withCredentials = true;
     
     useEffect(() => {
@@ -74,54 +73,65 @@ const UpdatePage = () => {
     }
 
     return (
-        <div>
-            <h1> Update Flight </h1>
-            <div class="form-check">
-                <div class="form-group">
+        <div class="container"  style={{display: "flex"}}>
+              
+             <div  style={{width: "50%"}}>
+             <h1> Update Flight </h1>
+           
+             <br></br> <br></br>
                     <label for="exampleInputEmail1">Flight No</label>
-                    <input name="FlightNo" type="text" class="form-control" id="attribute1" aria-describedby="emailHelp" placeholder="Enter Flight Number" onChange={event => setFlightNo(event.target.value)} />
-                </div>
-                <div class="form-group">
+                    <input name="FlightNo" type="text" class="form-control" style={{width: "200px"}} id="attribute1" aria-describedby="emailHelp" placeholder="Enter Flight Number" onChange={event => setFlightNo(event.target.value)} />
+                
+               
                     <label for="exampleInputPassword1">From: </label>
-                    <input type="text" name="FlightFrom" class="form-control" id="attribute2" placeholder="From" onChange={event => setFlightFrom(event.target.value)} />
-                </div>
-                <div class="form-group">
+                    <input type="text" name="FlightFrom" class="form-control" style={{width: "200px"}} id="attribute2" placeholder="From" onChange={event => setFlightFrom(event.target.value)} />
+                
+                
                     <label for="exampleInputPassword1">To:</label>
-                    <input name="FlightTo" type="text" class="form-control" id="attribute3" placeholder="To" onChange={event => setFlightTo(event.target.value)} />
-                </div>
+                    <input name="FlightTo" type="text" class="form-control" style={{width: "200px"}} id="attribute3" placeholder="To" onChange={event => setFlightTo(event.target.value)} />
+               
 
-                <div class="form-group">
-                    <label for="exampleInputPassword1">Flight Date</label>
-                    <input name="FlightDate" type="date" class="form-control" id="attribute4" placeholder="Date" onChange={event => setFlightDate(event.target.value)} />
-                </div>
+               
+                    <label >Flight Date</label>
+                    <input name="FlightDate" type="date" class="form-control" style={{width: "200px"}} id="attribute4" placeholder="Date" onChange={event => setFlightDate(event.target.value)} />
+                    
 
-                <div class="form-group">
-                    <label for="exampleInputPassword1">Departure</label>
-                    <input name="FlightDep" type="time" class="form-control" id="attribute5" placeholder="Dep Time" onChange={event => setFlightDep(event.target.value)} />
-                </div>
-                <div class="form-group">
+              
+                    <label>Departure</label>
+                    <input name="FlightDep" type="time" class="form-control" style={{width: "200px"}} id="attribute5" placeholder="Dep Time" onChange={event => setFlightDep(event.target.value)} />
+               
+                
                     <label for="exampleInputPassword1">Arrival</label>
-                    <input name="FlightArr" type="time" class="form-control" id="attribute6" placeholder="Arr Time" onChange={event => setFlightArr(event.target.value)} />
-                </div>
-                <div class="form-group">
-                    <label for="exampleInputPassword1">First Class Seats</label>
-                    <input name="FlightFirst" type="number" class="form-control" id="attribute7" placeholder="First Class Seats" onChange={event => setFlightFirst(event.target.value)} />
-                </div>
-                <div class="form-group">
+                    <input name="FlightArr" type="time" class="form-control" style={{width: "200px"}} id="attribute6" placeholder="Arr Time" onChange={event => setFlightArr(event.target.value)} />
+                    </div>
+                    <div style={{width: "50%"}}>
+                       
+                    <br></br> <br></br> <br></br> <br></br><br></br> <br></br>
+                    <label for="exampleInputPassword1">First Class Seats</label> 
+                    <input name="FlightFirst" type="number" class="form-control" style={{width: "200px"}} id="attribute7" placeholder="First Class Seats" onChange={event => setFlightFirst(event.target.value)} />
+                
+                
                     <label for="exampleInputPassword1">Business Class Seats</label>
-                    <input name="FlightBusiness" type="number" class="form-control" id="attribute8" placeholder="Business Class Seats" onChange={event => setFlightBus(event.target.value)} />
-                </div>
-                <div class="form-group">
+                    <input name="FlightBusiness" type="number" class="form-control" style={{width: "200px"}} id="attribute8" placeholder="Business Class Seats" onChange={event => setFlightBus(event.target.value)} />
+                
+                
                     <label for="exampleInputPassword1">Economy Class Seats</label>
-                    <input name="FlightEconomy" type="number" class="form-control" id="attribute9" placeholder="Economy Class Seats" onChange={event => setFlightEco(event.target.value)} />
-                </div>
-
+                    <input name="FlightEconomy" type="number" class="form-control" style={{width: "200px"}} id="attribute9" placeholder="Economy Class Seats" onChange={event => setFlightEco(event.target.value)} />
+                
+                    <br></br><br></br>
                 <input type="checkbox" class="form-check-input" id="exampleCheck1" onChange={event => setChecked(event.target.checked)} />
+               
                 <label class="form-check-label" for="exampleCheck1">Click To Confirm Update</label>
-            </div>
-
+                <br></br>
+               <br/>
             <button type="submit" class="btn btn-primary" onClick={event => ChangeValues(event)}>Update</button>
-        </div>
+            </div>
+           
+
+
+     
+   </div>
+
     );
 };
 export default UpdatePage;

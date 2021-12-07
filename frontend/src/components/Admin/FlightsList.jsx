@@ -6,35 +6,6 @@ import axios from "axios";
 import { useHistory } from "react-router-dom";
 
 
-var flightSelected = 0;
-
-function UpdateFlight(idOfFlight)
-{
-    const article = { id :  idOfFlight};
-    axios.post('http://localhost:3000/FlightsListVal', article)
-    .then();
-    window.location.href = "/UpdatePage";
-}
-
-let isChecked = false;
-let idDeleted = "";
-
-const deleteFlight = (id) => {
- 
-
-  if (isChecked && idDeleted == id)
-  {
-    axios.delete(`http://localhost:3000/delete/${id}`)
-    window.location.reload();
-  }
-};
-
-function handleChange(e, id) {
-  isChecked = e.target.checked;
-  idDeleted = id;
-  
-  // do whatever you want with isChecked value
-}
 
 function FlightsList() {
   const location = useLocation();
@@ -69,6 +40,37 @@ function FlightsList() {
 
   }])
 
+
+  var flightSelected = 0;
+
+  function UpdateFlight(idOfFlight)
+  {
+      const article = { id :  idOfFlight};
+      axios.post('http://localhost:3000/FlightsListVal', article)
+      .then();
+      window.location.href = "/UpdatePage";
+  }
+  
+  let isChecked = false;
+  let idDeleted = "";
+  
+  const deleteFlight = (id) => {
+   
+  
+    if (isChecked && idDeleted == id)
+    {
+      axios.delete(`http://localhost:3000/delete/${id}`)
+      window.location.reload();
+    }
+  };
+  
+  function handleChange(e, id) {
+    isChecked = e.target.checked;
+    idDeleted = id;
+    
+    // do whatever you want with isChecked value
+  }
+  
   useEffect(() => {
        fetch("/FlightsList").then(res => {
       if (res.ok) {

@@ -4,34 +4,27 @@ import { useHistory } from "react-router-dom";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
+import { css} from '@emotion/css'
+import Top from './Top';                     // rendering in return statement (responsible for session checking & returning of current user email)
+
+
 
 function Booking(){           //for USER & GUEST
    const location = useLocation();
    const history = useHistory();
+   axios.defaults.withCredentials = true;
+
    var flag=false;
    var confirmbookingclicked=false;
    
-   axios.defaults.withCredentials = true;
-   useEffect(() => {
-       axios.get('http://localhost:8000/currentUser').then(res =>{ 
-       if (res.data=="0" || res.data.type=="Admin"){
-       alert("Access Denied, Please Sign In First");
-       history.push({pathname:"/SignIn"});
-       }
-      //else go to page
-    })
-   }, [location]);
-
-
-   if (location.state!=null){           //checking if session exists (no url jumping) (if location.state has variables passed), if session exists -> extract state variables
+    if (location.state!=null){           //checking if user searched for a flight & selected a departure flight & variables were passed, no url
     flag=true;   
-      
-       var rflightNo=location.state.returnFlightNo; var dflightNo= location.state.departureFlightNo; 
+    var rflightNo=location.state.returnFlightNo; var dflightNo= location.state.departureFlightNo; 
    }
    else{
-   alert("Please Select Departure & Return Flights First!");
+   alert("Please search for a flight to book first!");
    history.push({
-       pathname: '/SearchFlightsUser' 
+       pathname: '/user' 
        });
    }
 
@@ -73,7 +66,7 @@ const [price , setprice] = useState();
     
 
    useEffect(() => {
-       if (flag==true){                                     //if session exists
+       if (flag==true){                                     //if user select departure & return flights
     const article1 = {DepartureFlightNo: dflightNo};
     axios.post('http://localhost:8000/getDFLight', article1)
     .then(jsonRes =>{
@@ -89,42 +82,15 @@ const [price , setprice] = useState();
     }, [location]);
 
 
-    //let priceshow=false; //console.log(priceshow);
-    
-    function handleclick(event){
-    history.push({
-                pathname: '/SearchFlightsUser'
-        }) 
-       
-    }
-
-    function handleclick4(event){
-        event.preventDefault();
-       
-        history.push({
-        pathname: '/user'
-     });
-     }
-
-    //change departure flight (optional)
-
-  function handleclick1(event){
-   event.preventDefault();
-  
-   history.push({
-   pathname: '/BookDepartureFlightUser',
-   state: {departureFlightNo: dflightNo}
-});
-}
-
 function handleclick2(event){ // booking functionality
-  
-    
-    if (input.cabin!="" && (input.adults!="" || input.children!="")){
+    if (input.cabin=="Cabin") input.cabin="";
+    if (input.adults==0) input.adults="";  if (input.children==0) input.children="";
+
+     if (input.cabin!=""  && (input.adults!="" || input.children!="")){
         
 
-    if (  (input.adults!="" && input.adults<=0 )  ||  (input.children!="" &&  input.children<=0) ){
-    alert("Please Reserve Atleast 1 Seat");
+    if (  input.adults<0   ||  input.children<0 ){
+    alert("Number of seats can't be a negative number");
     setpriceshow(false); }
     else{
      
@@ -136,17 +102,16 @@ function handleclick2(event){ // booking functionality
             
             //if res.send (0) -> no seats & if res.send (1) -> seats available & setprice(res.data)
             if (res.data==0){
+            setpriceshow(false);
             alert("Seats Not Available");
-            setpriceshow(false); }
+            }
             else{
             setpriceshow(true); 
             setprice(res.data); }
             
         })
     }
-    
-
-    }
+     }
 
     if (input.cabin=="" && (input.children!="" || input.adults!="")){
     setpriceshow(false); alert("Please Select Cabin");  } 
@@ -166,9 +131,9 @@ function handleclick3(event){
         axios.post('http://localhost:8000/confirmBooking',article5)
        .then(res =>{ 
         if (res.data==1){
-        alert("Booking Done Successful");
+        alert("Booking Done Successfully");
         history.push({
-        pathname: '/User'
+        pathname: '/myFlights'
          });   
         }
         
@@ -178,87 +143,100 @@ function handleclick3(event){
 }
  
 
-   return( <div className='container'>
-       <h1>Book Flight</h1>
+   return( 
+    <div  className={css`
+    color: white;
+   height: 1920px;
+   height: 1080px; 
+   `} style={{backgroundImage: 'url("/wallpaper.jpg")'}}>
+
+   <Top/>
+
+   <div  name="content" className={css`
+  position: absolute; left: 5%;  width: 50%; 
+  font-family: 'Josefin Sans'; font-size: 15px; `
+  }>
        
-       <br></br>
-       <button onClick={handleclick4}>Back To Main Page</button>
-       &nbsp;&nbsp;&nbsp;
-       <button onClick={handleclick}>Change Flights</button>
-        <br></br><br></br>   <br></br>
-
-
-       { flights1.map(flight =>
+       
+       {flights1.map(flight =>
        <div>
-        <h5 style={{color:"blue"}}>Departure Flight</h5>   
-        <br/>
-        <p> 
-       <label style={{fontWeight:"bold"}} > {flight.From} &#10140; {flight.To} </label>    <br></br> 
-        Flight No: {flight.Flight_No}  &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; Date: {flight.FlightDate.substr(0,10)} &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Departure Time: {flight.Departure}  &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Arrival Time: {flight.Arrival} &nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp; Duration: {flight.Duration}   <br></br>
+        <h1>Departure Flight</h1>   
+       <div id={flight.Flight_No} onClick={handleclick2} className={css`
+       background-color: green; border-radius: 20px; padding: 10px;`}>
         
-        First Class: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Seats Available ({flight.First_Class_Seats}) | Baggage Allowance ({flight.First_Class_BaggageAllowance}) | Price ({flight.First_Class_Price}) <br></br>  
-        Business Class: &nbsp;&nbsp;Seats Available ({flight.Business_Class_Seats}) | Baggage Allowance ({flight.Business_Class_BaggageAllowance}) | Price ({flight.Business_Class_Price})  <br></br> 
-        Economy Class: &nbsp;Seats Available ({flight.Economy_Class_Seats}) | Baggage Allowance ({flight.Economy_Class_BaggageAllowance}) | Price ({flight.Economy_Class_Price})  <br></br> 
-      
-       <br></br>
-       </p>
-        </div>
+        <label style={{fontWeight:"bold"}} > {flight.From} &#10140; {flight.To} </label>    <br></br> 
+        Flight No: {flight.Flight_No}  &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; Date: {flight.FlightDate.substr(0,10)} &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Departure Time: {flight.Departure}  &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Arrival Time: {flight.Arrival} &nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp; Duration: {flight.Duration}   <br></br>        
+        First Class: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Seats Available ({flight.First_Class_Seats}) | Baggage Allowance ({flight.First_Class_BaggageAllowance}) | Price ({flight.First_Class_Price}) <br></br>        
+        Business Class: &nbsp;&nbsp;Seats Available ({flight.Business_Class_Seats}) | Baggage Allowance ({flight.Business_Class_BaggageAllowance}) | Price ({flight.Business_Class_Price})   <br></br> 
+        Economy Class: &nbsp;Seats Available ({flight.Economy_Class_Seats}) | Baggage Allowance ({flight.Economy_Class_BaggageAllowance}) | Price ({flight.Economy_Class_Price})  
+     
+</div>
+<br></br>
+</div>
        )}
 
    
 
-       {flights2.map(flight =>
+{flights2.map(flight =>
        <div>
-        <h5 style={{color:"blue"}}>Return Flight</h5> 
-        <br/>
-       
-       <p> 
-       <label style={{fontWeight:"bold"}} > {flight.From} &#10140; {flight.To} </label>    <br></br> 
-        Flight No: {flight.Flight_No}  &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; Date: {flight.FlightDate.substr(0,10)} &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Departure Time: {flight.Departure}  &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Arrival Time: {flight.Arrival} &nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp; Duration: {flight.Duration}   <br></br>
+        <h1>Return Flight</h1>   
+       <div id={flight.Flight_No} onClick={handleclick2} className={css`
+       background-color: green; border-radius: 20px; padding: 10px;`}>
         
-        First Class: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Seats Available ({flight.First_Class_Seats}) | Baggage Allowance ({flight.First_Class_BaggageAllowance}) | Price ({flight.First_Class_Price}) 
-        <br></br>  
-        Business Class: &nbsp;&nbsp;Seats Available ({flight.Business_Class_Seats}) | Baggage Allowance ({flight.Business_Class_BaggageAllowance}) | Price ({flight.Business_Class_Price})  
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <button onClick={handleclick1}>Change Return Flight</button><br></br> 
-        Economy Class: &nbsp;Seats Available ({flight.Economy_Class_Seats}) | Baggage Allowance ({flight.Economy_Class_BaggageAllowance}) | Price ({flight.Economy_Class_Price})  <br></br> 
-      
-       <br></br>
-       </p>
+        <label style={{fontWeight:"bold"}} > {flight.From} &#10140; {flight.To} </label>    <br></br> 
+        Flight No: {flight.Flight_No}  &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; Date: {flight.FlightDate.substr(0,10)} &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Departure Time: {flight.Departure}  &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Arrival Time: {flight.Arrival} &nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp; Duration: {flight.Duration}   <br></br>        
+        First Class: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Seats Available ({flight.First_Class_Seats}) | Baggage Allowance ({flight.First_Class_BaggageAllowance}) | Price ({flight.First_Class_Price}) <br></br>        
+        Business Class: &nbsp;&nbsp;Seats Available ({flight.Business_Class_Seats}) | Baggage Allowance ({flight.Business_Class_BaggageAllowance}) | Price ({flight.Business_Class_Price})   <br></br> 
+        Economy Class: &nbsp;Seats Available ({flight.Economy_Class_Seats}) | Baggage Allowance ({flight.Economy_Class_BaggageAllowance}) | Price ({flight.Economy_Class_Price})  
+     
 </div>
-
+<br></br>
+</div>
        )}
+<br></br><br></br>
 
-
-    <label style={{fontWeight:"bold"}}>Seats</label> <br></br>
-    <label> Cabin <br></br> 
-<select name="cabin" value={input.cabin} onChange={handleChange}>
-<option >  </option>
+<div style={{display:"flex"}}>
+    <h1>Seats</h1> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    
+<select class="form-control" style={{width:"125px"}} name="cabin" value={input.cabin} onChange={handleChange}>
+<option style={{fontWeight:"bold"}}> Cabin </option>
   <option > First </option>
   <option > Business </option>
   <option > Economy </option>
 </select> 
-</label> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <label>Adults <br></br><input type="number" name="adults" value={input.adults}  onChange={handleChange} style={{width:"75px"}}></input> </label> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <label>Children <br></br> <input type="number" name="children" style={{width:"75px"}} value={input.children} onChange={handleChange}></input> </label>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <input class="form-control" placeholder="Adults" type="number" name="adults" value={input.adults}  onChange={handleChange} style={{width:"125px"}}></input>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <input  class="form-control" placeholder="Children" type="number" name="children" style={{width:"125px"}} value={input.children} onChange={handleChange}></input> 
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
    
 
-   <button onClick={handleclick2}>Book</button>
+   <button class= "btn btn-success btn-lg" onClick={handleclick2} style={{fontSize:"30px", width:"125px"}} >BOOK</button>
         <br></br><br></br>
+    
+    </div>
 
+    <br></br>
      {priceshow==true &&
-     <div>
-     <label style={{fontWeight:"bold"}}>Price: </label> 
-     <label style={{fontWeight:"bold"}}>{price} </label> 
+     <div style={{fontWeight:"bold",fontSize:"30px"}} className={css`
+     position: absolute; left: 20%; background-color: white; border-radius: 20px; padding: 20px; 
+     font-family: 'Josefin Sans'; font-size: 15px; font-weight: bold;`
+     }>
+       
+     <label style={{color:"black"}}>Price: </label> &nbsp;
+     <label style={{color:"red"}}>{price} </label> 
      
-     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-     <button onClick={handleclick3} >Confirm Booking</button>
+     &nbsp;&nbsp;&nbsp;&nbsp;
+     <button class= "btn btn-success btn-lg" onClick={handleclick3} >Confirm</button>
         
      </div>
-    }   
+    } 
+    </div>  
    
-   </div>
+  
+
+</div>
+   
 
        
 

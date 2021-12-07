@@ -1,34 +1,39 @@
-import 'bootstrap/dist/css/bootstrap.min.css'
 import React from 'react';
 import ReactDOM from 'react-dom';
-
 import {BrowserRouter as Router, Route} from "react-router-dom";  // react-router & react-router-dom v5.1.2
+import react, {useEffect,useState} from "react";
+import WebFont from 'webfontloader';
 
-import Main from './components/Main';
+//imported jsx components should start with uppercase letter
+
+import Main from './components/Main';                                 //main
 import SignUp from './components/SignUp';
 import SignIn from './components/SignIn';
-import User from './components/User';
-import MyFlights from './components/MyFlights';
+import UpdateUser from './components/UpdateUser';
 
-
-import Admin from './components/Admin/Admin';
-import AddFlight from './components/Admin/addFlight';   //imported object should start with uppercase letter
+import Admin from './components/Admin/Admin';                         //admin
+import AddFlight from './components/Admin/addFlight';  
 import FlightsList from './components/Admin/FlightsList';
-
 import SearchFlight from './components/Admin/SearchFlight';
 import SearchResults from './components/Admin/SearchResults';
 import UpdatePage from './components/Admin/UpdatePage';
 
-import SearchFlightsUser from './components/SearchFlightsUser';
-import SearchResultsUser from './components/SearchResultsUser';
-
-import BookDepartureFlightUser from './components/BookDepartureFlightUser';
+import User from './components/User';                                 //user (& guest)
+import DepartureFlights from './components/DepartureFlights';
+import ReturnFlights from './components/ReturnFlights';
 import Booking from './components/Booking';
-
-import UpdateUser from './components/UpdateUser';
-
+import MyFlights from './components/MyFlights';
 
 function App() {
+  
+  useEffect(() => {
+    WebFont.load({
+      google: {
+        families: ['Droid Sans', 'Chilanka', 'Josefin Sans']
+      }
+    });
+   }, []);
+
   return (
     <Router>
      
@@ -77,17 +82,14 @@ function App() {
       <Route exact path ="/UpdatePage">
         <UpdatePage/>
       </Route> 
-
-      <Route exact path ="/SearchFlightsUser">
-        <SearchFlightsUser/>
+    
+      
+      <Route exact path ="/DepartureFlights">
+        <DepartureFlights/>
       </Route>
       
-      <Route exact path ="/SearchResultsUser">
-        <SearchResultsUser/>
-      </Route>
-      
-      <Route exact path ="/BookDepartureFlightUser">
-        <BookDepartureFlightUser/>
+      <Route exact path ="/ReturnFlights">
+        <ReturnFlights/>
       </Route>
 
       <Route exact path="/Booking">

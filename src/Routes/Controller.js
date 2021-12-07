@@ -1,25 +1,25 @@
-const nodemailer = require("nodemailer");
-const express = require("express");
-
-const cors = require('cors');
+const flight = require('../Models/Flights');                  // Collections In Database
+const user = require('../Models/User');
+const booking = require('../Models/Booking');
+const { findByIdAndRemove } = require("../Models/Flights"); 
 
 const { ConnectionPoolClosedEvent } = require("mongodb");
 
+const express = require("express");
 const router= express.Router();
-const flight = require('../Models/Flights');
-const user = require('../Models/User');
-const booking = require('../Models/Booking');
-
 router.use(express.json());
-
-const session=require("express-session");
-router.use(session({secret:'secret', resave:false , saveUninitialized:false}));
+const cors = require('cors');
 
 router.use(cors({                          // for axios post to not destroy session (credentials is where the sessions is saved as cookie)
   origin:['http://localhost:3000'],     // is the origin of the axios requests (frontend url port)
   methods:['GET','POST'],
   credentials: true // enable set cookie
 }));
+
+const session=require("express-session");
+router.use(session({secret:'secret', resave:false , saveUninitialized:false}));
+
+const nodemailer = require("nodemailer");
 
 //--------------------------------------------------------------------------------------------
 
@@ -118,8 +118,6 @@ router.route("/getBooking").post((req, res) => {
 
 
 router.route("/searchFlightUser").post((req, res) => {
-var SPflag= false;
-
   const from= req.body.from;
   const to= req.body.to;
   const date= req.body.date;
@@ -146,12 +144,10 @@ if (arrival.length!=0)
 search = { $and: [ search,  {Arrival : arrival}  ] };
 
 
-//Note: when checking seats & price assume you user must select cabin
+//Note: when searching by seats & price assume user must selected cabin
 
 if (seats.length!=0){      
-SPflag=true;                                        // seat/price input  
-
-switch (cabin){
+ switch (cabin){
  
 case ("First"):{
   search = { $and: [ search,  {First_Class_Seats : { $gte: seats}}  ] }; break;
@@ -162,15 +158,10 @@ case ("Business"):{
 case ("Economy"):{
   search = { $and: [ search,  {Economy_Class_Seats : { $gte: seats}}  ] }; break;
 }
-default: { res.send("0"); break;}                  // no cabin input -> error in frontend
 }
 }
 
 if (price.length!=0){ 
- 
-  SPflag=true;                                     // seat/price input  
-
-
   switch (cabin){
   case ("First"):{
     search = { $and: [ search,  {First_Class_Price : { $lte: price}}  ] }; break;
@@ -181,27 +172,17 @@ if (price.length!=0){
   case ("Economy"):{
     search = { $and: [ search,  {Economy_Class_Price : { $lte: price}}  ] }; break;
   }
-  default: { res.send("0"); break;}                // no cabin input -> error in frontend
   }
   }
 
-var s=false;                              //search statement used in find statement is by default empty
-
-if ( Object.keys(search).length != 0){   // if the search statement isn't empty to catch no reults error
-  var s=true;                             //search statement used in find statement isn't empty
   flight.find(search)
      .then(foundflights => {
       if (foundflights.length!=0)
       res.json(foundflights); 
       else
-      res.send("1");
+      res.send("1");   // no results 
     });
-    
-    }
-
-   if (SPflag==false && s==false)   // if search statement was empty & no seat/price input
-    res.send("1");                  // no results (no search criteria was entered)
- })
+  })
 
  router.route("/selectReturnFlight").post((req, res) => {
   const dflightNo= req.body.departureFlightNo;
@@ -462,9 +443,9 @@ router.route("/Updateinfo").post((req, res) => {
 //mayar & shorouk
 router.route("/SendCancelEmail").post( async (req, res) => {
 
-  const details = req.body.details;
-  const From = req.body.From;
-  const To = req.body.To;
+  const booking = req.body.booking;
+  console.log(booking)
+;
 
   const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -474,10 +455,10 @@ router.route("/SendCancelEmail").post( async (req, res) => {
     }
   });
   
-  let mess = "Your booking has been cancelled. \nBooking Number: "  + details.BookingNo + "\nRefund: " + details.Price;
+  let mess = "Your booking has been cancelled. \nBooking Number: "  + booking.BookingNo + "\nRefund: " + booking.Price;
   const mailOptions = {
     from: 'ACL_SAMYH_TEAM@GUC.com',
-    to: details.Email,
+    to: req.session.email,
     subject: 'Your cancelled reservation',
     text:mess 
   };
@@ -538,13 +519,13 @@ router.route('/UpdatePage').post((req, res) => {
 
 
 router.route('/cancel').post(async(req, res) => {
-  const idNum = req.body.ID;
-  console.log(idNum);
+  const bookingNo = req.body.bookingNo;
+  console.log(bookingNo);
 
   var booking1={};
   var departureFlight={}; var returnFlight={};
   
-  await booking.findOne({_id : idNum}).then(res => booking1=res);
+  await booking.findOne({BookingNo : bookingNo}).then(res => booking1=res);
 
   var dFlightNo=booking1.DepartureFlightNo; var rFlightNo=booking1.ReturnFlightNo;
   var seats= booking1.AdultSeats + booking1.ChildrenSeats;
@@ -591,19 +572,23 @@ router.route('/cancel').post(async(req, res) => {
   }
 
 
-booking.findOneAndDelete({_id : idNum}).then(res);
+booking.findOneAndDelete({BookingNo : bookingNo}).then(res);
 
   });
 
 });
 
-//mayar & shorouk
 
-
-
-
-
+//----------------------------------------------------------------------------------------------------------------------
 //admin
+
+router.route('/delete/:id').delete(async(req, res) => {                       //delete flight
+  const idNum = req.params.id;
+   await flight.findOneAndDelete({_id : idNum}, function (err, docs) {
+   // console.log(err);
+   });
+  res.send("deleted");
+});
 
 router.route("/addFlight").post((req,res) => {
   const flightNo= req.body.flightNo;
@@ -676,13 +661,22 @@ router.route("/FlightsList").get((req, res) => {
     .then(foundflights => res.json(foundflights))
 });
 
-//admin
+//-----------------------------------------------------------------------------------------------------------------------
+//one-time execution for addding things in the database
 
-
-
-/*
+///*
 router.route("/addFlightManual").get((req,res) => {
   var d; var a;
+var LAX= "LAX (Los Angeles International Airport, California, USA)";  
+var JFK= "JFK (John F. Kennedy International Airport, New York, USA)" ; 
+var LHR= "LHR (Heathrow Airport, London, England)"  ;
+var CAI= "CAI (Cairo International Airport, Cairo, Egypt)"  ;
+var DXB= "DXB (Dubai International Airport, Dubai, UAE)"  ;
+var CDG= "CDG (Paris Charles de Gaulle Airport, Paris, France)"  ;
+var MUC= "MUC (Munich International Airport, Munich, Germany)"  ;
+var RUH= "RUH (King Khalid International Airport, Riyadh, Saudi Arabia)" ; 
+var YYZ= "YYZ (Toronto Pearson International Airport, Toronto, Canada)";  
+var FRA= "FRA (Frankfurt Airport, Frankfurt, Germany)";  
  
   function duration(departure, arrival){         //function for calculating duration
     var x= departure.split(":"); var y= arrival.split(":");
@@ -707,8 +701,8 @@ router.route("/addFlightManual").get((req,res) => {
     
     const newFlight1 = new flight({
     Flight_No: 1,
-    From: "LAX",
-    To: "JFK",
+    From: LAX, 
+    To: JFK,
   
     FlightDate: "2022-01-12",
     Departure: d,
@@ -733,8 +727,8 @@ router.route("/addFlightManual").get((req,res) => {
    d= "10:00"; a= "14:00";
    const newFlight2 = new flight({
     Flight_No: 2,
-    From: "JFK",
-    To: "LAX",
+    From: JFK,
+    To: LAX,
   
     FlightDate: "2022-01-22",
     Departure: d,
@@ -759,8 +753,8 @@ router.route("/addFlightManual").get((req,res) => {
    d= "10:00"; a= "12:00";
    const newFlight3 = new flight({
     Flight_No: 3,
-    From: "JFK",
-    To: "LHR",
+    From: JFK,
+    To: LHR,
   
     FlightDate: "2022-02-21",
     Departure: d,
@@ -785,8 +779,8 @@ router.route("/addFlightManual").get((req,res) => {
    d= "10:00"; a= "12:00";
    const newFlight4 = new flight({
     Flight_No: 4,
-    From: "LHR",
-    To: "JFK",
+    From: LHR,
+    To: JFK,
   
     FlightDate: "2022-03-06",
     Departure: d,
@@ -810,7 +804,6 @@ router.route("/addFlightManual").get((req,res) => {
 
    res.send("success");
 });
-*/
-
+//*/
 
 module.exports = router;

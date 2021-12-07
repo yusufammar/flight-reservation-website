@@ -8,7 +8,6 @@ import { useHistory } from "react-router-dom";
 function SearchFlight(){
     const location = useLocation();
     const history = useHistory();
-
     axios.defaults.withCredentials = true;
     
     useEffect(() => {
