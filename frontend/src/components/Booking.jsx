@@ -211,7 +211,7 @@ function handleclick3(event){
 
    
 
-   <button class= "btn btn-success btn-lg" onClick={handleclick2} style={{fontSize:"30px", width:"125px"}} >BOOK</button>
+   <button class= "btn btn-success" onClick={handleclick2}  >BOOK</button>
         <br></br><br></br>
     
     </div>

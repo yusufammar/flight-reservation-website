@@ -22,12 +22,16 @@ function handleChange(event){
     setInput(prevInput => {
         return {
             ...prevInput,
-            [name]:value
-        }
-    })
-    
-}
+            [name]:value }  })
+ }
 
+ /*  
+const [from, setfrom] = useState();          // easiest way to accept input (no need to put name & value attributes to the input field)
+function handleChange1(event){               // all you need: 
+setfrom(event.target.value);                 // 1) make a useState variable (actual variable & setter) for each input 
+}                                            // 2) Make a handelchange method that uses the setter of the usestate variable to set the variable with new value (that you get by event.target.value) 
+                                             //     (call in the onChange attribute of the input field -> onChange={handlechange})
+*/
 
 
 function handleclick1(event){

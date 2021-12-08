@@ -4,6 +4,11 @@ import { Route, Redirect, useLocation } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import 'bootstrap/dist/css/bootstrap.min.css';                  // rendering in return statement (responsible for session checking & returning of current user email)
+import { Modal} from 'react-bootstrap';
+import { css} from '@emotion/css'
+import Top from './Top';                     // rendering in return statement (responsible for session checking & returning of current user email)
+require("react-bootstrap/ModalHeader");
 
 function UpdateUser(){            // USER MAIN PAGE
     

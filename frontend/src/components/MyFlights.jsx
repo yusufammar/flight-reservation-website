@@ -47,8 +47,7 @@ function MyFlights() {
     }
 
 function SendMail(booking) {
-    const article = { booking: booking};
-    axios.post('http://localhost:8000/SendCancelEmail', article)
+   
 }
 
 function deleteFlight(event){
@@ -61,12 +60,20 @@ function deleteFlight(event){
          var art= {bookingNo: x};
          axios.post(`http://localhost:3000/cancel`,art);
        
-         history.push({
-             pathname: '/MyFlights'
+        
+
+         const article = { booking: bookingActive};
+         axios.post('http://localhost:8000/SendCancelEmail', article).then(res => {
+             if (res.data==1)
+             {
+                alert("Booking Canceled Successfully \nYou'll recieve an email with the cancelation details along with the refund amount");
+                setShow(false);   
+                history.push({
+                    pathname: '/MyFlights'
+                });
+             }
          });
-         SendMail(bookingActive);
-         alert("Booking Canceled Successfully \nYou'll recieve an email with the cancelation details along with the refund amount"); 
-         setShow(false);   
+        
      }
      else 
      alert("Make sure confirmation checkbox is checked, to cancel booking!");

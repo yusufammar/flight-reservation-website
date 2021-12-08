@@ -468,6 +468,7 @@ router.route("/SendCancelEmail").post( async (req, res) => {
     console.log(error);
     } else {
       console.log('Email sent: ' + info.response);
+      res.send("1");
     }
   });
 
