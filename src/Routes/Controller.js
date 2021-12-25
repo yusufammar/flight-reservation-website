@@ -729,6 +729,52 @@ booking.findOneAndDelete({BookingNo : bookingNo}).then(res);
 
 });
 
+router.route('/changeSeats').post(async(req, res) => {
+  var booking= req.body.Booking;
+  var flightDirection= req.body.FlightDirection;
+  var Flight= req.body.Flight;
+
+  var cabin= booking.Cabin;
+
+  var oldChosenSeats;  // chosen seats array of departure/return flight of booking
+
+  if ( flightDirection=="DepartureFlight")  oldChosenSeasts=booking.departureChosenSeats;
+  if ( flightDirection=="ReturnFlight")     oldChosenSeasts=booking.returnChosenSeats;
+
+
+  //consturct seats array acccording to cabin (remove old seats & update flight collection)  // dont do anything to no. of seats available becuase user going to reserve same amount again
+  // update chosen seats in booking after he selects new seats
+
+  var FirstSeats = Flight.First_Class_Seats;                     // seats array (with old seats)
+  var BusinessSeats =Flight.Business_Class_Seats;
+  var EconomySeats =Flight.Economy_Class_Seats;
+  
+  switch(cabin){
+    case("First"):{
+      for (var i=1;i<FirstSeats.length; i++){
+        for (var j=0; j<oldChosenSeats.length; j++)
+             if (i== oldChosenSeats[j])   FirstSeats[i]= 0  //-> seat available
+      }
+      flight.findOneAndUpdate({Flight_No: Flight.FlightNo },{First_Class_Seats: FirstSeats},{ new: true, upsert: true }).then(res);
+      }break;
+    
+    case("Business"):{
+      for (var i=1;i<BusinessSeats.length; i++){
+        for (var j=0; j<oldChosenSeats.length; j++)
+             if (i== oldChosenSeats[j])   BusinessSeats[i]= 0  //-> seat available
+      }
+      flight.findOneAndUpdate({Flight_No: Flight.FlightNo },{Business_Class_Seats: BusinessSeats},{ new: true, upsert: true }).then(res);
+      }break;
+    
+    case("Economy"):{
+        for (var i=1;i<EconomySeats.length; i++){
+          for (var j=0; j<oldChosenSeats.length; j++)
+               if (i== oldChosenSeats[j])   EconomySeats[i]= 0  //-> seat available
+        }
+        flight.findOneAndUpdate({Flight_No: Flight.FlightNo },{Economy_Class_Seats: EconomySeats},{ new: true, upsert: true }).then(res);
+        }break;
+  }
+});
 
 //----------------------------------------------------------------------------------------------------------------------
 //admin

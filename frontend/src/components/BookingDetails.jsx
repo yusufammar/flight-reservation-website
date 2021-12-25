@@ -73,11 +73,17 @@ function deleteFlight(event){                        // deletes booking and send
 }
 
 function handleChangeSeats(event){
-var id=event.target.id;
+    var id=event.target.id;
+    var article= {Flight: GetFlight(bookingActive.DepartureFlightNo) , Booking: bookingActive, FlightDirection: id};
+    console.log(article);
+    /*
+   
 if (id=="DepartureFlight"){
-    var article;
+    var article= {Flight: GetFlight(bookingActive.DepartureFlightNo) , Booking: bookingActive, FlightDirection: id};
+    console.log(article);
+    axios.post('http://localhost:8000/changeSeats',article);
 }
-
+*/
 }
 
 function handleChangeDepartureFlight(event){
