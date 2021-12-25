@@ -23,13 +23,14 @@ import DepartureFlights from './components/DepartureFlights';
 import ReturnFlights from './components/ReturnFlights';
 import Booking from './components/Booking';
 import MyFlights from './components/MyFlights';
+import BookingDetails from './components/BookingDetails';
 
 function App() {
   
   useEffect(() => {
     WebFont.load({
       google: {
-        families: ['Droid Sans', 'Chilanka', 'Josefin Sans']
+        families: ['Droid Sans', 'Chilanka', 'Josefin Sans', 'Roboto']
       }
     });
    }, []);
@@ -100,6 +101,10 @@ function App() {
         <UpdateUser/>
       </Route>
 
+
+      <Route exact path="/BookingDetails">
+        <BookingDetails/>
+      </Route>
 
     </Router>
     

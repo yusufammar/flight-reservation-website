@@ -34,14 +34,27 @@ const FlightsSchema = new Schema({
   },
 
   First_Class_Seats: {
-    type: Number ,
+    type: Array ,
     required: true
   },
   Business_Class_Seats: {
-    type: Number ,
+    type: Array ,
     required: true
   },
   Economy_Class_Seats: {
+    type: Array ,
+    required: true
+  },
+
+  First_Class_AvailableSeats: {
+    type: Number ,
+    required: true
+  },
+  Business_Class_AvailableSeats: {
+    type: Number ,
+    required: true
+  },
+  Economy_Class_AvailableSeats: {
     type: Number ,
     required: true
   },

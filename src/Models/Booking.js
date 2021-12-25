@@ -30,6 +30,14 @@ const bookingSchema = new Schema({
       type: Number,
       require: true
   },
+  DepartureChosenSeats:{
+      type: Array,
+      required: true    
+  },
+  ReturnChosenSeats:{
+      type: Array,
+      required: true    
+  },
   Price:{
     type: Number,
     require: true

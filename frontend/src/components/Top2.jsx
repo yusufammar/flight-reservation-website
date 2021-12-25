@@ -25,7 +25,7 @@ import Divider from '@mui/material/Divider';
 
 
 
-function Top(){      //for USER & GUEST
+function Top2(){      //for USER & GUEST
    
     const location = useLocation();
     const history = useHistory();
@@ -112,10 +112,8 @@ return (
     top: 0px;
     left: 0px;
     z-index:1;
-    color:	#2C85B8;
-    font-family:"Josefin Sans"; 
-    box-shadow: 0px 0px 10px 1px lightGray;
-     `}>
+    color:	white;
+    font-family:"Josefin Sans";  `}>
        
       
     <img className={css`position: absolute; left: 10%; `} src="/logo.png" />
@@ -181,4 +179,4 @@ return (
 );
 } 
 
-export default Top;
+export default Top2;
