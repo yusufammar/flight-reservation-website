@@ -8,10 +8,9 @@ import { useHistory } from "react-router-dom";
 
 function SearchResults(){
 
-      const location = useLocation();
-    const history = useHistory();
-
-    axios.defaults.withCredentials = true;
+   const location = useLocation();
+   const history = useHistory();
+   axios.defaults.withCredentials = true;
     
     useEffect(() => {
         
@@ -37,8 +36,7 @@ function SearchResults(){
      
     }])
     
-    
-    
+     
     useEffect(() => {
    if (location.state!=null){
         var type= location.state.type;  

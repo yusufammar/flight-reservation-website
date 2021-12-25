@@ -4,159 +4,155 @@ import { useHistory } from "react-router-dom";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
+import { css} from '@emotion/css'
+import Top from './Top';                     // rendering in return statement (responsible for session checking & returning of current user email)
+import Checkbox from '@mui/material/Checkbox';
+
 
 function Booking(){           //for USER & GUEST
    const location = useLocation();
    const history = useHistory();
+   axios.defaults.withCredentials = true;
+
    var flag=false;
    var confirmbookingclicked=false;
    
-   axios.defaults.withCredentials = true;
-   useEffect(() => {
-       axios.get('http://localhost:8000/currentUser').then(res =>{ 
-       if (res.data=="0" || res.data.type=="Admin"){
-       alert("Access Denied, Please Sign In First");
-       history.push({pathname:"/SignIn"});
-       }
-      //else go to page
-    })
-   }, [location]);
-
-
-   if (location.state!=null){           //checking if session exists (no url jumping) (if location.state has variables passed), if session exists -> extract state variables
+    if (location.state!=null){           //checking if user searched for a flight & selected a departure flight & variables were passed, no url
     flag=true;   
-      
-       var rflightNo=location.state.returnFlightNo; var dflightNo= location.state.departureFlightNo; 
+    
    }
    else{
-   alert("Please Select Departure & Return Flights First!");
+   alert("Please search for a flight to book first!");
    history.push({
-       pathname: '/SearchFlightsUser' 
+       pathname: '/user' 
        });
    }
 
+   //-------------------------------------------
+
+   var returnFlight=location.state.booking.selectedReturnFlight; 
+   var departureFlight= location.state.booking.selectedDepartureFlight; 
+   var search= location.state.search // search input sent from user.jsx page
+   //var data= location.state.searchResults; 
+   //console.log(data);
+   
+  // var departureFlights=data.departureFlightsAndPrices;
+//var returnFlights=data.returnFlightsAndPrices;
+   
+   var cabin= search.cabin;
+   var totalseats= search.adultSeats + search.childrenSeats;
+
+
+//---------------------------------------------------
+var departureCabinSeatsArray; // cabin seats format array (that has indexes up to the max seats available on that cabin of all flights) (array of constant size, seats array gets aplied on it becuase to display cabin -> format should be the same for all flights)
+var returnCabinSeatsArray;
+
+var departureFlightSeatsArray; // seats array in every flight (that dictates the free (0) & occupied (1) seats) //Based on cabin (departureCabinSeatsArray & departureFlightSeatsArray {First,Business, or Economy})
+var returnFlightSeatsArray; 
+
+var departureChosenSeats=[];  // array of indexes of the chosen seats (checkboxes selected)
+var returnChosenSeats=[]; 
+
+switch (cabin){
+    case ("First"):{
+    departureCabinSeatsArray=new Array(16+1).fill(0); 
+    returnCabinSeatsArray =new Array(16+1).fill(0);              // 16 seats max on First Class Cabin on any flight
+    departureFlightSeatsArray= departureFlight.FlightDetails.First_Class_Seats;        //(first seats array of flight)
+    returnFlightSeatsArray= returnFlight.FlightDetails.First_Class_Seats;
+    } break;
     
-    const [input, setInput] = useState({
-        cabin: "", adults: "",  children: ""  
-    })
-
-
-function handleChange(event){
-const {name,value}=event.target;
-
-setInput(prevInput => {
-    return {
-        ...prevInput,
-        [name]:value
-    }
-})
-
-}
-const [priceshow , setpriceshow] = useState(false);   // initialing priceshow=false
-const [price , setprice] = useState(); 
-
-    const [flights1 , setflights1] = useState([{ 
-        Flight_No:"", From:"", To:"", FlightDate:"" , Departure:"" , Arrival:"", Duration:"", 
-        First_Class_Seats:"",  Business_Class_Seats:"",   Economy_Class_Seats:"",
-        First_Class_BaggageAllowance:"", Business_Class_BaggageAllowance:"",  Economy_Class_BaggageAllowance:"", 
-        First_Class_Price:"", Business_Class_Price:"",  Economy_Class_Price:"" 
-    }])
-
-    const [flights2 , setflights2] = useState([{ 
-        Flight_No:"", From:"", To:"", FlightDate:"" , Departure:"" , Arrival:"", Duration:"", 
-        First_Class_Seats:"",  Business_Class_Seats:"",   Economy_Class_Seats:"",
-        First_Class_BaggageAllowance:"", Business_Class_BaggageAllowance:"",  Economy_Class_BaggageAllowance:"", 
-        First_Class_Price:"", Business_Class_Price:"",  Economy_Class_Price:"" 
-    }])
+    case ("Business"):{
+    departureCabinSeatsArray=new Array(30+1).fill(0); 
+    returnCabinSeatsArray =new Array(30+1).fill(0);              // 16 seats max on First Class Cabin on any flight
+    departureFlightSeatsArray= departureFlight.FlightDetails.Business_Class_Seats;        //(first seats array of flight)
+    returnFlightSeatsArray= returnFlight.FlightDetails.Business_Class_Seats;
+    } break;
     
-    
-    
+    case ("Economy"):{
+    departureCabinSeatsArray=new Array(60+1).fill(0); 
+    returnCabinSeatsArray =new Array(60+1).fill(0);              // 16 seats max on First Class Cabin on any flight
+    departureFlightSeatsArray= departureFlight.FlightDetails.Economy_Class_Seats;        //(first seats array of flight)
+    returnFlightSeatsArray= returnFlight.FlightDetails.Economy_Class_Seats;
+    } break;
 
-   useEffect(() => {
-       if (flag==true){                                     //if session exists
-    const article1 = {DepartureFlightNo: dflightNo};
-    axios.post('http://localhost:8000/getDFLight', article1)
-    .then(jsonRes =>{
-        (setflights1(jsonRes.data)) 
-    })
-    const article2 = {ReturnFlightNo: rflightNo};
-    axios.post('http://localhost:8000/getrFLight', article2)
-    .then(jsonRes =>{
-        (setflights2(jsonRes.data)) 
-    })
-
-       } 
-    }, [location]);
-
-
-    //let priceshow=false; //console.log(priceshow);
-    
-    function handleclick(event){
-    history.push({
-                pathname: '/SearchFlightsUser'
-        }) 
-       
-    }
-
-    function handleclick4(event){
-        event.preventDefault();
-       
-        history.push({
-        pathname: '/user'
-     });
-     }
-
-    //change departure flight (optional)
-
-  function handleclick1(event){
-   event.preventDefault();
-  
-   history.push({
-   pathname: '/BookDepartureFlightUser',
-   state: {departureFlightNo: dflightNo}
-});
-}
-
-function handleclick2(event){ // booking functionality
-  
-    
-    if (input.cabin!="" && (input.adults!="" || input.children!="")){
         
+}
 
-    if (  (input.adults!="" && input.adults<=0 )  ||  (input.children!="" &&  input.children<=0) ){
-    alert("Please Reserve Atleast 1 Seat");
-    setpriceshow(false); }
-    else{
-     
-    var article4= {departureFlightNo: dflightNo, returnFlightNo: rflightNo, cabin: input.cabin,  
-        adults: input.adults, children: input.children}
+// Constructing cabin seats array (0-> free , 1-> occupied/not available) according to the flight seats array
+  
+for(var i=1; i < departureCabinSeatsArray.length; i++){  
+    if (departureFlightSeatsArray[i]==0)
+    departureCabinSeatsArray[i]=0;
+    else if (departureFlightSeatsArray[i]==1) departureCabinSeatsArray[i]=1;
+    else if (departureFlightSeatsArray[i]==undefined) departureCabinSeatsArray[i]=1;
+}
 
-        axios.post('http://localhost:8000/booking',article4)
-        .then(res =>{ 
-            
-            //if res.send (0) -> no seats & if res.send (1) -> seats available & setprice(res.data)
-            if (res.data==0){
-            alert("Seats Not Available");
-            setpriceshow(false); }
-            else{
-            setpriceshow(true); 
-            setprice(res.data); }
-            
-        })
-    }
+for(var i=1; i < returnCabinSeatsArray.length; i++){  
+    if (returnFlightSeatsArray[i]==0)
+    returnCabinSeatsArray[i]=0;
+    else if (returnFlightSeatsArray[i]==1) returnCabinSeatsArray[i]=1;
+    else if (returnFlightSeatsArray[i]==undefined) returnCabinSeatsArray[i]=1;
+}
+
+
+function checkChange(event){ //(departure flight) returns an array of all indexes of seats that were chosen (checkboxes)
+var id= event.target.id 
+var checked=event.target.checked; 
+
+if (checked==true) {
+    departureChosenSeats.push(id);
+} 
+if (checked==false){
+    for (var i=0; i<departureChosenSeats.length; i++)
+    if (departureChosenSeats[i]==id)     departureChosenSeats.splice(i, 1);
+}
+console.log(departureChosenSeats);
+return departureChosenSeats; //console.log(departureChosenSeats);
+}
+
+function checkChange2(event){ // (return flight) returns an array of all indexes of seats that were chosen (checkboxes)
+    var id= event.target.id 
+    var checked=event.target.checked; 
     
-
+    if (checked==true) {
+        returnChosenSeats.push(id);
+    } 
+    if (checked==false){
+        for (var i=0; i<returnChosenSeats.length; i++)
+        if (returnChosenSeats[i]==id)     returnChosenSeats.splice(i, 1);
+    }
+    console.log(returnChosenSeats);
+    return returnChosenSeats; //console.log(departureChosenSeats);
     }
 
-    if (input.cabin=="" && (input.children!="" || input.adults!="")){
-    setpriceshow(false); alert("Please Select Cabin");  } 
-
-    if (input.adults=="" && input.children=="" && input.cabin!=""){
-    setpriceshow(false); alert("Please Reserve Atleast 1 Seat");  }
+function handleClick(){   // confirm button of choosing seats --> make booking
+    console.log(search);
+    if (departureChosenSeats.length!=totalseats || returnChosenSeats.length!=totalseats )
+    alert ("Make sure no. of chosen seats aren't exceeding or not equal to no. of seats required (on both flights)");
+    else{ // make booking post request
+    alert ("Booking Done Successfully");
+    //console.log("Departure Chosen Seats: " + departureChosenSeats +"\nReturn Chosen Seats " + returnChosenSeats);
     
-    if (input.adults=="" && input.children=="" && input.cabin==""){
-    setpriceshow(false); alert("Please Select Cabin & Reserve Atleast 1 Seat"); setpriceshow(false); }
-}    
+    var article= {
+    dFlightNo: departureFlight.FlightDetails.Flight_No,
+    rFlightNo: returnFlight.FlightDetails.Flight_No,
+    cabin: cabin,
+    adults: search.adultSeats,
+    children: search.childrenSeats,
+    price: departureFlight.TotalPrice + returnFlight.TotalPrice,
+    departureChosenSeats: departureChosenSeats,
+    returnChosenSeats: returnChosenSeats,
+};
+  axios.post('http://localhost:8000/confirmBooking', article).then(
+      history.push({pathname:"user"})
+  );
+}
+}
+
+
+//---------------------------------------------------
+
+/*
 function handleclick3(event){
     if (confirmbookingclicked==false){  //to avoid registering the boooking more than once if the user clicked on booking button more than once
         confirmbookingclicked=true;
@@ -166,9 +162,9 @@ function handleclick3(event){
         axios.post('http://localhost:8000/confirmBooking',article5)
        .then(res =>{ 
         if (res.data==1){
-        alert("Booking Done Successful");
+        alert("Booking Done Successfully");
         history.push({
-        pathname: '/User'
+        pathname: '/myFlights'
          });   
         }
         
@@ -176,89 +172,233 @@ function handleclick3(event){
 
  }
 }
+*/
  
 
-   return( <div className='container'>
-       <h1>Book Flight</h1>
-       
-       <br></br>
-       <button onClick={handleclick4}>Back To Main Page</button>
-       &nbsp;&nbsp;&nbsp;
-       <button onClick={handleclick}>Change Flights</button>
-        <br></br><br></br>   <br></br>
+   return( 
+    <div  >
 
+   <Top/>
 
-       { flights1.map(flight =>
-       <div>
-        <h5 style={{color:"blue"}}>Departure Flight</h5>   
-        <br/>
-        <p> 
-       <label style={{fontWeight:"bold"}} > {flight.From} &#10140; {flight.To} </label>    <br></br> 
-        Flight No: {flight.Flight_No}  &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; Date: {flight.FlightDate.substr(0,10)} &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Departure Time: {flight.Departure}  &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Arrival Time: {flight.Arrival} &nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp; Duration: {flight.Duration}   <br></br>
-        
-        First Class: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Seats Available ({flight.First_Class_Seats}) | Baggage Allowance ({flight.First_Class_BaggageAllowance}) | Price ({flight.First_Class_Price}) <br></br>  
-        Business Class: &nbsp;&nbsp;Seats Available ({flight.Business_Class_Seats}) | Baggage Allowance ({flight.Business_Class_BaggageAllowance}) | Price ({flight.Business_Class_Price})  <br></br> 
-        Economy Class: &nbsp;Seats Available ({flight.Economy_Class_Seats}) | Baggage Allowance ({flight.Economy_Class_BaggageAllowance}) | Price ({flight.Economy_Class_Price})  <br></br> 
+   <div  name="content" className={css`
+  position: absolute; left: 5%; top: 10%;  text-align: center; 
+  font-family: 'Josefin Sans'; font-size: 15px; `
+  }>
+
+      <h1>Choose Seats</h1>
+
+      <div name="SeatSelector">
+          <label>Number of seats to  be chosen (per flight): {totalseats}</label>
       
-       <br></br>
-       </p>
+      {cabin=="First" &&
+      <div  name="First Class Format Seat Selector" style={{outline: '5px solid black', textAlign:'center', padding:'30px', borderRadius: '8px'}}>
+       
+       <img src="/F.jpg" /> <br></br> <br></br> <h3 >First Class</h3> <br></br> 
+      
+      
+      <div style={{display:'flex', textAlign:'center',  width:'100%'}}>
+       
+        <div name="departureFlight" style={{ width:'50%'}}>
+        <label>Departure Flight</label> <br></br>
+            
+            {departureCabinSeatsArray.map((seat, i) => //Conditional Rendering with map function (used to iterate over arrays) | 
+                                    //seat-> each entry of array that the function is applied on | i-> index of departureCabinSeatsArray array | function performed to every entry is what's between the curly braces after the '=>' operator
+            { 
+            if (i==0) return (""); // index -> 0  (seatArray starts from 1 so do nothing)   
+            else if (i%4==0)   // index -> 4/8/12/16  (end of row)
+            return (<a><Checkbox id={i} onChange={checkChange} disabled={seat==1}/> <img src="/window.png" /><br></br></a>)
+            else if (i%2==0 && i%4!=0)   // index -> 2/6/10/14  (middle seat of row)
+            return (<a><Checkbox id={i} onChange={checkChange} disabled={seat==1}/> &nbsp; &nbsp;&nbsp; &nbsp;  </a>)
+            else if (i%4==1)   // index -> 1/5/9/13  (first seat of row)
+            return (<a><img src="/window.png" /><Checkbox id={i} onChange={checkChange} disabled={seat==1}/>  </a>)
+            else // (seat in same row) 
+            return (<a><Checkbox id={i} onChange={checkChange} disabled={seat==1}/> </a>)
+            }
+      )} 
         </div>
-       )}
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 
+        <div className= {css`border-left: 6px solid #2C85B8;; height: 100%px;`}></div>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 
 
-   
-
-       {flights2.map(flight =>
-       <div>
-        <h5 style={{color:"blue"}}>Return Flight</h5> 
-        <br/>
-       
-       <p> 
-       <label style={{fontWeight:"bold"}} > {flight.From} &#10140; {flight.To} </label>    <br></br> 
-        Flight No: {flight.Flight_No}  &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; Date: {flight.FlightDate.substr(0,10)} &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Departure Time: {flight.Departure}  &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Arrival Time: {flight.Arrival} &nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp; Duration: {flight.Duration}   <br></br>
+        <div name="returnFlight" style={{ width:'50%'}}>
+        <label>Return Flight</label> <br></br> 
         
-        First Class: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Seats Available ({flight.First_Class_Seats}) | Baggage Allowance ({flight.First_Class_BaggageAllowance}) | Price ({flight.First_Class_Price}) 
-        <br></br>  
-        Business Class: &nbsp;&nbsp;Seats Available ({flight.Business_Class_Seats}) | Baggage Allowance ({flight.Business_Class_BaggageAllowance}) | Price ({flight.Business_Class_Price})  
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <button onClick={handleclick1}>Change Return Flight</button><br></br> 
-        Economy Class: &nbsp;Seats Available ({flight.Economy_Class_Seats}) | Baggage Allowance ({flight.Economy_Class_BaggageAllowance}) | Price ({flight.Economy_Class_Price})  <br></br> 
+         {returnCabinSeatsArray.map((seat, i) => //Conditional Rendering with map function (used to iterate over arrays) | 
+                                    //seat-> each entry of array that the function is applied on | i-> index of departureCabinSeatsArray array | function performed to every entry is what's between the curly braces after the '=>' operator
+            { 
+            if (i==0) return (""); // index -> 0  (seatArray starts from 1 so do nothing)   
+            else if (i%4==0)   // index -> 4/8/12/16  (end of row)
+            return (<a><Checkbox id={i} onChange={checkChange2} disabled={seat==1}/> <img src="/window.png" /><br></br></a>)
+            else if (i%2==0 && i%4!=0)   // index -> 2/6/10/14  (middle seat of row)
+            return (<a><Checkbox id={i} onChange={checkChange2} disabled={seat==1}/> &nbsp; &nbsp;&nbsp; &nbsp;  </a>)
+            else if (i%4==1)   // index -> 1/5/9/13  (first seat of row)
+            return (<a><img src="/window.png" /><Checkbox id={i} onChange={checkChange2} disabled={seat==1}/>  </a>)
+            else // (seat in same row) 
+            return (<a><Checkbox id={i} onChange={checkChange2} disabled={seat==1}/> </a>)
+            }
+      )} 
+        </div>
+
+
+      </div>
+
+      <br></br> <br></br>
+      <button className="btn btn-primary" onClick={handleClick}>Confirm</button>
+      </div>
       
-       <br></br>
-       </p>
-</div>
+      
+}
 
-       )}
+{cabin=="Business" &&
+      <div  name="Business Class Format Seat Selector" style={{outline: '5px solid black', textAlign:'center', padding:'30px', borderRadius: '8px'}}>
+       
+       <img src="/B.jpg" /> <br></br> <br></br> <h3 >Business Class</h3> <br></br> 
+      
+    
+      <div style={{display:'flex', textAlign:'center',  width:'100%'}}>
+       
+        <div name="departureFlight"  style={{ width:'50%'}}>
+        <label>Departure Flight</label> <br></br>
+            
+            {departureCabinSeatsArray.map((seat, i) => //Conditional Rendering with map function (used to iterate over arrays) | 
+                                    //seat-> each entry of array that the function is applied on | i-> index of departureCabinSeatsArray array | function performed to every entry is what's between the curly braces after the '=>' operator
+            { 
+            if (i==0) return (""); // index -> 0  (seatArray starts from 1 so do nothing)   
+            
+            else if (i%6==0)   // index -> 4/8/12/16  (end of row)
+            return (<a><Checkbox id={i} onChange={checkChange} disabled={seat==1}/> <img src="/window.png" /><br></br></a>)
+            
+            else if ( (i%2==0 || i%4==0 )&& i%6!=0)   // index -> 2/6/10/14  (middle seat of row)
+            return (<a><Checkbox id={i} onChange={checkChange} disabled={seat==1}/> &nbsp; &nbsp;&nbsp; &nbsp;  </a>)
+            
+            else if (i%6==1)   // index -> 1/5/9/13  (first seat of row)
+            return (<a><img src="/window.png" /><Checkbox id={i} onChange={checkChange} disabled={seat==1}/>  </a>)
+            
+            else // (seat in same row) 
+            return (<a><Checkbox id={i} onChange={checkChange} disabled={seat==1}/> </a>)
+            }
+      )} 
+        </div>
 
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 
+        <div className= {css`border-left: 6px solid #2C85B8;; height: 100%px;`}></div>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;           
 
-    <label style={{fontWeight:"bold"}}>Seats</label> <br></br>
-    <label> Cabin <br></br> 
-<select name="cabin" value={input.cabin} onChange={handleChange}>
-<option >  </option>
-  <option > First </option>
-  <option > Business </option>
-  <option > Economy </option>
-</select> 
-</label> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <label>Adults <br></br><input type="number" name="adults" value={input.adults}  onChange={handleChange} style={{width:"75px"}}></input> </label> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <label>Children <br></br> <input type="number" name="children" style={{width:"75px"}} value={input.children} onChange={handleChange}></input> </label>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-   
-
-   <button onClick={handleclick2}>Book</button>
-        <br></br><br></br>
-
-     {priceshow==true &&
-     <div>
-     <label style={{fontWeight:"bold"}}>Price: </label> 
-     <label style={{fontWeight:"bold"}}>{price} </label> 
-     
-     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-     <button onClick={handleclick3} >Confirm Booking</button>
+        <div name="returnFlight" style={{ width:'50%'}}>
+        <label>Return Flight</label> <br></br> 
         
-     </div>
-    }   
+         {returnCabinSeatsArray.map((seat, i) => //Conditional Rendering with map function (used to iterate over arrays) | 
+                                    //seat-> each entry of array that the function is applied on | i-> index of departureCabinSeatsArray array | function performed to every entry is what's between the curly braces after the '=>' operator
+                                    { 
+                                        if (i==0) return (""); // index -> 0  (seatArray starts from 1 so do nothing)   
+                                        
+                                        else if (i%6==0)   // index -> 4/8/12/16  (end of row)
+                                        return (<a><Checkbox id={i} onChange={checkChange2} disabled={seat==1}/> <img src="/window.png" /><br></br></a>)
+                                        
+                                        else if ( (i%2==0 || i%4==0 )&& i%6!=0)   // index -> 2/6/10/14  (middle seat of row)
+                                        return (<a><Checkbox id={i} onChange={checkChange2} disabled={seat==1}/> &nbsp; &nbsp;&nbsp; &nbsp;  </a>)
+                                        
+                                        else if (i%6==1)   // index -> 1/5/9/13  (first seat of row)
+                                        return (<a><img src="/window.png" /><Checkbox id={i} onChange={checkChange2} disabled={seat==1}/>  </a>)
+                                        
+                                        else // (seat in same row) 
+                                        return (<a><Checkbox id={i} onChange={checkChange2} disabled={seat==1}/> </a>)
+                                        }
+      )} 
+        </div>
+
+
+      </div>
+
+      <br></br> <br></br>
+      <button className="btn btn-primary" onClick={handleClick}>Confirm</button>
+      
+      </div>
+}
+
+{cabin=="Economy" &&
+      <div  name="Economy Class Format Seat Selector" style={{outline: '5px solid black', textAlign:'center', padding:'30px', borderRadius: '8px'}}>
+       
+       <img src="/E.jpg" /> <br></br> <br></br> <h3 >Economy Class</h3> <br></br> 
+      
+    
+      <div style={{display:'flex', textAlign:'center', }}>
+       
+        <div name="departureFlight"  style={{ width:'50%'}}>
+        <label>Departure Flight</label> <br></br>
+            
+            {departureCabinSeatsArray.map((seat, i) => //Conditional Rendering with map function (used to iterate over arrays) | 
+                                    //seat-> each entry of array that the function is applied on | i-> index of departureCabinSeatsArray array | function performed to every entry is what's between the curly braces after the '=>' operator
+            { var m= i%10;
+            if (i==0) return (""); // index -> 0  (seatArray starts from 1 so do nothing)   
+            
+            else if (m%10==0)   // index -> 4/8/12/16  (end of row)
+            return (<a><Checkbox id={i} onChange={checkChange} disabled={seat==1}/> <img src="/window.png" /><br></br></a>)
+            
+            else if ( ((m%3==0 && m%6!=0 && m%9!=0) || m%7==0)&& m%10!=0)   // index -> 2/6/10/14  (middle seat of row)
+            return (<a><Checkbox id={i} onChange={checkChange} disabled={seat==1}/> &nbsp; &nbsp;&nbsp; &nbsp;  </a>)
+            
+            else if (m%10==1)   // index -> 1/5/9/13  (first seat of row)
+            return (<a><img src="/window.png" /><Checkbox id={i} onChange={checkChange} disabled={seat==1}/>  </a>)
+            
+            else // (seat in same row) 
+            return (<a><Checkbox id={i} onChange={checkChange} disabled={seat==1}/> </a>)
+            }
+      )} 
+        </div>
+
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 
+        <div className= {css`border-left: 6px solid #2C85B8;; height: 100%px;`}></div>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;           
+
+        <div name="returnFlight" style={{ width:'50%'}}>
+        <label>Return Flight</label> <br></br> 
+        
+         {returnCabinSeatsArray.map((seat, i) => //Conditional Rendering with map function (used to iterate over arrays) | 
+                                    //seat-> each entry of array that the function is applied on | i-> index of departureCabinSeatsArray array | function performed to every entry is what's between the curly braces after the '=>' operator
+                                    { var m= i%10;
+                                        if (i==0) return (""); // index -> 0  (seatArray starts from 1 so do nothing)   
+                                        
+                                        else if (m%10==0)   // index -> 4/8/12/16  (end of row)
+                                        return (<a><Checkbox id={i} onChange={checkChange2} disabled={seat==1}/> <img src="/window.png" /><br></br></a>)
+                                        
+                                        else if ( ((m%3==0 && m%6!=0 && m%9!=0) || m%7==0)&& m%10!=0)   // index -> 2/6/10/14  (middle seat of row)
+                                        return (<a><Checkbox id={i} onChange={checkChange2} disabled={seat==1}/> &nbsp; &nbsp;&nbsp; &nbsp;  </a>)
+                                        
+                                        else if (m%10==1)   // index -> 1/5/9/13  (first seat of row)
+                                        return (<a><img src="/window.png" /><Checkbox id={i} onChange={checkChange2} disabled={seat==1}/>  </a>)
+                                        
+                                        else // (seat in same row) 
+                                        return (<a><Checkbox id={i} onChange={checkChange2} disabled={seat==1}/> </a>)
+                                        }
+      )} 
+        </div>
+
+
+      </div>
+
+      <br></br> <br></br>
+      <button className="btn btn-primary" onClick={handleClick}>Confirm</button>
+      
+      </div>
+}
+
+
+      </div>
+       
+       
+ 
+
    
-   </div>
+
+
+
+    </div>  
+   
+  
+
+</div>
+   
 
        
 

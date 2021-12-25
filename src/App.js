@@ -1,18 +1,24 @@
 const express = require("express");
 const app = express();
-const mongoose = require('mongoose');
-
-const nodemailer = require("nodemailer");
-const Flight = require('../src/Models/Flights');
-const Booking = require('../src/Models/Booking');
-const User = require('../src/Models/User');
-
-const { findByIdAndRemove } = require("../src/Models/Flights");
-
-app.use("/", require("./Routes/Controller"));
 app.use(express.json());
+app.use("/", require("./Routes/Controller"));
+
+
+const port = process.env.PORT || "8000";         // Initializing Backend Server (specifying port no)
+app.listen(port, () => { console.log(`Listening to requests on http://localhost:${port}`);  });
+
+const mongoose = require('mongoose');            // Database Connection
+const MongoURI = 'mongodb+srv://Adham:1234@acl.tpg5t.mongodb.net/Airline?retryWrites=true&w=majority' ;  // database mongodb url
+mongoose.connect(MongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(result => console.log("MongoDB is now connected"))
+  .catch(err => console.log(err));
 
 /*
+
+const flight = require('../src/Models/Flights');
+const booking = require('../src/Models/Booking');
+const user = require('../src/Models/User');
+
 const cors = require('cors');
 const session=require("express-session");
 app.use(session({secret:'secret', resave:false , saveUninitialized:false}));
@@ -25,18 +31,14 @@ app.use(cors({                          // for axios post to not destroy session
 
 */
 
+/*
 app.get("/Home", (req, res) => {
   res.status(200).send("You have everything installed !");
 });
 
 
-app.delete('/delete/:id', async (req, res) => {
-  const idNum = req.params.id;
-   await Flight.findOneAndDelete({_id : idNum}, function (err, docs) {
-    console.log(err);
-   });
-  res.send("deleted");
-});
+
+*/
 
 /*
 
@@ -59,14 +61,4 @@ app.get("/addUsers",(req,res)=>{
     me.save();  });
 */
 
-const MongoURI = 'mongodb+srv://Adham:1234@acl.tpg5t.mongodb.net/Airline?retryWrites=true&w=majority' ;  // database mongodb url
-
-mongoose.connect(MongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(result => console.log("MongoDB is now connected"))
-  .catch(err => console.log(err));
-
-const port = process.env.PORT || "8000";
-app.listen(port, () => {
-  console.log(`Listening to requests on http://localhost:${port}`);
-});
 
