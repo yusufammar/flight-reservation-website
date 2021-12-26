@@ -103,15 +103,16 @@ router.route("/addUser").post((req,res) => {
 
 router.route("/MyBookings").get((req, res) => {
   booking.find({Email : req.session.email})
-    .then(foundBookings => res.send(foundBookings))
+    .then(foundBookings => {res.send(foundBookings); //console.log(foundBookings);
+    })
 })
 
 router.route("/getBooking").post((req, res) => {
   bookingNo= req.body.bookingNo;
-  console.log(bookingNo);
+  //console.log(bookingNo);
   booking.find({BookingNo : bookingNo}).then(foundBookings => {
     res.send(foundBookings[0])
-    console.log(foundBookings[0]);  
+   // console.log(foundBookings[0]);  
   })
   
 })
@@ -217,6 +218,154 @@ res.send('1');
 
     //search for the return flight if no flight (then don't show trip)
   })
+
+  router.route("/getMatchingFlights").post(async(req, res) => {
+  
+    const from= req.body.from;
+    const to= req.body.to;
+    
+    const date= req.body.date;
+     
+    const cabin= req.body.cabin;
+    const adultSeats= req.body.adultSeats;  
+    const childrenSeats= req.body.childrenSeats;
+  
+  var seats= adultSeats+ childrenSeats;
+  var search = { From : from, To : to, FlightDate : date }   ;   
+ 
+  
+  switch (cabin){
+   
+  case ("First"):{
+    search = { $and: [ search,  {First_Class_AvailableSeats : { $gte: seats}}  ]} ;
+   
+  }; break;
+  
+  case ("Business"):{
+    search = { $and: [ search,  {Bussiness_Class_AvailableSeats : { $gte: seats}}  ]};
+  
+  }; break;
+  
+  case ("Economy"):{
+    search = { $and: [ search,  {Economy_Class_AvailableSeats : { $gte: seats}}  ]};
+
+  }; break;
+  
+  }
+  
+  var Flights;  
+  var foundflag=true;
+  await flight.find(search).then(foundflights => {
+        if (foundflights.length!=0)
+        Flights= foundflights;
+        else
+        foundflag=false;   // no results 
+      });
+  
+  
+  if (foundflag==true){
+  
+    var FlightsAndPrices=[];
+  
+  for (var i=0; i<Flights.length; i++){    // gets price of every departure flight
+   var flight1= Flights[i]; var price;
+   switch (cabin){
+    case ("First"):{
+     price = flight1.First_Class_Price * adultSeats + flight1.First_Class_Price * childrenSeats*0.7; } break;
+      
+    case ("Business"):{
+     price = flight1.Business_Class_Price * adultSeats + flight1.Business_Class_Price * childrenSeats*0.7; } break;
+      
+    case ("Economy"):{
+     price = flight1.Economy_Class_Price * adultSeats + flight1.Economy_Class_Price * childrenSeats*0.7; } break;
+     
+  }
+  var f= { FlightDetails: flight1, TotalPrice: price}   //makes new object (flight & its corrosponding price)
+  FlightsAndPrices.push(f) // pushes object (flight & its corrosponding price) to an array (departureFlightsAndPrices) 
+  }
+  
+ res.send(FlightsAndPrices);  // array of objects [ {FlightDetails: x , TotalPrice: x } ]
+  }
+  else 
+  res.send('1');
+
+})
+
+router.route("/changeFlight").post((req, res) => {
+  var newFlight= req.body.newFlight.FlightDetails  // actual flight
+  var newChosenSeats= req.body.NewChosenSeats;
+  var Booking= req.body.Booking;
+  var FlightDirection= req.body.FlightDirection;
+  var Flight= req.body.Flight;  // to get seat array from & update it
+
+  var cabin= Booking.Cabin; var adults= Booking.AdultSeats; var children= Booking.ChildrenSeats; 
+
+  var totalSeats= adults+children;  
+  var oldChosenSeats;
+
+//1) update old flight's seats array (get old chosen seats in the corrosponding cabin)
+
+if (FlightDirection=="DepartureFlight")   oldChosenSeats= Booking.DepartureChosenSeats;
+else                                      oldChosenSeats= Booking.ReturnChosenSeats;
+
+var seatsArray=[];
+var availableSeats;
+switch (cabin){
+case ("First"):{  seatsArray=Flight.First_Class_Seats;       availableSeats=Flight.First_Class_AvailableSeats;} break;
+case ("Business"):{  seatsArray=Flight.Business_Class_Seats; availableSeats=Flight.Business_Class_AvailableSeats;} break;
+case ("Economy"):{  seatsArray=Flight.Economy_Class_Seats;   availableSeats=Flight.Economy_Class_AvailableSeats;} break;
+}
+availableSeats+=totalSeats;
+
+for (var i=1;i<seatsArray.length; i++){
+  for (var j=0; j<oldChosenSeats.length; j++)
+          if (i== oldChosenSeats[j])   seatsArray[i]= 0  //-> seat became available
+  }
+  //now seatsArray & avaialable seats of old flight is updated --> update flight collection
+  switch (cabin){
+    case ("First"):{  
+    flight.findOneAndUpdate({Flight_No: Flight.Flight_No},{ First_Class_Seats: seatsArray, First_Class_AvailableSeats: availableSeats  },{ new: true, upsert: true }).then(res);} break;
+    case ("Business"):{  
+    flight.findOneAndUpdate({Flight_No: Flight.Flight_No},{ Business_Class_Seats: seatsArray, Business_Class_AvailableSeats: availableSeats },{ new: true, upsert: true }).then(res);} break;
+    case ("Economy"):{  
+    flight.findOneAndUpdate({Flight_No: Flight.Flight_No},{ Economy_Class_Seats: seatsArray, Economy_Class_AvailableSeats: availableSeats },{ new: true, upsert: true }).then(res);} break;
+    }
+
+//2) update newFlight seats array & available seats 
+ 
+var newFlightSeatsArray=[]; var newFlightAvailableSeats;
+switch (cabin){
+  case ("First"):{    newFlightSeatsArray = newFlight.First_Class_Seats;       newFlightAvailableSeats=newFlight.First_Class_AvailableSeats;} break;
+  case ("Business"):{ newFlightSeatsArray  = newFlight.Business_Class_Seats; newFlightAvailableSeats=newFlight.Business_Class_AvailableSeats;} break;
+  case ("Economy"):{  newFlightSeatsArray = newFlight.Economy_Class_Seats;   newFlightAvailableSeats=newFlight.Economy_Class_AvailableSeats;} break;
+  }
+  newFlightAvailableSeats= newFlightAvailableSeats- totalSeats;
+  console.log(newFlightSeatsArray);
+
+  for (var i=1;i<newFlightSeatsArray.length; i++){
+    for (var j=0; j<newChosenSeats.length; j++)
+            if (i== newChosenSeats[j])   newFlightSeatsArray[i]= 1  //-> seat became occupied
+    }
+    console.log(newFlightSeatsArray);
+    //now seatsArray & avaialable seats of old flight is updated --> update flight collection
+
+    switch (cabin){
+      case ("First"):{  
+      flight.findOneAndUpdate({Flight_No: newFlight.Flight_No},{ First_Class_Seats:  newFlightSeatsArray, First_Class_AvailableSeats: newFlightAvailableSeats  },{ new: true, upsert: true }).then(res);} break;
+      case ("Business"):{  
+      flight.findOneAndUpdate({Flight_No: newFlight.Flight_No},{ Business_Class_Seats:  newFlightSeatsArray, Business_Class_AvailableSeats: newFlightAvailableSeats },{ new: true, upsert: true }).then(res);} break;
+      case ("Economy"):{  
+      flight.findOneAndUpdate({Flight_No: newFlight.Flight_No},{ Economy_Class_Seats:  newFlightSeatsArray, Economy_Class_AvailableSeats: newFlightAvailableSeats },{ new: true, upsert: true }).then(res);} break;
+      }
+
+ //3) update booking collection with  new flight no & NewChosenSeats based on flight direction     
+if (FlightDirection=="DepartureFlight"){
+  booking.findOneAndUpdate({BookingNo: Booking.BookingNo},{DepartureFlightNo: newFlight.Flight_No, DepartureChosenSeats:  newChosenSeats},{ new: true, upsert: true }).then(res); 
+}  else{                                   
+booking.findOneAndUpdate({BookingNo: Booking.BookingNo},{ReturnFlightNo: newFlight.Flight_No, ReturnChosenSeats:  newChosenSeats},{ new: true, upsert: true }).then(res);
+}
+
+ })
 
 
 
@@ -411,8 +560,8 @@ router.route("/confirmBooking").post((req,res)=>{ // update available seats in f
       case("First"):{
       
       // Seats Available Update
-      DFirstAvailableSeats -= seats;
-      RFirstAvailableSeats -= seats;
+      DFirstAvailableSeats =DFirstAvailableSeats- seats;
+      RFirstAvailableSeats = RFirstAvailableSeats- seats;
       
       // Seats Array Update
       for (var i=1;i<DFirstSeats.length; i++){
@@ -432,8 +581,8 @@ router.route("/confirmBooking").post((req,res)=>{ // update available seats in f
         case("Business"):{
       
           // Seats Available Update
-          DBusinessAvailableSeats -= seats;
-          RBusinessAvailableSeats -= seats;
+          DBusinessAvailableSeats = DBusinessAvailableSeats- seats;
+          RBusinessAvailableSeats =RBusinessAvailableSeats - seats;
           
           // Seats Array Update
           for (var i=1;i<DBusinessSeats.length; i++){
@@ -453,8 +602,8 @@ router.route("/confirmBooking").post((req,res)=>{ // update available seats in f
       case("Economy"):{
       
         // Seats Available Update
-        DEconomyAvailableSeats -= seats;
-        REconomyAvailableSeats -= seats;
+        DEconomyAvailableSeats = DEconomyAvailableSeats- seats;
+        REconomyAvailableSeats = DEconomyAvailableSeats- seats;
         
         // Seats Array Update
         for (var i=1;i<DEconomySeats.length; i++){
@@ -535,7 +684,7 @@ router.route("/Updateinfo").post((req, res) => {
 router.route("/SendCancelEmail").post( async (req, res) => {
 
   const booking = req.body.booking;
-  console.log(booking)
+  //console.log(booking)
 ;
 
   const transporter = nodemailer.createTransport({
@@ -568,13 +717,13 @@ router.route("/SendCancelEmail").post( async (req, res) => {
 var selectedFlightID = "";
 router.route('/FlightsListVal').post((req, res) => {
   selectedFlightID = req.body.id;
-  console.log(selectedFlightID);
+  //console.log(selectedFlightID);
 });
 
 router.route('/UpdatePage').post((req, res) => {
-  console.log(selectedFlightID);
+  //console.log(selectedFlightID);
   flight.findById(selectedFlightID, function (err, docs) {
-    console.log(docs);
+   // console.log(docs);
     var flightVar = req.body;
 
     if (flightVar.FlightNo_.length != 0)
@@ -612,7 +761,7 @@ router.route('/UpdatePage').post((req, res) => {
 
 router.route('/cancel').post(async(req, res) => {
   const bookingNo = req.body.bookingNo;
-  console.log(bookingNo);
+ // console.log(bookingNo);
 
   var booking1={};
   var departureFlight={}; var returnFlight={};
@@ -730,48 +879,37 @@ booking.findOneAndDelete({BookingNo : bookingNo}).then(res);
 });
 
 router.route('/changeSeats').post(async(req, res) => {
-  var booking= req.body.Booking;
-  var flightDirection= req.body.FlightDirection;
-  var Flight= req.body.Flight;
+//console.log(req.body);
+//updating booking
+var bookingNo= req.body.BookingNo;
+var flightDirection= req.body.FlightDirection;
+var newChosenSeats= req.body.NewChosenSeats;
 
-  var cabin= booking.Cabin;
-
-  var oldChosenSeats;  // chosen seats array of departure/return flight of booking
-
-  if ( flightDirection=="DepartureFlight")  oldChosenSeasts=booking.departureChosenSeats;
-  if ( flightDirection=="ReturnFlight")     oldChosenSeasts=booking.returnChosenSeats;
+if (flightDirection=="DepartureFlight")
+booking.findOneAndUpdate({BookingNo: bookingNo },{DepartureChosenSeats: newChosenSeats},{ new: true, upsert: true }).then(res);
+else
+booking.findOneAndUpdate({BookingNo: bookingNo },{ReturnChosenSeats: newChosenSeats},{ new: true, upsert: true }).then(res);
 
 
-  //consturct seats array acccording to cabin (remove old seats & update flight collection)  // dont do anything to no. of seats available becuase user going to reserve same amount again
-  // update chosen seats in booking after he selects new seats
+//updating flight
+var flightNo=req.body.FlightNo;
+var cabin=req.body.Cabin;  
+var newSeatsArray= req.body.NewSeatsArray;
 
-  var FirstSeats = Flight.First_Class_Seats;                     // seats array (with old seats)
-  var BusinessSeats =Flight.Business_Class_Seats;
-  var EconomySeats =Flight.Economy_Class_Seats;
-  
   switch(cabin){
     case("First"):{
-      for (var i=1;i<FirstSeats.length; i++){
-        for (var j=0; j<oldChosenSeats.length; j++)
-             if (i== oldChosenSeats[j])   FirstSeats[i]= 0  //-> seat available
-      }
-      flight.findOneAndUpdate({Flight_No: Flight.FlightNo },{First_Class_Seats: FirstSeats},{ new: true, upsert: true }).then(res);
+    
+      flight.findOneAndUpdate({Flight_No: flightNo },{First_Class_Seats: newSeatsArray},{ new: true, upsert: true }).then(res);
       }break;
     
     case("Business"):{
-      for (var i=1;i<BusinessSeats.length; i++){
-        for (var j=0; j<oldChosenSeats.length; j++)
-             if (i== oldChosenSeats[j])   BusinessSeats[i]= 0  //-> seat available
-      }
-      flight.findOneAndUpdate({Flight_No: Flight.FlightNo },{Business_Class_Seats: BusinessSeats},{ new: true, upsert: true }).then(res);
+     
+      flight.findOneAndUpdate({Flight_No: flightNo },{Business_Class_Seats: newSeatsArray},{ new: true, upsert: true }).then(res);
       }break;
     
     case("Economy"):{
-        for (var i=1;i<EconomySeats.length; i++){
-          for (var j=0; j<oldChosenSeats.length; j++)
-               if (i== oldChosenSeats[j])   EconomySeats[i]= 0  //-> seat available
-        }
-        flight.findOneAndUpdate({Flight_No: Flight.FlightNo },{Economy_Class_Seats: EconomySeats},{ new: true, upsert: true }).then(res);
+        
+        flight.findOneAndUpdate({Flight_No: flightNo },{Economy_Class_Seats: newSeatsArray},{ new: true, upsert: true }).then(res);
         }break;
   }
 });
@@ -1018,6 +1156,37 @@ var FRA= "FRA (Frankfurt Airport, Frankfurt, Germany)";
 
   });
    newFlight4.save();
+
+   d= "10:00"; a= "14:00";
+    
+    const newFlight5 = new flight({
+    Flight_No: 5,
+    From: LAX, 
+    To: JFK,
+  
+    FlightDate: "2022-01-12",
+    Departure: d,
+    Arrival: a,
+    Duration: duration(d,a),
+  
+    First_Class_Seats: FirstSeats,
+    Business_Class_Seats: BusinessSeats,
+    Economy_Class_Seats: EconomySeats,
+
+    First_Class_AvailableSeats: FirstSeats.length-1, 
+    Business_Class_AvailableSeats: BusinessSeats.length-1,
+    Economy_Class_AvailableSeats: EconomySeats.length-1,
+  
+    First_Class_BaggageAllowance: 4,
+    Business_Class_BaggageAllowance: 3,
+    Economy_Class_BaggageAllowance: 2,
+  
+    First_Class_Price: 5000,
+    Business_Class_Price: 3000,
+    Economy_Class_Price: 1500
+
+  });
+   newFlight5.save();
    
 
    res.send("success");

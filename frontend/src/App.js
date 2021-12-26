@@ -24,6 +24,9 @@ import ReturnFlights from './components/ReturnFlights';
 import Booking from './components/Booking';
 import MyFlights from './components/MyFlights';
 import BookingDetails from './components/BookingDetails';
+import ChangeSeats from './components/ChangeSeats';
+import ChangeFlight from './components/ChangeFlight';
+import BookingUpdate from './components/BookingUpdate';
 
 function App() {
   
@@ -105,7 +108,17 @@ function App() {
       <Route exact path="/BookingDetails">
         <BookingDetails/>
       </Route>
+      <Route exact path="/ChangeSeats">
+        <ChangeSeats/>
+      </Route>
 
+      <Route exact path="/ChangeFlight">
+        <ChangeFlight/>
+      </Route>
+
+      <Route exact path="/BookingUpdate">
+        <BookingUpdate/>
+      </Route>
     </Router>
     
 )}

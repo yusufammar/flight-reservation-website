@@ -16,16 +16,12 @@ const location = useLocation();
 const history = useHistory();
 axios.defaults.withCredentials = true;
 
-
+const [bookings, setbookings] = useState([]);       //bookings found for user
 const [depFlights, setDepFlights] = useState([]);     // all flights
-const [bookings, setbookings] = useState([])       //bookings found for user
+
   
 useEffect(() => {
-    fetch("/MyBookings").then(res => {                // gets all bookings
-        if (res.ok) {
-            return res.json();
-        }
-    }).then(jsonRes => {setbookings(jsonRes); });
+    axios.get('http://localhost:8000/MyBookings').then(jsonRes => {console.log(jsonRes.data); setbookings(jsonRes.data); console.log(bookings)});
 
     fetch("/FlightsList").then(res => {              // gets all flights (& sets it to depFlights)
         if (res.ok) {
@@ -52,6 +48,7 @@ function GetFlight(FlightNumber) {             // get flights with flightNo from
         if (depFlights[i].Flight_No == FlightNumber)
             return depFlights[i]
     }
+    return [];
 }
      
 return (
@@ -61,7 +58,7 @@ return (
 
   <div  name="content" className={css`
   position: absolute; left: 10%; top: 10%; border-radius: 20px; width: 50%; padding: 20px; 
-  font-family: 'Josefin Sans'; font-size: 15px; font-weight: bold;`
+  font-family: 'Josefin Sans'; font-size: 15px; font-weight: bold; height:1000px;`
   }>
         <h1>Bookings</h1>
         
@@ -69,7 +66,7 @@ return (
         {bookings.length==0 &&  <h6> <br></br> No Bookings To Show! </h6>}
         
        
-        {bookings.map(booking =>
+        {bookings[0] !=undefined && bookings.map(booking =>
            
         <div>
             <div id={booking.BookingNo} onClick={handleShow} className={css`
