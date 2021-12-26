@@ -6,6 +6,7 @@ const { findByIdAndRemove } = require("../Models/Flights");
 const { ConnectionPoolClosedEvent } = require("mongodb");
 
 const express = require("express");
+const bcrypt = require("bcrypt");
 const router= express.Router();
 router.use(express.json());
 const cors = require('cors');
@@ -27,22 +28,25 @@ router.route("/logout").get((req, res) => {
   req.session.destroy();              // destroying session
    });
 
-router.route("/SignIn").post((req, res) => {
-var x = req.body.Email;  const y = req.body.Password;
+router.route("/SignIn").post(async(req, res) => {
+   var emailInput = req.body.Email;  
+  const email=emailInput.toLowerCase();  const password = req.body.Password;
 
- user.find({ Email : x , Password: y}).then(founduser => {  //all cases (actions) shoud be inside then statement (variable changes in then statement dont get apllied outside then statement)
-   if (founduser.length!= 0 && founduser[0].type!="Guest") {
-     //req.session.user = x; req.session.save();    //setting session (if admin or user) & saving session variable without sending it
-     //res.send(req.session.user);
-     switch (founduser[0].Type){
-     case("Customer"): {req.session.email = x; req.session.type = founduser[0].Type; req.session.save();res.send("1"); break;};
-     case("Admin"): {req.session.email = x; req.session.type = founduser[0].Type; req.session.save();res.send("2"); break;};
-     default:  {res.send("0"); break;};
-     }
-   }
-   else  
-   res.send("0");  //user is guest or not found -> don't sign in 
-   })
+  const User = await user.findOne({ Email: email }); // user with same email 
+  
+  if ( (User) && (await bcrypt.compare(password, User.Password))) {        // (user) = user found/exists/true
+
+    if (User.type!="Guest") {
+  
+        switch (User.Type){
+          case("Customer"): {req.session.email = email;  req.session.type = User.Type; req.session.save();res.send("1"); break;};  // customer signed in
+          case("Admin"): {req.session.email = x; req.session.type = founduser[0].Type; req.session.save();res.send("2"); break;};  //admin signed in
+          default:  {res.send("0"); break;};     
+        }
+    }
+    else  
+    res.send("0");  //guest type-> don't sign in 
+  }
 });
 
 router.route("/currentUser").get((req, res) => {
@@ -77,25 +81,32 @@ router.route("/addGuest").get((req,res) => { //get becuase no input
     })
  });
 
-router.route("/addUser").post((req,res) => {
+router.route("/addUser").post(async(req,res) => {
   const name= req.body.name;
-  const email= req.body.email;
+ 
+  const emailInput= req.body.email;
+  const email=emailInput.toLowerCase();
+  
   const password= req.body.password;
-
+     //Encrypt user password
+  const encryptedPassword = await bcrypt.hash(password, 10);
+  
+  
   user.find({ Email : email}).then(founduser => {  //all cases (actions) shoud be inside then statement (variable changes in then statement dont get apllied outside then statement)
    if (founduser.length!= 0) 
     res.send("1"); 
    else {
-    
-    res.send("0"); 
+  
     const newUser = new user({
       Name : name,
       Email : email,
-      Password : password,
+      Password : encryptedPassword,
       Type: "Customer" 
        });
       newUser.save();
       }  
+
+      res.send("0");  // successful user registration
     })
  });
 
@@ -632,19 +643,17 @@ router.route("/UpdateBookingUser").post((req, res) => {
   //console.log("UpdateBookingUser");
  //console.log(email);
 
- const z = req.body.name;
- const d = req.body.password;
- const s = req.body.email;
+ const s = req.body.oldEmail;
  
- console.log(z);
 
- booking.find({Email : req.session.email}, function (err, docs) {
+
+ booking.find({Email :  s}, function (err, docs) {
   //console.log("TEST BEFORE");
  //  console.log(docs);
   // console.log("TEST AFTER");
    for(let i = 0; i < docs.length; i++)
    {
-     docs[i]["Email"] = s;
+     docs[i]["Email"] = req.session.email;   // current & new email
      docs[i].save();
    }
  
@@ -654,29 +663,41 @@ router.route("/UpdateBookingUser").post((req, res) => {
 
 
 router.route("/Updateinfo").post((req, res) => {
-  //console.log("updateinfo");
- //console.log(email);
- const z = req.body.name;
- const d = req.body.password;
- const s = req.body.email;
+
+var newName = req.body.name;
+var newEmail = req.body.email;
+
+var newPassword = req.body.password;
+var oldPassword= req.body.oldPassword;
+
+var emailNow= req.session.email;
 
 
-
-
- user.findOne({Email: req.session.email}, function (err, user) {
-  user.Name = z;
-  user.Password = d;
-  user.Email = s;
-  
-   user.save(function (err) {
-      if(err) {
-         // console.error('ERROR!');
+user.find({Email: newEmail}).then(foundUser=>{
+ if (foundUser.length==0){  //if  didn't find existing users with the new email user wants to use
+    
+    user.findOne({Email: emailNow, Password: oldPassword }, function (err, user) {  // better way because it updates
+     if(user){                   //user found/exists/true
+      user.Name = newName;
+      user.Password = newPassword;
+      user.Email = newEmail;
+      
+      user.save(function (err) { if(err) {}   });           // updatesSaved
+           
+      req.session.email=newEmail;   //change session email after successful update
+      res.send("1");  //(old password given by user was correct) 
       }
-  });
-  req.session.email=s; res.send("req.session.email");
-});
+      else res.send("2"); // wrong old password
+    
+    }); 
+}
+ else
+  res.send('0'); // email exists
 
 })
+ 
+
+}) //end of route
 
 
 //---------------------------------------------------------------------------------------------------------------------
