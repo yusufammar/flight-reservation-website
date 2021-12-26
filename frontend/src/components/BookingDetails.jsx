@@ -73,15 +73,58 @@ function deleteFlight(event){                        // deletes booking and send
 }
 
 function handleChangeSeats(event){
-var id=event.target.id;
-if (id=="DepartureFlight"){
-    var article;
-}
-
-}
-
-function handleChangeDepartureFlight(event){
+    var id=event.target.id;  // FlightDirection -> "DepartureFlight" or "ReturnFlight"
     
+    if (id=='DepartureFlight')
+    var article= {Flight: GetFlight(bookingActive.DepartureFlightNo) , Booking: bookingActive, FlightDirection: id};
+    else
+    var article= {Flight: GetFlight(bookingActive.ReturnFlightNo) , Booking: bookingActive, FlightDirection: id};
+    
+    history.push({
+        pathname:"/ChangeSeats",
+       state:article
+    });
+}
+
+function handleChangeFlight(event){
+var id=event.target.id;  // FlightDirection -> "DepartureFlight" or "ReturnFlight"
+var departureFlight= GetFlight(bookingActive.DepartureFlightNo);
+var returnFlight= GetFlight(bookingActive.ReturnFlightNo);
+ 
+if (id=="DepartureFlight"){
+var passedVariable= {Flight: departureFlight, Booking: bookingActive, FlightDirection: id};
+var input= {from: departureFlight.From , to: departureFlight.To , date: departureFlight.FlightDate,
+cabin: bookingActive.Cabin , adultSeats: bookingActive.AdultSeats, childrenSeats: bookingActive.ChildrenSeats };
+}
+else{
+    var passedVariable= {Flight: returnFlight, Booking: bookingActive, FlightDirection: id};
+    var input= {from: returnFlight.From , to: returnFlight.To , date: returnFlight.FlightDate,
+    cabin: bookingActive.Cabin , adultSeats: bookingActive.AdultSeats, childrenSeats: bookingActive.ChildrenSeats };
+    }
+
+//Getting matching flights & price for each all at once (passed to other front end pages using history.push)
+    axios.post('http://localhost:8000/getMatchingFlights', input).then(res =>{ 
+        var data1= res.data; // array of objects {FlightDetails: x, TotalPrice: x} ->flights that meet the search criteria (FlightDetails & Price) sent from  bookingDetails (when change flight is pressed)
+        var data=[];
+        var oldFlightNo= passedVariable.Flight.Flight_No; 
+
+        for (var i=0; i<data1.length; i++){            // excluding the flight you want to change from the matched flights result
+            if (data1[i].FlightDetails.Flight_No!= oldFlightNo)
+            data.push(data1[i]);
+        }
+
+        if (data.length!=0) {        
+         //console.log(res.data);  // res.send(FlightsAndPrices);  // array of objects [ {FlightDetails: x , TotalPrice: x } ]
+         
+         history.push({
+          pathname: '/ChangeFlight',
+          state: {matchedFlights: res.data, search: input, passed: passedVariable}
+        });
+    }
+    else alert ("No matching flights");
+       
+    
+    })
 
 }
 
@@ -116,13 +159,14 @@ font-family: 'Josefin Sans'; font-size: 15px; font-weight: bold;`}>
     
     <div>    <br></br>
     <button class="btn btn-primary" id="DepartureFlight" onClick={handleChangeSeats}> Change Seats </button>  <br></br> <br></br><br></br>
-    <button class="btn btn-primary" id="DepartureFlight" onClick={handleChangeDepartureFlight} > Change Departure Flight </button>
+    <button class="btn btn-primary" id="DepartureFlight" onClick={handleChangeFlight} > Change Departure Flight </button>
     </div>
  
  </div>
 
 <br /><br /> <br></br>
-    
+
+<div style={{display:'flex'}}>   
   <div>
     <h5>Return Flight</h5>
     Flight No: {GetFlight(bookingActive.ReturnFlightNo).Flight_No}  &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Date: { (""+GetFlight(bookingActive.ReturnFlightNo).FlightDate).substr(0,10)}<br></br>
@@ -135,7 +179,12 @@ font-family: 'Josefin Sans'; font-size: 15px; font-weight: bold;`}>
     {bookingActive.Cabin=="Business" && GetFlight(bookingActive.ReturnFlightNo).Business_Class_BaggageAllowance}
     {bookingActive.Cabin=="Economy" && GetFlight(bookingActive.ReturnFlightNo).Economy_Class_BaggageAllowance}
   </div>
-  
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <div>    <br></br>
+    <button class="btn btn-primary" id="ReturnFlight" onClick={handleChangeSeats}> Change Seats </button>  <br></br> <br></br><br></br>
+    <button class="btn btn-primary" id="ReturnFlight" onClick={handleChangeFlight} > Change Return Flight </button>
+    </div>
+</div> 
 
 <div>         
                                
