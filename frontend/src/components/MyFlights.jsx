@@ -58,7 +58,7 @@ return (
 
   <div  name="content" className={css`
   position: absolute; left: 10%; top: 10%; border-radius: 20px; width: 50%; padding: 20px; 
-  font-family: 'Josefin Sans'; font-size: 15px; font-weight: bold; height:1000px;`
+  font-family: 'Josefin Sans'; font-size: 15px; font-weight: bold; `
   }>
         <h1>Bookings</h1>
         

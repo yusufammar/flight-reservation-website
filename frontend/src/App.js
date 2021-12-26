@@ -21,7 +21,7 @@ import UpdatePage from './components/Admin/UpdatePage';
 import User from './components/User';                                 //user (& guest)
 import DepartureFlights from './components/DepartureFlights';
 import ReturnFlights from './components/ReturnFlights';
-import Booking from './components/Booking';
+
 import MyFlights from './components/MyFlights';
 import BookingDetails from './components/BookingDetails';
 import ChangeSeats from './components/ChangeSeats';
@@ -96,9 +96,7 @@ function App() {
         <ReturnFlights/>
       </Route>
 
-      <Route exact path="/Booking">
-        <Booking/>
-      </Route>
+ 
 
       <Route exact path="/UpdateUser">
         <UpdateUser/>

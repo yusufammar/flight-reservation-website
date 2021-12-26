@@ -9,14 +9,14 @@ import Top from './Top';                     // rendering in return statement (r
 import Checkbox from '@mui/material/Checkbox';
 
 
-function Booking(){           //for USER & GUEST
-   const location = useLocation();
+function Booking(props){           //for USER & GUEST
+ const location = useLocation();
    const history = useHistory();
    axios.defaults.withCredentials = true;
 
    var flag=false;
    var confirmbookingclicked=false;
-   
+ /*    
     if (location.state!=null){           //checking if user searched for a flight & selected a departure flight & variables were passed, no url
     flag=true;   
     
@@ -27,18 +27,20 @@ function Booking(){           //for USER & GUEST
        pathname: '/user' 
        });
    }
-
+*/
    //-------------------------------------------
-
-   var returnFlight=location.state.booking.selectedReturnFlight; 
+   
+   //Needed Inputs
+/*    var returnFlight=location.state.booking.selectedReturnFlight; 
    var departureFlight= location.state.booking.selectedDepartureFlight; 
-   var search= location.state.search // search input sent from user.jsx page
-   //var data= location.state.searchResults; 
-   //console.log(data);
-   
-  // var departureFlights=data.departureFlightsAndPrices;
-//var returnFlights=data.returnFlightsAndPrices;
-   
+   var search= location.state.search  */
+  
+   var returnFlight= props.state1.booking.selectedReturnFlight; 
+   var departureFlight= props.state1.booking.selectedDepartureFlight; 
+   var search= props.state1.search 
+
+
+   //Derived
    var cabin= search.cabin;
    var totalseats= search.adultSeats + search.childrenSeats;
 
@@ -176,81 +178,68 @@ function handleclick3(event){
  
 
    return( 
-    <div  >
 
-   <Top/>
 
-   <div  name="content" className={css`
-  position: absolute; left: 5%; top: 10%;  text-align: center; 
-  font-family: 'Josefin Sans'; font-size: 15px; `
-  }>
-
-      <h1>Choose Seats</h1>
-
-      <div name="SeatSelector">
-          <label>Number of seats to  be chosen (per flight): {totalseats}</label>
+<div name="SeatSelector" style={{ boxShadow: "0px 0px 100px 1px lightGray", textAlign:'center', padding:'20px', borderRadius: '20px'}}>
+     
       
       {cabin=="First" &&
-      <div  name="First Class Format Seat Selector" style={{outline: '5px solid black', textAlign:'center', padding:'30px', borderRadius: '8px'}}>
-       
+      <div  name="First Class Format Seat Selector" >
+         
        <img src="/F.jpg" /> <br></br> <br></br> <h3 >First Class</h3> <br></br> 
       
-      
-      <div style={{display:'flex', textAlign:'center',  width:'100%'}}>
-       
-        <div name="departureFlight" style={{ width:'50%'}}>
-        <label>Departure Flight</label> <br></br>
-            
-            {departureCabinSeatsArray.map((seat, i) => //Conditional Rendering with map function (used to iterate over arrays) | 
-                                    //seat-> each entry of array that the function is applied on | i-> index of departureCabinSeatsArray array | function performed to every entry is what's between the curly braces after the '=>' operator
-            { 
-            if (i==0) return (""); // index -> 0  (seatArray starts from 1 so do nothing)   
-            else if (i%4==0)   // index -> 4/8/12/16  (end of row)
-            return (<a><Checkbox id={i} onChange={checkChange} disabled={seat==1}/> <img src="/window.png" /><br></br></a>)
-            else if (i%2==0 && i%4!=0)   // index -> 2/6/10/14  (middle seat of row)
-            return (<a><Checkbox id={i} onChange={checkChange} disabled={seat==1}/> &nbsp; &nbsp;&nbsp; &nbsp;  </a>)
-            else if (i%4==1)   // index -> 1/5/9/13  (first seat of row)
-            return (<a><img src="/window.png" /><Checkbox id={i} onChange={checkChange} disabled={seat==1}/>  </a>)
-            else // (seat in same row) 
-            return (<a><Checkbox id={i} onChange={checkChange} disabled={seat==1}/> </a>)
-            }
-      )} 
-        </div>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 
-        <div className= {css`border-left: 6px solid #2C85B8;; height: 100%px;`}></div>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 
-
-        <div name="returnFlight" style={{ width:'50%'}}>
-        <label>Return Flight</label> <br></br> 
+           <div style={{display:'flex', textAlign:'center',  width:'100%'}}>
         
-         {returnCabinSeatsArray.map((seat, i) => //Conditional Rendering with map function (used to iterate over arrays) | 
-                                    //seat-> each entry of array that the function is applied on | i-> index of departureCabinSeatsArray array | function performed to every entry is what's between the curly braces after the '=>' operator
-            { 
-            if (i==0) return (""); // index -> 0  (seatArray starts from 1 so do nothing)   
-            else if (i%4==0)   // index -> 4/8/12/16  (end of row)
-            return (<a><Checkbox id={i} onChange={checkChange2} disabled={seat==1}/> <img src="/window.png" /><br></br></a>)
-            else if (i%2==0 && i%4!=0)   // index -> 2/6/10/14  (middle seat of row)
-            return (<a><Checkbox id={i} onChange={checkChange2} disabled={seat==1}/> &nbsp; &nbsp;&nbsp; &nbsp;  </a>)
-            else if (i%4==1)   // index -> 1/5/9/13  (first seat of row)
-            return (<a><img src="/window.png" /><Checkbox id={i} onChange={checkChange2} disabled={seat==1}/>  </a>)
-            else // (seat in same row) 
-            return (<a><Checkbox id={i} onChange={checkChange2} disabled={seat==1}/> </a>)
-            }
-      )} 
-        </div>
+            <div name="departureFlight" style={{ width:'50%'}}>
+            <label>Departure Flight</label> <br></br>
+                
+                {departureCabinSeatsArray.map((seat, i) => //Conditional Rendering with map function (used to iterate over arrays) | 
+                                        //seat-> each entry of array that the function is applied on | i-> index of departureCabinSeatsArray array | function performed to every entry is what's between the curly braces after the '=>' operator
+                { 
+                if (i==0) return (""); // index -> 0  (seatArray starts from 1 so do nothing)   
+                else if (i%4==0)   // index -> 4/8/12/16  (end of row)
+                return (<a><Checkbox id={i} onChange={checkChange} disabled={seat==1}/> <img src="/window.png" /><br></br></a>)
+                else if (i%2==0 && i%4!=0)   // index -> 2/6/10/14  (middle seat of row)
+                return (<a><Checkbox id={i} onChange={checkChange} disabled={seat==1}/> &nbsp; &nbsp;&nbsp; &nbsp;  </a>)
+                else if (i%4==1)   // index -> 1/5/9/13  (first seat of row)
+                return (<a><img src="/window.png" /><Checkbox id={i} onChange={checkChange} disabled={seat==1}/>  </a>)
+                else // (seat in same row) 
+                return (<a><Checkbox id={i} onChange={checkChange} disabled={seat==1}/> </a>)
+                }
+        )} 
+            </div>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 
+            <div className= {css`border-left: 6px solid #2C85B8;; height: 100%px;`}></div>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 
 
+            <div name="returnFlight" style={{ width:'50%'}}>
+            <label>Return Flight</label> <br></br> 
+            
+            {returnCabinSeatsArray.map((seat, i) => //Conditional Rendering with map function (used to iterate over arrays) | 
+                                        //seat-> each entry of array that the function is applied on | i-> index of departureCabinSeatsArray array | function performed to every entry is what's between the curly braces after the '=>' operator
+                { 
+                if (i==0) return (""); // index -> 0  (seatArray starts from 1 so do nothing)   
+                else if (i%4==0)   // index -> 4/8/12/16  (end of row)
+                return (<a><Checkbox id={i} onChange={checkChange2} disabled={seat==1}/> <img src="/window.png" /><br></br></a>)
+                else if (i%2==0 && i%4!=0)   // index -> 2/6/10/14  (middle seat of row)
+                return (<a><Checkbox id={i} onChange={checkChange2} disabled={seat==1}/> &nbsp; &nbsp;&nbsp; &nbsp;  </a>)
+                else if (i%4==1)   // index -> 1/5/9/13  (first seat of row)
+                return (<a><img src="/window.png" /><Checkbox id={i} onChange={checkChange2} disabled={seat==1}/>  </a>)
+                else // (seat in same row) 
+                return (<a><Checkbox id={i} onChange={checkChange2} disabled={seat==1}/> </a>)
+                }
+        )} 
+            </div>
 
+            </div >
+   
       </div>
+      }
 
-      <br></br> <br></br>
-      <button className="btn btn-primary" onClick={handleClick}>Confirm</button>
-      </div>
       
-      
-}
 
 {cabin=="Business" &&
-      <div  name="Business Class Format Seat Selector" style={{outline: '5px solid black', textAlign:'center', padding:'30px', borderRadius: '8px'}}>
+      <div  name="Business Class Format Seat Selector" >
        
        <img src="/B.jpg" /> <br></br> <br></br> <h3 >Business Class</h3> <br></br> 
       
@@ -310,14 +299,11 @@ function handleclick3(event){
 
       </div>
 
-      <br></br> <br></br>
-      <button className="btn btn-primary" onClick={handleClick}>Confirm</button>
-      
       </div>
 }
 
 {cabin=="Economy" &&
-      <div  name="Economy Class Format Seat Selector" style={{outline: '5px solid black', textAlign:'center', padding:'30px', borderRadius: '8px'}}>
+      <div  name="Economy Class Format Seat Selector" >
        
        <img src="/E.jpg" /> <br></br> <br></br> <h3 >Economy Class</h3> <br></br> 
       
@@ -377,13 +363,12 @@ function handleclick3(event){
 
       </div>
 
-      <br></br> <br></br>
-      <button className="btn btn-primary" onClick={handleClick}>Confirm</button>
-      
       </div>
 }
 
-
+       <br></br> <br></br>
+      <label style={{color: 'red'}}>*Number of seats to  be chosen (per flight): {totalseats}</label> <br></br>
+      <button className="btn btn-primary" onClick={handleClick}>Confirm</button>
       </div>
        
        
@@ -393,12 +378,11 @@ function handleclick3(event){
 
 
 
-    </div>  
+
    
   
 
-</div>
-   
+
 
        
 

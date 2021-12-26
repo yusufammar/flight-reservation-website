@@ -12,10 +12,10 @@ require("react-bootstrap/ModalHeader");
 
 function UpdateUser(){            // USER MAIN PAGE
     
-   
+   // Session Checking
     const location = useLocation();
     const history = useHistory();
-    const [x,setUser]=useState();
+    const [x,setUser]=useState();     // x is email of user (it is the old email if he updated email )
 
     axios.defaults.withCredentials = true;
     useEffect(() => {
@@ -29,7 +29,9 @@ function UpdateUser(){            // USER MAIN PAGE
      })
     }, [location]);
 
-    const [input, setInput] = useState({ name: "" , email:"" , password:""  });
+    //------------------------------------------------------------
+//Inputs
+    const [input, setInput] = useState({ name: "" , email:"" , password:"" , oldPassword:"" });
 
     function handleChange(event){
         const {name,value}=event.target;
@@ -43,6 +45,7 @@ function UpdateUser(){            // USER MAIN PAGE
         
     }
   
+//Accepting Inputs
 
     function handleclick(event){
         event.preventDefault();
@@ -51,21 +54,26 @@ function UpdateUser(){            // USER MAIN PAGE
 
     function handleclick1(event){
         event.preventDefault();
-        if (input.name!="" && input.email!="" && input.password!=""){
-    
-            console.log(input);     
-        
-            axios.post('http://localhost:8000/UpdateBookingUser', input);
-
-            axios.post('http://localhost:8000/Updateinfo', input);
-            alert('Account Info Updated Successfully');
-            history.push({pathname: '/user'});  
-        }
-        else
-        alert("Please fill the needed fields");
+        if (input.name!="" && input.email!="" && input.password!="" && input.oldPassword!=""){
             
+            console.log(input);     
+            axios.post('http://localhost:8000/Updateinfo', input).then(res =>{
+            if (res.data==0)  alert("Email already used, use a different email")  // email already used
+            
+            else if (res.data==1){        // succesful update
+            var article={oldEmail: x};
+            alert('Account Info Updated Successfully')
+            axios.post('http://localhost:8000/UpdateBookingUser', article).then(history.push({pathname: '/user'}))
+            }
+            else if (res.data==2)  alert("Wrong Old Password");  // wrong old password
+          
+           });
+      }
+        else
+        alert("Please fill all fields");
         }      
        
+//------------------------------------------------------------
 
 return (
 <div className='container'>
@@ -80,7 +88,11 @@ return (
 <form>
       <label>Name      <input onChange={handleChange} name="name" type="text" value={input.name} />  </label> <br></br> <br></br>
       <label>Email    <input onChange={handleChange} name="email" type="text" value={input.email} />  </label> <br></br> <br></br>
-      <label>Password <input onChange={handleChange} name="password" type="password" value={input.password}/>  </label> <br></br> <br></br> <br></br> 
+      <br></br>
+      <label>Old Password <input onChange={handleChange} name="oldPassword" type="password" value={input.oldPassword}/>  </label>
+      <br></br>
+      <label>New Password <input onChange={handleChange} name="password" type="password" value={input.password}/>  </label> <br></br> 
+      <br></br> <br></br> 
 
       <input type="submit" value="Update" onClick={handleclick1} /> 
 </form>

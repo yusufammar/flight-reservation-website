@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { css} from '@emotion/css'
 import Top from './Top';                     // rendering in return statement (responsible for session checking & returning of current user email)
 import Checkbox from '@mui/material/Checkbox';
+import Booking from './Booking';
 
 function DepartureFlights(){           //for USER & GUEST
 
@@ -52,19 +53,31 @@ function handleclick3(event){
     selectedReturnFlight= returnFlights[event.target.id];
    // console.log(event.target.id);   // to get id of the button clicked (jsx/react/frontend)
    }
+
+  const [clicked,setClicked]= useState(false); 
+  const [state1,setState1]= useState({});
+
 function handleclick4(event){
     event.preventDefault();
 
     if(selectedDepartureFlight!= undefined && selectedReturnFlight!= undefined ){
     console.log({selectedDepartureFlight: selectedDepartureFlight,  selectedReturnFlight: selectedReturnFlight });
-    history.push({
+   var object1= { 
+    booking: {selectedDepartureFlight: selectedDepartureFlight,  selectedReturnFlight: selectedReturnFlight },
+    search: search,
+    searchResults: data
+}
+setState1(object1);
+    /* history.push({
+    
         pathname: '/Booking',
         state: { 
             booking: {selectedDepartureFlight: selectedDepartureFlight,  selectedReturnFlight: selectedReturnFlight },
             search: search,
             searchResults: data
-        }
-     }); 
+        }}); */
+        setClicked(true);
+     
      console.log({ 
         booking: {selectedDepartureFlight: selectedDepartureFlight,  selectedReturnFlight: selectedReturnFlight },
         search: search,
@@ -127,10 +140,10 @@ return (
        <button onClick={handleclick4}>Choose Seats</button>
 	   
 
+    <br></br> <br></br><br></br>
     
-   
-       
-     
+       {clicked && <Booking state1={state1}/>} 
+    
     </div> 
  </div>
 
