@@ -24,7 +24,6 @@ import MenuList from '@mui/material/MenuList';
 import Divider from '@mui/material/Divider';
 
 
-
 function Top2(){      //for USER & GUEST
    
     const location = useLocation();
@@ -115,32 +114,33 @@ return (
     color:	white;
     font-family:"Josefin Sans";  `}>
        
-      
-    <img className={css`position: absolute; left: 10%; `} src="/logo.png" />
+     
+        
+       <img className={css`position: absolute; left: 10%; &:hover{cursor: pointer; `} onClick={handleclick7} src="/logo.png" />
       
          
-    <div className={css`position: absolute; left: 75%;` }>
-    <label className={css` font-size: 20px;  &:hover{cursor: pointer;} `} onClick={handleclick7}>BOOK</label>  
-    &nbsp; &nbsp; &nbsp;    &nbsp; &nbsp;  
- 
-    <label className={css`   font-size: 20px;  &:hover{cursor: pointer;}`} onClick={showBookings}>ABOUT</label> 
-   </div>
-    
-
- <AccountCircleRoundedIcon  ref={anchorRef}
-        id="composition-button"
-        aria-controls={open ? 'composition-menu' : undefined}
-        aria-expanded={open ? 'true' : undefined}
-        aria-haspopup="true"
-        onClick={handleToggle} className={css`position: absolute; left: 88%; transform: scale(1.5)  ; `}/>
-        <Popper
-          open={open}
-          anchorEl={anchorRef.current}
-          role={undefined}
-          placement="bottom-end"
-          transition
-          disablePortal
-        >
+      <div className={css`position: absolute; left: 70%;` }>
+      <label className={css` font-size: 20px;  &:hover{cursor: pointer;} `} onClick={handleclick7}>BOOK</label>  
+      &nbsp; &nbsp; &nbsp;    &nbsp; &nbsp;  
+   
+      <label className={css`   font-size: 20px;  &:hover{cursor: pointer;}`} onClick={showBookings}>MY BOOKINGS</label> 
+     </div>
+      
+  
+   <AccountCircleRoundedIcon  ref={anchorRef}
+          id="composition-button"
+          aria-controls={open ? 'composition-menu' : undefined}
+          aria-expanded={open ? 'true' : undefined}
+          aria-haspopup="true"
+          onClick={handleToggle} className={css`position: absolute; left: 88%; transform: scale(1.5); &:hover{cursor: pointer; `}/>
+          <Popper
+            open={open}
+            anchorEl={anchorRef.current}
+            role={undefined}
+            placement="bottom-end"
+            transition
+            disablePortal
+          >
           {({ TransitionProps, placement }) => (
             <Grow
               {...TransitionProps}

@@ -118,14 +118,14 @@ return (
      `}>
        
       
-    <img className={css`position: absolute; left: 10%; `} src="/logo.png" />
+    <img className={css`position: absolute; left: 10%; &:hover{cursor: pointer; `} onClick={handleclick7} src="/logo.png" />
       
          
-    <div className={css`position: absolute; left: 75%;` }>
+    <div className={css`position: absolute; left: 70%;` }>
     <label className={css` font-size: 20px;  &:hover{cursor: pointer;} `} onClick={handleclick7}>BOOK</label>  
     &nbsp; &nbsp; &nbsp;    &nbsp; &nbsp;  
  
-    <label className={css`   font-size: 20px;  &:hover{cursor: pointer;}`} onClick={showBookings}>ABOUT</label> 
+    <label className={css`   font-size: 20px;  &:hover{cursor: pointer;}`} onClick={showBookings}>MY BOOKINGS</label> 
    </div>
     
 
@@ -134,7 +134,7 @@ return (
         aria-controls={open ? 'composition-menu' : undefined}
         aria-expanded={open ? 'true' : undefined}
         aria-haspopup="true"
-        onClick={handleToggle} className={css`position: absolute; left: 88%; transform: scale(1.5)  ; `}/>
+        onClick={handleToggle} className={css`position: absolute; left: 88%; transform: scale(1.5); &:hover{cursor: pointer; `}/>
         <Popper
           open={open}
           anchorEl={anchorRef.current}

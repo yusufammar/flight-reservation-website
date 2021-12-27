@@ -8,7 +8,11 @@ import { css} from '@emotion/css'
 import Top from './Top';   
 import 'bootstrap/dist/css/bootstrap.min.css';                  // rendering in return statement (responsible for session checking & returning of current user email)
 import { Modal} from 'react-bootstrap';
+
+
+
 require("react-bootstrap/ModalHeader");
+
 
 function MyFlights() {
 
@@ -50,13 +54,20 @@ function GetFlight(FlightNumber) {             // get flights with flightNo from
     }
     return [];
 }
+
+
+
+
+ 
+ 
+
      
 return (
 <div>
 
     <Top/>
 
-  <div  name="content" className={css`
+  <div name="content" className={css`
   position: absolute; left: 10%; top: 10%; border-radius: 20px; width: 50%; padding: 20px; 
   font-family: 'Josefin Sans'; font-size: 15px; font-weight: bold; `
   }>
@@ -82,8 +93,9 @@ return (
         </div>  
 
 )}
-        
+         
      </div>
+    
 
  </div> 
 

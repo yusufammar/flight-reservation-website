@@ -31,7 +31,7 @@ function UpdateUser(){            // USER MAIN PAGE
 
     //------------------------------------------------------------
 //Inputs
-    const [input, setInput] = useState({ name: "" , email:"" , password:"" , oldPassword:"" });
+    const [input, setInput] = useState({ firstName: "", lastName: "" , email:"" , password:"" , oldPassword:"" });
 
     function handleChange(event){
         const {name,value}=event.target;
@@ -54,7 +54,7 @@ function UpdateUser(){            // USER MAIN PAGE
 
     function handleclick1(event){
         event.preventDefault();
-        if (input.name!="" && input.email!="" && input.password!="" && input.oldPassword!=""){
+        if (input.firstName!="" && input.lastName!="" && input.email!="" && input.password!="" && input.oldPassword!=""){
             
             console.log(input);     
             axios.post('http://localhost:8000/Updateinfo', input).then(res =>{
@@ -86,12 +86,13 @@ return (
 <br></br><br></br>
 
 <form>
-      <label>Name      <input onChange={handleChange} name="name" type="text" value={input.name} />  </label> <br></br> <br></br>
-      <label>Email    <input onChange={handleChange} name="email" type="text" value={input.email} />  </label> <br></br> <br></br>
+      <label>First Name <br></br>     <input onChange={handleChange} name="firstName" type="text" value={input.name} />  </label> <br></br> <br></br>
+      <label>Last Name  <br></br>    <input onChange={handleChange} name="lastName" type="text" value={input.name} />  </label> <br></br> <br></br>
+      <label>Email <br></br>     <input onChange={handleChange} name="email" type="text" value={input.email} />  </label> <br></br> <br></br>
       <br></br>
-      <label>Old Password <input onChange={handleChange} name="oldPassword" type="password" value={input.oldPassword}/>  </label>
+      <label>Old Password <br></br>   <input onChange={handleChange} name="oldPassword" type="password" value={input.oldPassword}/>  </label>
       <br></br>
-      <label>New Password <input onChange={handleChange} name="password" type="password" value={input.password}/>  </label> <br></br> 
+      <label>New Password <br></br>   <input onChange={handleChange} name="password" type="password" value={input.password}/>  </label> <br></br> 
       <br></br> <br></br> 
 
       <input type="submit" value="Update" onClick={handleclick1} /> 

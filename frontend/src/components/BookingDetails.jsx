@@ -8,6 +8,11 @@ import { css} from '@emotion/css'
 import Top from './Top';   
 import 'bootstrap/dist/css/bootstrap.min.css';                  // rendering in return statement (responsible for session checking & returning of current user email)
 import { Modal} from 'react-bootstrap';
+
+import html2canvas from 'html2canvas';     //  save html into an image
+import { jsPDF } from 'jspdf';            // for generating pdf files (of elements in a fontend/react page/component)
+
+
 require("react-bootstrap/ModalHeader");
 
 function BookingDetails() {
@@ -128,22 +133,52 @@ else{
 
 }
 
+const printRef = React.useRef();
+
+async function SendItineraryPDF(event){
+  const element = printRef.current;
+  const canvas = await html2canvas(element);
+  const data = canvas.toDataURL('image/png');
+
+  const pdf = new jsPDF();
+  const imgProperties = pdf.getImageProperties(data);
+  const pdfWidth = pdf.internal.pageSize.getWidth();
+  const pdfHeight =
+    (imgProperties.height * pdfWidth) / imgProperties.width;
+
+  pdf.addImage(data, 'PNG', 0, 0, pdfWidth, pdfHeight);
+    
+  var pdfFile = pdf.output('blob');      //formdata (for sending files) takes only blob (binary large object) item (the 2nd parameter of append must be blob)
+                                      // blob format : blob is an object with many attrbutes , but most important is "data" attribute (is a buffer that holds  the data of file)  
+  var file2=new FormData(); 
+  file2.append('file',pdfFile);
+  //console.log(pdfFile);
+  axios.post('http://localhost:8000/SendEmail', file2).then(res => {
+      if (res.data==1) alert ("Intinerary sent to your email")
+      //add loading while waiting for email to be sent
+  })
+  
+};
+
+
 return (
 <div>
 
 <Top/>
 
-<div  name="content" className={css` position: absolute; left: 10%; top: 10%; width: 100%; padding: 20px; 
+<div name="content" className={css` position: absolute; left: 10%; top: 10%; width: 100%; padding: 20px; 
 font-family: 'Josefin Sans'; font-size: 15px; font-weight: bold;`}>
 
+<div style={{display:'flex'}} name="flexBig">
+
+<div ref={printRef} name="Itinerary">
 <h1>Booking Details</h1> <br></br>
     Booking No: {bookingActive.BookingNo}<br />  Cabin: {bookingActive.Cabin}  <br />  Seats: {bookingActive.AdultSeats>0 && bookingActive.AdultSeats + " (Adults)"} {(bookingActive.AdultSeats>0 && bookingActive.ChildrenSeats>0) && " | " } {bookingActive.ChildrenSeats>0 && bookingActive.ChildrenSeats + " (Children)"} 
     <br />Price: {bookingActive.Price}
     <br></br><br /> <br></br>
 
-<div style={{display:'flex'}}>
 
-    <div>
+    <div name="DepartureFlight">
     <h5>Departure Flight</h5>
     Flight No: {GetFlight(bookingActive.DepartureFlightNo).Flight_No}  &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Date: { (""+GetFlight(bookingActive.DepartureFlightNo).FlightDate).substr(0,10)}<br></br>
     From: {GetFlight(bookingActive.DepartureFlightNo).From}  <br></br>
@@ -155,19 +190,10 @@ font-family: 'Josefin Sans'; font-size: 15px; font-weight: bold;`}>
     {bookingActive.Cabin=="Business" && GetFlight(bookingActive.DepartureFlightNo).Business_Class_BaggageAllowance}
     {bookingActive.Cabin=="Economy" && GetFlight(bookingActive.DepartureFlightNo).Economy_Class_BaggageAllowance}
     </div>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    
-    <div>    <br></br>
-    <button class="btn btn-primary" id="DepartureFlight" onClick={handleChangeSeats}> Change Seats </button>  <br></br> <br></br><br></br>
-    <button class="btn btn-primary" id="DepartureFlight" onClick={handleChangeFlight} > Change Departure Flight </button>
-    </div>
- 
- </div>
 
-<br /><br /> <br></br>
+    <br></br><br /> <br></br>
 
-<div style={{display:'flex'}}>   
-  <div>
+    <div name="ReturnFlight">
     <h5>Return Flight</h5>
     Flight No: {GetFlight(bookingActive.ReturnFlightNo).Flight_No}  &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Date: { (""+GetFlight(bookingActive.ReturnFlightNo).FlightDate).substr(0,10)}<br></br>
     From: {GetFlight(bookingActive.ReturnFlightNo).From}  <br></br>
@@ -178,18 +204,33 @@ font-family: 'Josefin Sans'; font-size: 15px; font-weight: bold;`}>
     {bookingActive.Cabin=="First" && GetFlight(bookingActive.ReturnFlightNo).First_Class_BaggageAllowance}
     {bookingActive.Cabin=="Business" && GetFlight(bookingActive.ReturnFlightNo).Business_Class_BaggageAllowance}
     {bookingActive.Cabin=="Economy" && GetFlight(bookingActive.ReturnFlightNo).Economy_Class_BaggageAllowance}
-  </div>
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <div>    <br></br>
-    <button class="btn btn-primary" id="ReturnFlight" onClick={handleChangeSeats}> Change Seats </button>  <br></br> <br></br><br></br>
-    <button class="btn btn-primary" id="ReturnFlight" onClick={handleChangeFlight} > Change Return Flight </button>
     </div>
-</div> 
 
-<div>         
+
+
+</div>
+
+<div name="Buttons" style={{paddingLeft:"50px"}}>
+
+<br></br> <br></br><br></br><br></br> <br></br><br></br><br></br> <br></br><br></br><br></br>
+<button class="btn btn-primary" id="DepartureFlight" onClick={handleChangeSeats}> Change Seats </button>  <br></br><br></br> 
+<button class="btn btn-primary" id="DepartureFlight" onClick={handleChangeFlight} > Change Departure Flight </button> <br></br> <br></br><br></br>
+
+<br></br> <br></br><br></br>
+<button class="btn btn-primary" id="ReturnFlight" onClick={handleChangeSeats}> Change Seats </button>  <br></br><br></br> 
+<button class="btn btn-primary" id="ReturnFlight" onClick={handleChangeFlight} > Change Return Flight </button>
+         
+</div>
+
+</div>
+
+<div name="Cancel & Send Button">         
                                
-<br /><br></br> <br></br> 
+<br /> 
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+<button  class="btn btn-success" onClick={SendItineraryPDF}>Send Itineray By Email </button> <br></br> <br></br> <br></br>
 
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
 <label> Are you sure you want to cancel this booking?</label> &nbsp; &nbsp; 
 <input  type="checkbox"  onChange={handleChange}/>  
                
@@ -199,9 +240,8 @@ font-family: 'Josefin Sans'; font-size: 15px; font-weight: bold;`}>
                                 
 </div>
 
-
 </div>
-
+    
 </div>
 
 );
