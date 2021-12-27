@@ -22,22 +22,23 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
-  Nationality: {
-    type: String,
-    required: true,
-  },
   PassportNo: {
-    type: Number,
+    type: String,
     required: true,
   },
   Address: {
     type: String,
     required: true,
   },
+  CountryCode: {
+    type: Number,
+    required: true,
+  },
   PhoneNo: {
     type: Number,
     required: true,
   }
+  
  
 }, { timestamps: false });
 

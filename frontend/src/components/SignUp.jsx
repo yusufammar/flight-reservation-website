@@ -9,7 +9,7 @@ import { useHistory } from "react-router-dom";
 function SignUp(){
     const history = useHistory();
     const [input, setInput] = useState({     //attribute names should be lowercase that will be use in the return statement {input.attributename} (for handle change to work & accept inputs) 
-        firstname:"", lastname:"", email: "", password: "", nationality:"", phoneNo:"", passportNo:"", address:"" 
+        firstname:"", lastname:"", email: "", password: "", countryCode:"", phoneNo:"", passportNo:"", address:"" 
     })
 
 
@@ -29,11 +29,9 @@ function handleChange(event){
 
 function handleclick(event){
     event.preventDefault();
-    console.log(input);
 
-    const newUser= {name: input.name, email : input.email , password : input.password  }  ;
     
-    axios.post('http://localhost:8000/addUser', newUser).then( res => {
+    axios.post('http://localhost:8000/addUser', input).then( res => {
         if (res.data==1){
         alert("E-Mail Address Already Exists!  \nPlease use another E-Mail address");  // alert message with line break
         history.push({
@@ -61,9 +59,17 @@ return (
 <br></br><br></br>
 
 <form>
-      <label>Name <br></br>      <input onChange={handleChange} name="name" type="text" value={input.name} />  </label> <br></br> <br></br>
+      <label>First Name: <br></br>      <input onChange={handleChange} name="firstName" type="text" value={input.firstName} />  </label> <br></br> <br></br>
+      <label>Last Name: <br></br>      <input onChange={handleChange} name="lastName" type="text" value={input.lastName} />  </label> <br></br> <br></br>
       <label>Email <br></br>     <input onChange={handleChange} name="email" type="text" value={input.email} />  </label> <br></br> <br></br>
-      <label>Password <br></br>  <input onChange={handleChange} name="password" type="password" value={input.password}/>  </label> <br></br> <br></br> <br></br> 
+      <label>Password <br></br>  <input onChange={handleChange} name="password" type="password" value={input.password}/> </label> <br></br> <br></br>
+      
+      <label>Passport No <br></br>      <input onChange={handleChange} name="passportNo" type="text" value={input.passportNo} />  </label> <br></br> <br></br>
+      <label>Address <br></br>     <input onChange={handleChange} name="address" type="text" value={input.address} />  </label> <br></br> <br></br>
+      <label>Country Code <br></br>     <input onChange={handleChange} name="countryCode" type="number" value={input.nationality} />  </label> <br></br> <br></br>
+      <label>Phone No <br></br>      <input onChange={handleChange} name="phoneNo" type="number" value={input.phoneNo} />  </label> <br></br> <br></br>
+      
+      
       
       <input type="submit" value="Sign Up" onClick={handleclick} /> 
 </form>

@@ -44,9 +44,9 @@ router.route("/SignIn").post(async(req, res) => {
           default:  {res.send("0"); break;};     
         }
     }
-    else  
-    res.send("0");  //guest type-> don't sign in 
   }
+  else  
+    res.send("0");  // wrong email/password or guest type-> don't sign in 
 });
 
 router.route("/currentUser").get((req, res) => {
@@ -82,14 +82,16 @@ router.route("/addGuest").get((req,res) => { //get becuase no input
  });
 
 router.route("/addUser").post(async(req,res) => {
-  const name= req.body.name;
- 
-  const emailInput= req.body.email;
-  const email=emailInput.toLowerCase();
-  
-  const password= req.body.password;
-     //Encrypt user password
-  const encryptedPassword = await bcrypt.hash(password, 10);
+   
+  const firstName= req.body.firstName;
+  const lastName= req.body.lastName;
+  const passportNo= req.body.passportNo;
+  const address= req.body.address;
+  const countryCode= req.body.countryCode;
+  const phoneNo= req.body.phoneNo;
+   
+  const emailInput= req.body.email; const email = emailInput.toLowerCase();
+  const password= req.body.password; const encryptedPassword = await bcrypt.hash(password, 10);  //Encrypt user password
   
   
   user.find({ Email : email}).then(founduser => {  //all cases (actions) shoud be inside then statement (variable changes in then statement dont get apllied outside then statement)
@@ -98,9 +100,15 @@ router.route("/addUser").post(async(req,res) => {
    else {
   
     const newUser = new user({
-      Name : name,
+      FirstName : firstName,
+      LastName: lastName,
       Email : email,
       Password : encryptedPassword,
+      
+      PassportNo: passportNo,
+      Address: address,
+      CountryCode: countryCode,
+      PhoneNo: phoneNo,
       Type: "Customer" 
        });
       newUser.save();
@@ -110,7 +118,7 @@ router.route("/addUser").post(async(req,res) => {
     })
  });
 
-;
+
 
 router.route("/MyBookings").get((req, res) => {
   booking.find({Email : req.session.email})
@@ -662,42 +670,85 @@ router.route("/UpdateBookingUser").post((req, res) => {
 })
 
 
-router.route("/Updateinfo").post((req, res) => {
+router.route("/Updateinfo").post(async(req, res) => {
+//Inputs
+var newFirstName = req.body.firstName;
+var newLastName = req.body.lastName;
+var newEmailInput = req.body.email; var newEmail=  newEmailInput.toLowerCase();
 
-var newName = req.body.name;
-var newEmail = req.body.email;
-
-var newPassword = req.body.password;
+var newPassword = req.body.password; const encryptedNewPassword = await bcrypt.hash(newPassword, 10);  //Encrypt user new password
 var oldPassword= req.body.oldPassword;
 
-var emailNow= req.session.email;
+var emailNow= req.session.email;     // old email
+const password = req.body.Password;  // old pass
+//-----------------------------------------------------------------------------------------------
 
+const User = await user.findOne({ Email: emailNow }); // user with same email  // old email
+
+if ( (User) && (await bcrypt.compare(oldPassword, User.Password))) {        // (user) = user found/exists/true
+//if old password is correct & user with old email exists (which actually always exists due to code structure)
 
 user.find({Email: newEmail}).then(foundUser=>{
- if (foundUser.length==0){  //if  didn't find existing users with the new email user wants to use
-    
-    user.findOne({Email: emailNow, Password: oldPassword }, function (err, user) {  // better way because it updates
-     if(user){                   //user found/exists/true
-      user.Name = newName;
-      user.Password = newPassword;
-      user.Email = newEmail;
+  if (foundUser.length==0){  //if  didn't find existing users with the new email user wants to use
+     
+     user.findOne({Email: emailNow}, function (err, user) {  // better way because it updates  // update user with old email
+      //encrypt pass
       
-      user.save(function (err) { if(err) {}   });           // updatesSaved
-           
-      req.session.email=newEmail;   //change session email after successful update
-      res.send("1");  //(old password given by user was correct) 
-      }
-      else res.send("2"); // wrong old password
-    
-    }); 
+      if(user){                   //user found/exists/true
+       user.FirstName = newFirstName;
+       user.LastName = newLastName;
+       user.Password = encryptedNewPassword;
+       user.Email = newEmail;
+       
+       user.save(function (err) { if(err) {}   });           // updatesSaved
+            
+       req.session.email=newEmail;   //change session email after successful update
+       res.send("1");  //(old password given by user was correct) 
+       }
+       else res.send("2"); // wrong old password
+     
+     }); 
+ }
+  else
+   res.send('0'); // email exists
+ 
+ })
+
 }
- else
-  res.send('0'); // email exists
+}) //end of route
+
+router.route("/SendEmail").post( async (req, res) => {
+
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'fakeEmailACL@gmail.com',
+      pass: 'Fake1234' // naturally, replace both with your real credentials or an application-specific password
+    }
+  });
+  
+  var pdfObject= req.body;
+  const mailOptions = {
+    from: 'ACL_SAMYH_TEAM@GUC.com',
+    to: req.session.email,
+    subject: 'Itenerary',
+    attachments:
+    {   // file on disk as an attachment
+      filename: 'Intenerary.pdf',
+      content: pdfObject // stream this file
+  }
+  };
+  
+  transporter.sendMail(mailOptions, function(error, info){
+    if (error) {
+    console.log(error);
+    } else {
+      console.log('Email sent: ' + info.response);
+      res.send("1");
+    }
+  });
 
 })
- 
-
-}) //end of route
 
 
 //---------------------------------------------------------------------------------------------------------------------

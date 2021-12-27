@@ -8,7 +8,10 @@ import { css} from '@emotion/css'
 import Top from './Top';   
 import 'bootstrap/dist/css/bootstrap.min.css';                  // rendering in return statement (responsible for session checking & returning of current user email)
 import { Modal} from 'react-bootstrap';
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
 require("react-bootstrap/ModalHeader");
+
 
 function MyFlights() {
 
@@ -50,6 +53,13 @@ function GetFlight(FlightNumber) {             // get flights with flightNo from
     }
     return [];
 }
+
+
+
+
+
+ 
+
      
 return (
 <div>
@@ -82,8 +92,10 @@ return (
         </div>  
 
 )}
+         
         
      </div>
+    
 
  </div> 
 
