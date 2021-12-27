@@ -5,11 +5,15 @@ const { findByIdAndRemove } = require("../Models/Flights");
 
 const { ConnectionPoolClosedEvent } = require("mongodb");
 
-const express = require("express");
 const bcrypt = require("bcrypt");
+const express = require("express");
 const router= express.Router();
 router.use(express.json());
 const cors = require('cors');
+
+const fileUpload= require('express-fileupload');   // to accept files (blob) from frontend & then accessing it from req.files
+router.use(fileUpload());
+
 
 router.use(cors({                          // for axios post to not destroy session (credentials is where the sessions is saved as cookie)
   origin:['http://localhost:3000'],     // is the origin of the axios requests (frontend url port)
@@ -718,6 +722,8 @@ user.find({Email: newEmail}).then(foundUser=>{
 }) //end of route
 
 router.route("/SendEmail").post( async (req, res) => {
+var pdfObject= req.files.file
+console.log(pdfObject)
 
   const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -727,16 +733,16 @@ router.route("/SendEmail").post( async (req, res) => {
     }
   });
   
-  var pdfObject= req.body;
+  
   const mailOptions = {
     from: 'ACL_SAMYH_TEAM@GUC.com',
     to: req.session.email,
     subject: 'Itenerary',
-    attachments:
-    {   // file on disk as an attachment
-      filename: 'Intenerary.pdf',
-      content: pdfObject // stream this file
-  }
+    attachments:[{
+      filename: 'filename.pdf',
+      content: pdfObject.data,     // the buffer of data of the file
+      contentType: 'application/pdf'
+  }]
   };
   
   transporter.sendMail(mailOptions, function(error, info){
@@ -747,6 +753,7 @@ router.route("/SendEmail").post( async (req, res) => {
       res.send("1");
     }
   });
+  
 
 })
 
