@@ -42,7 +42,7 @@ function handleclick(event){
         alert("Wrong Email or Password!");
         if (res.data==1)
         history.push({
-        pathname: "/user" });
+        pathname: "/" });
         if (res.data==2)
         history.push({
         pathname: "/Admin" });

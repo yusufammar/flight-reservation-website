@@ -5,16 +5,16 @@ import { useHistory } from "react-router-dom";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { css} from '@emotion/css'
-import Top from './Top';   
+import NavBar from './Helper/NavBar';   
 import 'bootstrap/dist/css/bootstrap.min.css';                  // rendering in return statement (responsible for session checking & returning of current user email)
 import { Modal} from 'react-bootstrap';
 
-
+import BookingDetails from './Helper/MyBookings/BookingDetails';
 
 require("react-bootstrap/ModalHeader");
 
 
-function MyFlights() {
+function MyBookings() {
 
 const location = useLocation();
 const history = useHistory();
@@ -25,7 +25,8 @@ const [depFlights, setDepFlights] = useState([]);     // all flights
 
   
 useEffect(() => {
-    axios.get('http://localhost:8000/MyBookings').then(jsonRes => {console.log(jsonRes.data); setbookings(jsonRes.data); console.log(bookings)});
+    axios.get('http://localhost:8000/MyBookings').then(jsonRes => {
+    console.log(jsonRes.data); setbookings(jsonRes.data); console.log(bookings)});
 
     fetch("/FlightsList").then(res => {              // gets all flights (& sets it to depFlights)
         if (res.ok) {
@@ -36,16 +37,6 @@ useEffect(() => {
 }, [location]);
     
 
-function handleShow(event){             // redirect to page to show  booking details of booking selected (gets it by bokking no passed by id)
-    event.preventDefault();
-    var bookingNumber= event.target.id;
-
-    history.push({pathname:"BookingDetails", 
-    state: {bookingNo: bookingNumber, depFlights: depFlights}
-    })
-}
-   
-
 function GetFlight(FlightNumber) {             // get flights with flightNo from all flights (depFlights)
     var element = depFlights.find(({ Flight_No }) => Flight_No === FlightNumber);
     for (let i = 0; i < depFlights.length; i++) {
@@ -55,6 +46,17 @@ function GetFlight(FlightNumber) {             // get flights with flightNo from
     return [];
 }
 
+const [clicked,setClicked]= useState(false); 
+const [state1,setState1]= useState({});
+
+function handleShow(event){             // redirect to page to show  booking details of booking selected (gets it by bokking no passed by id)
+    event.preventDefault();
+    var bookingNumber= event.target.id;
+    var data4={bookingNo: bookingNumber, depFlights: depFlights} // state (as object) passed to location.state (previously)
+    setState1(data4);
+    setClicked(true);
+    
+}
 
 
 
@@ -65,7 +67,7 @@ function GetFlight(FlightNumber) {             // get flights with flightNo from
 return (
 <div>
 
-    <Top/>
+<NavBar state1="Page"/>
 
   <div name="content" className={css`
   position: absolute; left: 10%; top: 10%; border-radius: 20px; width: 50%; padding: 20px; 
@@ -90,8 +92,10 @@ return (
             <br />
 
         </div><br></br> 
+         { clicked && <BookingDetails state={state1}/>
+}
         </div>  
-
+     
 )}
          
      </div>
@@ -102,4 +106,4 @@ return (
 
 );
 }
-export default MyFlights;
+export default MyBookings;

@@ -7,29 +7,13 @@ import { Link } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';                  // rendering in return statement (responsible for session checking & returning of current user email)
 import { Modal} from 'react-bootstrap';
 import { css} from '@emotion/css'
-import Top from './Top';                     // rendering in return statement (responsible for session checking & returning of current user email)
+import NavBar from './Helper/NavBar';                     // rendering in return statement (responsible for session checking & returning of current user email)
 require("react-bootstrap/ModalHeader");
 
-function UpdateUser(){            // USER MAIN PAGE
-    
-   // Session Checking
+function EditProfile(){            
     const location = useLocation();
     const history = useHistory();
-    const [x,setUser]=useState();     // x is email of user (it is the old email if he updated email )
-
-    axios.defaults.withCredentials = true;
-    useEffect(() => {
-        axios.get('http://localhost:8000/currentUser').then(res =>{ 
-        if (res.data=="0" || res.data.type!="Customer"){
-        alert("Access Denied, Please Sign In First");
-        history.push({pathname:"/SignIn"});
-        }
-        else
-         setUser(res.data.email);
-     })
-    }, [location]);
-
-    //------------------------------------------------------------
+ 
 //Inputs
     const [input, setInput] = useState({ firstName: "", lastName: "" , email:"" , password:"" , oldPassword:"" });
 
@@ -61,9 +45,9 @@ function UpdateUser(){            // USER MAIN PAGE
             if (res.data==0)  alert("Email already used, use a different email")  // email already used
             
             else if (res.data==1){        // succesful update
-            var article={oldEmail: x};
+           
             alert('Account Info Updated Successfully')
-            axios.post('http://localhost:8000/UpdateBookingUser', article).then(history.push({pathname: '/user'}))
+            axios.post('http://localhost:8000/UpdateBookingUser').then(history.push({pathname: '/user'}))  // post request nead old email (get from backend)
             }
             else if (res.data==2)  alert("Wrong Old Password");  // wrong old password
           
@@ -78,12 +62,9 @@ function UpdateUser(){            // USER MAIN PAGE
 return (
 <div className='container'>
 
-<h1>Welcome</h1>
-<h8>Account: {x}  </h8>
+<NavBar props="Page"/>
 
-<br></br><br></br>
-<button  onClick={handleclick}> Back to Main Page </button>
-<br></br><br></br>
+
 
 <form>
       <label>First Name <br></br>     <input onChange={handleChange} name="firstName" type="text" value={input.name} />  </label> <br></br> <br></br>
@@ -104,4 +85,4 @@ return (
 )
 } 
 
-export default  UpdateUser;
+export default  EditProfile;

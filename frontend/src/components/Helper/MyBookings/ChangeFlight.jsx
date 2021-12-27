@@ -5,33 +5,23 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 
 import { css} from '@emotion/css'
-import Top from './Top';                     // rendering in return statement (responsible for session checking & returning of current user email)
 import Checkbox from '@mui/material/Checkbox';
+import NewFlightSeats from "./NewFlightSeats";
 
-function ChangeFlight(){           //for USER & GUEST
 
-    const location = useLocation();
-    const history = useHistory();
-    axios.defaults.withCredentials = true;
-    
-    var flag=false;
-   
-    if (location.state!=null){           //checking if user searched for a flight & variables were passed, //passed state variable (search criteria)
-        flag=true;   
-     }
-   else{
-   alert("Please search for a flight to book first");
-   history.push({ pathname: '/user' });
-   }
 
-// --------------------------------------------------------------------------------------------------
+function ChangeFlight(props){           //helperComponent of BookingDetails
+console.log(props);
+//Needed Inputs   (passed form BookingDetails page)
+var passedVariable= props.state.passed;
+var search= props.state.search; // search input sent from user.jsx page
+var data1= props.state.matchedFlights; // array of objects {FlightDetails: x, TotalPrice: x} ->flights that meet the search criteria (FlightDetails & Price) sent from  bookingDetails (when change flight is pressed)
 
-var passedVariable= location.state.passed;
+
+//-----------
+
+//Derived Inputs
 var oldFlightNo= passedVariable.Flight.Flight_No; 
-
-//Needed Inputs
-var search= location.state.search; // search input sent from user.jsx page
-var data1= location.state.matchedFlights; // array of objects {FlightDetails: x, TotalPrice: x} ->flights that meet the search criteria (FlightDetails & Price) sent from  bookingDetails (when change flight is pressed)
 var data=[];
 
 for (var i=0; i<data1.length; i++){
@@ -54,12 +44,26 @@ function handleclick2(event){ //select flight
    // console.log(event.target.id);   // to get id of the button clicked (jsx/react/frontend)
    }
  
+	const [clicked,setClicked]= useState(false); 
+	const [state1,setState1]= useState({});
 
-function handleclick4(event){ // choose seats button
+   function handleclick4(event){ // choose seats button
  event.preventDefault();
 
     if(selectedFlight!= undefined){
- history.push({
+
+      var data4={ 
+         selectedFlight: selectedFlight,
+         search: search,
+         searchResults: data,
+         passed: passedVariable
+     };			// state passed (as object) passed to location.state (previously)
+    
+   setState1(data4);         // set data first to ensure redering wont occur with empty data
+    setClicked(true);
+
+
+/*  history.push({                          // remove & call in return & pass props to NewFlightSeats 
         pathname: '/BookingUpdate',
         state: { 
             selectedFlight: selectedFlight,
@@ -67,7 +71,7 @@ function handleclick4(event){ // choose seats button
             searchResults: data,
             passed: passedVariable
         }
-     }); 
+     });  */
      
    // console.log({selectedFlight: selectedFlight, search: search, searchResults: data});
    }
@@ -79,7 +83,7 @@ function handleclick4(event){ // choose seats button
 
 return (
 <div>
-    <Top/>
+    
  
     <div  name="content" className={css`
     position: absolute; left: 10%; top: 10%; border-radius: 20px; padding: 20px; 
@@ -106,6 +110,8 @@ return (
    
 
        <button onClick={handleclick4}>ChooseSeats</button>
+
+       { clicked && <NewFlightSeats state={state1}/> }
 	   
 
     

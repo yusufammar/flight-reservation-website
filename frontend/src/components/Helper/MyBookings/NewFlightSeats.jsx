@@ -5,36 +5,25 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 
 import { css} from '@emotion/css'
-import Top from './Top';                     // rendering in return statement (responsible for session checking & returning of current user email)
 import Checkbox from '@mui/material/Checkbox';
 
 
-function BookingUpdate(){           //for USER & GUEST
+function NewFlightSeats(props){           //helper component of changeFlight
    const location = useLocation();
    const history = useHistory();
    axios.defaults.withCredentials = true;
 
    var flag=false;
    var confirmbookingclicked=false;
-   
-    if (location.state!=null){           //checking if user searched for a newFlight & selected a departure newFlight & variables were passed, no url
-    flag=true;   
-    
-   }
-   else{
-   alert("Please search for a newFlight to book first!");
-   history.push({
-       pathname: '/user' 
-       });
-   }
+//-------------------------------------------
 
-   //-------------------------------------------
-
-   var passedVariable= location.state.passed;
-   var newFlight=location.state.selectedFlight; 
-
-   var search= location.state.search // search input sent from user.jsx page
-   //var data= location.state.searchResults; 
+//Inputs needed (passed from ChangeFlight component)
+  var passedVariable= props.state.passed;
+  var newFlight=props.state.selectedFlight; 
+  var search= props.state.search         
+  
+ //------------------------------------------------------- 
+  //var data= location.state.searchResults; 
    //console.log(data);
    
   // var departureFlights=data.departureFlightsAndPrices;
@@ -47,7 +36,6 @@ function BookingUpdate(){           //for USER & GUEST
 //---------------------------------------------------
 var CabinSeatsArray; // cabin seats format array (that has indexes up to the max seats available on that cabin of all flights) (array of constant size, seats array gets aplied on it becuase to display cabin -> format should be the same for all flights)
 var FlightSeatsArray; // seats array in every newFlight (that dictates the free (0) & occupied (1) seats) //Based on cabin (departureCabinSeatsArray & departureFlightSeatsArray {First,Business, or Economy})
-
 var ChosenSeats=[];  // array of indexes of the chosen seats (checkboxes selected)
 
 
@@ -118,7 +106,7 @@ function handleClick(){   // confirm button of choosing seats --> make booking
     axios.post('http://localhost:8000/changeFlight', article).then(
         alert("Flight Changed Successfully")
         );
-        history.push({pathname:'MyFlights'});
+        history.push({pathname:'MyBookings'});
 }
 }
 
@@ -151,7 +139,6 @@ function handleclick3(event){
    return( 
     <div  >
 
-   <Top/>
 
    <div  name="content" className={css`
   position: absolute; left: 5%; top: 10%;  text-align: center; 
@@ -300,4 +287,4 @@ function handleclick3(event){
    
    );
 }
-export default BookingUpdate;
+export default NewFlightSeats;

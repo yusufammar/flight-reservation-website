@@ -5,29 +5,32 @@ import { useHistory } from "react-router-dom";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { css} from '@emotion/css'
-import Top from './Top';   
-import 'bootstrap/dist/css/bootstrap.min.css';                  // rendering in return statement (responsible for session checking & returning of current user email)
-import { Modal} from 'react-bootstrap';
 
+import 'bootstrap/dist/css/bootstrap.min.css';                  // rendering in return statement (responsible for session checking & returning of current user email)
 import html2canvas from 'html2canvas';     //  save html into an image
 import { jsPDF } from 'jspdf';            // for generating pdf files (of elements in a fontend/react page/component)
 
+// helper components of this page (BookingDetails)
+import ChangeSeats from './ChangeSeats';   
+import ChangeFlight from './ChangeFlight';
 
-require("react-bootstrap/ModalHeader");
+//-------
+//import { Modal} from 'react-bootstrap';
+//require("react-bootstrap/ModalHeader");
 
-function BookingDetails() {
+function BookingDetails(props) {   //helper of MyBookings
+
+//Needed Inputs (from MyBookings)
+const depFlights= props.state.depFlights;               // all flights
+const bookingNo=props.state.bookingNo;                    //booking no of booking selected (passed by previous page: Myflght.jsx)
+//---------
 
 const location = useLocation();
 const history = useHistory();
 axios.defaults.withCredentials = true;
 
-const depFlights= location.state.depFlights;               // all flights
-const bookingNo=location.state.bookingNo;                    //booking no of booking selected (passed by previous page: Myflght.jsx)
-
 const [bookingActive, setBookingActive] = useState({});   // booking selected
 const [isChecked, setIsChecked] = useState(false);         // status of confirm cancel checkbox 
-
-
 
 useEffect(() => {
 
@@ -68,7 +71,7 @@ function deleteFlight(event){                        // deletes booking and send
     axios.post('http://localhost:8000/SendCancelEmail', article).then(res => {
     if (res.data==1){
     alert("Booking Canceled Successfully \nYou'll recieve an email with the cancelation details along with the refund amount");
-    history.push({ pathname: '/MyFlights'});
+    history.push({ pathname: '/MyBookings'});   // or handle in main page (Booking Details)
     }
     });
     
@@ -76,6 +79,38 @@ function deleteFlight(event){                        // deletes booking and send
     else 
     alert("Make sure confirmation checkbox is checked, to cancel booking!");
 }
+
+
+// Sending Itenerary (pdf by email)
+const printRef = React.useRef();
+
+async function SendItineraryPDF(event){
+  const element = printRef.current;
+  const canvas = await html2canvas(element);
+  const data = canvas.toDataURL('image/png');
+
+  const pdf = new jsPDF();
+  const imgProperties = pdf.getImageProperties(data);
+  const pdfWidth = pdf.internal.pageSize.getWidth();
+  const pdfHeight =
+    (imgProperties.height * pdfWidth) / imgProperties.width;
+
+  pdf.addImage(data, 'PNG', 0, 0, pdfWidth, pdfHeight);
+    
+  var pdfFile = pdf.output('blob');      //formdata (for sending files) takes only blob (binary large object) item (the 2nd parameter of append must be blob)
+                                      // blob format : blob is an object with many attrbutes , but most important is "data" attribute (is a buffer that holds  the data of file)  
+  var file2=new FormData(); 
+  file2.append('file',pdfFile);
+  //console.log(pdfFile);
+  axios.post('http://localhost:8000/SendEmail', file2).then(res => {
+      if (res.data==1) alert ("Intinerary sent to your email")
+      //add loading while waiting for email to be sent
+  })
+  
+};
+
+const [changeSeatsClicked,setChangeSeatsClicked]= useState(false); 
+const [state1,setState1]= useState({});
 
 function handleChangeSeats(event){
     var id=event.target.id;  // FlightDirection -> "DepartureFlight" or "ReturnFlight"
@@ -85,11 +120,19 @@ function handleChangeSeats(event){
     else
     var article= {Flight: GetFlight(bookingActive.ReturnFlightNo) , Booking: bookingActive, FlightDirection: id};
     
-    history.push({
+    var data4=article;			// state passed (as object) passed to location.state (previously)
+    setState1(data4);
+    setChangeSeatsClicked(true);
+    
+
+  /*   history.push({                    //remove & pass props to changeSeats component when calling (set flag -> render conditionally)
         pathname:"/ChangeSeats",
        state:article
-    });
+    }); */
 }
+
+const [changeFlightClicked,setChangeFlightClicked]= useState(false); 
+
 
 function handleChangeFlight(event){
 var id=event.target.id;  // FlightDirection -> "DepartureFlight" or "ReturnFlight"
@@ -118,13 +161,20 @@ else{
             data.push(data1[i]);
         }
 
-        if (data.length!=0) {        
+    if (data.length!=0) {        
          //console.log(res.data);  // res.send(FlightsAndPrices);  // array of objects [ {FlightDetails: x , TotalPrice: x } ]
          
-         history.push({
+    var data4={matchedFlights: res.data, search: input, passed: passedVariable};
+    console.log(data4);			// state passed (as object) passed to location.state (previously)
+    setState1(data4);
+    setChangeFlightClicked(true);
+  
+
+         
+         /* history.push({                //remove & pass props to changeFlight component when calling (set flag -> render conditionally)
           pathname: '/ChangeFlight',
           state: {matchedFlights: res.data, search: input, passed: passedVariable}
-        });
+        }); */
     }
     else alert ("No matching flights");
        
@@ -132,39 +182,10 @@ else{
     })
 
 }
-
-const printRef = React.useRef();
-
-async function SendItineraryPDF(event){
-  const element = printRef.current;
-  const canvas = await html2canvas(element);
-  const data = canvas.toDataURL('image/png');
-
-  const pdf = new jsPDF();
-  const imgProperties = pdf.getImageProperties(data);
-  const pdfWidth = pdf.internal.pageSize.getWidth();
-  const pdfHeight =
-    (imgProperties.height * pdfWidth) / imgProperties.width;
-
-  pdf.addImage(data, 'PNG', 0, 0, pdfWidth, pdfHeight);
-    
-  var pdfFile = pdf.output('blob');      //formdata (for sending files) takes only blob (binary large object) item (the 2nd parameter of append must be blob)
-                                      // blob format : blob is an object with many attrbutes , but most important is "data" attribute (is a buffer that holds  the data of file)  
-  var file2=new FormData(); 
-  file2.append('file',pdfFile);
-  //console.log(pdfFile);
-  axios.post('http://localhost:8000/SendEmail', file2).then(res => {
-      if (res.data==1) alert ("Intinerary sent to your email")
-      //add loading while waiting for email to be sent
-  })
-  
-};
-
+//-----------------------------------------------------------------------
 
 return (
 <div>
-
-<Top/>
 
 <div name="content" className={css` position: absolute; left: 10%; top: 10%; width: 100%; padding: 20px; 
 font-family: 'Josefin Sans'; font-size: 15px; font-weight: bold;`}>
@@ -205,9 +226,11 @@ font-family: 'Josefin Sans'; font-size: 15px; font-weight: bold;`}>
     {bookingActive.Cabin=="Business" && GetFlight(bookingActive.ReturnFlightNo).Business_Class_BaggageAllowance}
     {bookingActive.Cabin=="Economy" && GetFlight(bookingActive.ReturnFlightNo).Economy_Class_BaggageAllowance}
     </div>
-
-
-
+    
+    { changeSeatsClicked && <ChangeSeats state={state1}/> }
+    { changeFlightClicked && <ChangeFlight state={state1}/> }
+   
+ 
 </div>
 
 <div name="Buttons" style={{paddingLeft:"50px"}}>

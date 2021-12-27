@@ -24,8 +24,7 @@ import MenuList from '@mui/material/MenuList';
 import Divider from '@mui/material/Divider';
 
 
-
-function Top(){      //for USER & GUEST
+function NavBar(props){      //for USER & GUEST
    
     const location = useLocation();
     const history = useHistory();
@@ -36,7 +35,7 @@ function Top(){      //for USER & GUEST
         axios.get('http://localhost:8000/currentUser').then(res =>{ 
         if (res.data=="0" || res.data.type=="Admin"){
         alert("Access Denied, Please Sign In First");
-        history.push({pathname:"/SignIn"});
+        history.push({pathname:"/SignIn"});                // change this part to go to add guest route & setUser as guest email
         }
         else
         setUser(res.data.email);
@@ -46,11 +45,11 @@ function Top(){      //for USER & GUEST
     function handleclick7(event){
         event.preventDefault();
         history.push({
-        pathname: '/user'})
+        pathname: '/'})
     }
     function handleclick8(event){
         event.preventDefault();
-        history.push({pathname: '/UpdateUser' });
+        history.push({pathname: '/EditProfile' });
     }
     function handleclick9(event){
         event.preventDefault();
@@ -61,7 +60,7 @@ function Top(){      //for USER & GUEST
     function showBookings(event){
         event.preventDefault();
         history.push({
-        pathname: '/MyFlights'}); 
+        pathname: '/MyBookings'}); 
     }
 
 // MUI Profile Dropdown
@@ -99,50 +98,51 @@ function Top(){      //for USER & GUEST
     prevOpen.current = open;
   }, [open]);
  
-// ----------
+// ----------------------
 
+var mode=props.state1;              // "landingPage" or "Page"
+
+var style1= css` width: 100%; display:flex; height: 75px; position: fixed; padding-top:15px; 
+z-index:1;  font-family:"Josefin Sans"; color:	#2C85B8; box-shadow: 0px 0px 10px 1px lightGray; ` ;
+
+var style2= css` width: 100%; display:flex; height: 75px; position: fixed; padding-top:15px; 
+z-index:1; font-family:"Josefin Sans"; color:white;  `  ;
+
+var style;
+
+if (mode=="landingPage") style= style2;
+else                  style= style1;
 
 return (
-    <div className={css`
-    width: 100%;
-    display:flex;
-    height: 75px;
-    position: fixed;
-    padding-top:15px;
-    top: 0px;
-    left: 0px;
-    z-index:1;
-    color:	#2C85B8;
-    font-family:"Josefin Sans"; 
-    box-shadow: 0px 0px 10px 1px lightGray;
-     `}>
+  <div className={style}>
        
-      
-    <img className={css`position: absolute; left: 10%; &:hover{cursor: pointer; `} onClick={handleclick7} src="/logo.png" />
+     
+        
+       <img className={css`position: absolute; left: 10%; &:hover{cursor: pointer; `} onClick={handleclick7} src="/logo.png" />
       
          
-    <div className={css`position: absolute; left: 70%;` }>
-    <label className={css` font-size: 20px;  &:hover{cursor: pointer;} `} onClick={handleclick7}>BOOK</label>  
-    &nbsp; &nbsp; &nbsp;    &nbsp; &nbsp;  
- 
-    <label className={css`   font-size: 20px;  &:hover{cursor: pointer;}`} onClick={showBookings}>MY BOOKINGS</label> 
-   </div>
-    
-
- <AccountCircleRoundedIcon  ref={anchorRef}
-        id="composition-button"
-        aria-controls={open ? 'composition-menu' : undefined}
-        aria-expanded={open ? 'true' : undefined}
-        aria-haspopup="true"
-        onClick={handleToggle} className={css`position: absolute; left: 88%; transform: scale(1.5); &:hover{cursor: pointer; `}/>
-        <Popper
-          open={open}
-          anchorEl={anchorRef.current}
-          role={undefined}
-          placement="bottom-end"
-          transition
-          disablePortal
-        >
+      <div className={css`position: absolute; left: 70%;` }>
+      <label className={css` font-size: 20px;  &:hover{cursor: pointer;} `} onClick={handleclick7}>BOOK</label>  
+      &nbsp; &nbsp; &nbsp;    &nbsp; &nbsp;  
+   
+      <label className={css`   font-size: 20px;  &:hover{cursor: pointer;}`} onClick={showBookings}>MY BOOKINGS</label> 
+     </div>
+      
+  
+   <AccountCircleRoundedIcon  ref={anchorRef}
+          id="composition-button"
+          aria-controls={open ? 'composition-menu' : undefined}
+          aria-expanded={open ? 'true' : undefined}
+          aria-haspopup="true"
+          onClick={handleToggle} className={css`position: absolute; left: 88%; transform: scale(1.5); &:hover{cursor: pointer; `}/>
+          <Popper
+            open={open}
+            anchorEl={anchorRef.current}
+            role={undefined}
+            placement="bottom-end"
+            transition
+            disablePortal
+          >
           {({ TransitionProps, placement }) => (
             <Grow
               {...TransitionProps}
@@ -181,4 +181,4 @@ return (
 );
 } 
 
-export default Top;
+export default NavBar;

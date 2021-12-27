@@ -5,11 +5,13 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 
 import { css} from '@emotion/css'
-import Top from './Top';                     // rendering in return statement (responsible for session checking & returning of current user email)
 import Checkbox from '@mui/material/Checkbox';
-import Booking from './Booking';
 
-function DepartureFlights(){           //for USER & GUEST
+
+import NavBar from './Helper/NavBar';                    // rendering in return statement (responsible for session checking & returning of current user email)
+import SeatSelector from './Helper/SeatSelector';
+
+function FlightSelector(){           //for USER & GUEST
 
     const location = useLocation();
     const history = useHistory();
@@ -22,7 +24,7 @@ function DepartureFlights(){           //for USER & GUEST
      }
    else{
    alert("Please search for a flight to book first");
-   history.push({ pathname: '/user' });
+   history.push({ pathname: '/' });
    }
 
 // --------------------------------------------------------------------------------------------------
@@ -67,7 +69,10 @@ function handleclick4(event){
     search: search,
     searchResults: data
 }
-setState1(object1);
+
+    setState1(object1);
+    setClicked(true);
+
     /* history.push({
     
         pathname: '/Booking',
@@ -76,7 +81,7 @@ setState1(object1);
             search: search,
             searchResults: data
         }}); */
-        setClicked(true);
+        
      
      console.log({ 
         booking: {selectedDepartureFlight: selectedDepartureFlight,  selectedReturnFlight: selectedReturnFlight },
@@ -91,7 +96,7 @@ setState1(object1);
 
 return (
 <div>
-    <Top/>
+    <NavBar state1="Page"/>
  
     <div  name="content" className={css`
     position: absolute; left: 10%; top: 10%; border-radius: 20px; padding: 20px; 
@@ -142,11 +147,11 @@ return (
 
     <br></br> <br></br><br></br>
     
-       {clicked && <Booking state1={state1}/>} 
+       {clicked && <SeatSelector state1={state1}/>} 
     
     </div> 
  </div>
 
 );
 }
-export default DepartureFlights;
+export default FlightSelector;
