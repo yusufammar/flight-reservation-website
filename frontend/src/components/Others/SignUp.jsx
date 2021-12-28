@@ -1,9 +1,17 @@
+import '../css/style2.css';
 import React, {useState} from "react";
-import { Link } from "react-router-dom";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
+import NavBar from '../Helper/NavBar';
+import { css} from '@emotion/css'
 
 
+import AccountCircle from '@mui/icons-material/AccountCircle';
+import Input from '@mui/material/Input';
+import InputAdornment from '@mui/material/InputAdornment';
+import LockIcon from '@mui/icons-material/Lock';
+import NumbersRoundedIcon from '@mui/icons-material/NumbersRounded';
+import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 
 
 function SignUp(){
@@ -30,7 +38,8 @@ function handleChange(event){
 function handleclick(event){
     event.preventDefault();
 
-    
+    if (input.firstname!="" && input.lastname!="" && input.email!= "" && input.password!= "" && input.countryCode!="" && 
+    input.phoneNo!="" && input.passportNo!="" && input.address!="" ) { 
     axios.post('http://localhost:8000/addUser', input).then( res => {
         if (res.data==1){
         alert("E-Mail Address Already Exists!  \nPlease use another E-Mail address");  // alert message with line break
@@ -46,38 +55,100 @@ function handleclick(event){
             });
         }
         });
+    }
+    else
+    alert("All fields are required")
 }
 
+function handleclick2(event){
+    event.preventDefault();
+     history.push({pathname: "/SignIn" });
+} 
+
 return (
-<div className='container'>
-<h1>Sign Up</h1>
+    <div className={css` font-family: 'Josefin Sans'; `} > 
+    
+    <div style={{display:"flex", height:"875px"}}>
+    
+    
+    <div name="SignUp" className={css` width: 70%; `}> 
+    
+    <NavBar state1="Form"/>
+    
+    
+    <form className={css` box-shadow: 0px 0px 100px 1px lightGray; position: absolute; left: 20%; top:22%; 
+    background-color:white; border-radius: 20px; padding: 40px; font-family: 'Josefin Sans';  font-size: 10px; 
+    transform:scale(1.3); color:#2C85B8; `} >
+    <h1>Sign Up</h1>    <br></br> <br></br> <br></br>  
+    
+    <div style={{display:"flex"}}>
 
-<br></br>
-<button><Link to="/SignIn">Sign In Instead</Link></button>
-&nbsp;&nbsp;
-<button><Link to="/"> Back To Main Page </Link></button>
-<br></br><br></br>
+    <div>
+    <Input className={css` width: 300px; `} startAdornment={<InputAdornment position="start"> <AccountCircle  /> </InputAdornment> }
+       onChange={handleChange} name="firstName" type="text" value={input.firstName} placeholder='First Name'/> 
+       <br></br> <br></br> <br></br><br></br>
+       <Input className={css` width: 300px; `} startAdornment={<InputAdornment position="start"> <HomeRoundedIcon/> </InputAdornment> }
+     onChange={handleChange} name="address" type="text" value={input.address} placeholder='Address' />  
+        <br></br> <br></br> <br></br> <br></br> 
+     
+        <Input className={css` width: 300px; `} startAdornment={<InputAdornment position="start"> <NumbersRoundedIcon /> </InputAdornment> }
+     onChange={handleChange} name="countryCode" type="number" value={input.countryCode} placeholder='Country Code' />   
+       <br></br> <br></br> <br></br><br></br>
+    <Input className={css` width: 300px; `} startAdornment={<InputAdornment position="start"> <AccountCircle  /> </InputAdornment> }
+        onChange={handleChange} name="email" type="text" value={input.email} placeholder='Email' />
+       <br></br> <br></br> <br></br><br></br>
+   
+        </div>
+           
+    &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <div>
+      <Input className={css` width: 300px; `} startAdornment={<InputAdornment position="start"> <AccountCircle /> </InputAdornment> }
+        onChange={handleChange} name="lastName" type="text" value={input.lastName} placeholder='Last Name' />
+        <br></br> <br></br> <br></br> <br></br> 
+ 
+        <Input className={css` width: 300px; `} startAdornment={<InputAdornment position="start"> <NumbersRoundedIcon  /> </InputAdornment> }
+     onChange={handleChange} name="passportNo" type="text" value={input.passportNo} placeholder='Passport No'/> 
+       <br></br> <br></br> <br></br><br></br>
+      
+    
+    
+      
+    <Input className={css` width: 300px; `} startAdornment={<InputAdornment position="start"> <NumbersRoundedIcon /> </InputAdornment> }
+       onChange={handleChange} name="phoneNo" type="number" value={input.phoneNo} placeholder='Phone Number'/>  
+        <br></br> <br></br> <br></br> <br></br> 
+           
+    <Input className={css` width: 300px; `} startAdornment={<InputAdornment position="start"> <LockIcon /> </InputAdornment> }
+        onChange={handleChange} name="password" type="password" value={input.password} placeholder='Password'/>
+        <br></br> <br></br> <br></br> <br></br> 
 
-<form>
-      <label>First Name: <br></br>      <input onChange={handleChange} name="firstName" type="text" value={input.firstName} />  </label> <br></br> <br></br>
-      <label>Last Name: <br></br>      <input onChange={handleChange} name="lastName" type="text" value={input.lastName} />  </label> <br></br> <br></br>
-      <label>Email <br></br>     <input onChange={handleChange} name="email" type="text" value={input.email} />  </label> <br></br> <br></br>
-      <label>Password <br></br>  <input onChange={handleChange} name="password" type="password" value={input.password}/> </label> <br></br> <br></br>
-      
-      <label>Passport No <br></br>      <input onChange={handleChange} name="passportNo" type="text" value={input.passportNo} />  </label> <br></br> <br></br>
-      <label>Address <br></br>     <input onChange={handleChange} name="address" type="text" value={input.address} />  </label> <br></br> <br></br>
-      <label>Country Code <br></br>     <input onChange={handleChange} name="countryCode" type="number" value={input.nationality} />  </label> <br></br> <br></br>
-      <label>Phone No <br></br>      <input onChange={handleChange} name="phoneNo" type="number" value={input.phoneNo} />  </label> <br></br> <br></br>
-      
-      
-      
-      <input type="submit" value="Sign Up" onClick={handleclick} /> 
-</form>
 
-<br></br> <br></br>
+    </div> 
+    </div>
+    <br></br>
+    
+    
+    <div style={{textAlign:"center"}}>
+    <input className="btn btn-primary btn-lg" style={{borderRadius: "40px",  width:"300px"}} type="submit" value="Sign Up" onClick={handleclick} /> 
+    </div>
 
-</div>
-)
+   
+    </form>
+    
+    </div>
+    
+    <div name="SignIn" class="c" >
+    <div style={{transform:'scale(1.3)', width:'400px'}}>
+    <h1>Already Have An Acount?</h1> <br></br> <br></br> 
+    <button className="btn btn-light btn-lg" style={{borderRadius: "40px",  width:"300px"}}  onClick={handleclick2} > Sign In </button>  
+    </div>
+    </div>
+    
+    
+    </div>
+    
+    </div>
+    )
+
 } 
 
 export default SignUp;

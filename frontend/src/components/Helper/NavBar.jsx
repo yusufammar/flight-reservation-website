@@ -93,7 +93,7 @@ function NavBar(props){      //for USER & GUEST
     }
   }
 
-  function logIn(event){
+  function signIn(event){
     event.preventDefault();
     history.push({
     pathname: '/SignIn'}); 
@@ -111,7 +111,8 @@ function NavBar(props){      //for USER & GUEST
  
 // ----------------------
 
-var mode=props.state1;              // "landingPage" or "Page"
+var formFlag=false;
+var mode=props.state1;              // "landingPage" or "Page" or "form ->sign in & sign up"
 
 //Normal Page NavBar Style
 var style1= css` width: 100%; display:flex; height: 75px; position: fixed; padding-top:15px; 
@@ -124,7 +125,8 @@ z-index:1; font-family:"Josefin Sans"; color:white;  `  ;
 var style;
 
 if (mode=="landingPage") style= style2;
-else                  style= style1;
+else if (mode=="Page")        style= style1;
+else { style= style1; formFlag=true}  // signIn & signup pages
 
 return (
   <div className={style}>
@@ -133,18 +135,20 @@ return (
         
        <img className={css`position: absolute; left: 10%; &:hover{cursor: pointer;`} onClick={handleclick7} src="/logo.png" />
       
-         
-      <div name="Book_MyBookings" className={css`position: absolute; left: 70%; font-size: 20px; ` }>
-      <label className={css`&:hover{cursor: pointer;} `} onClick={handleclick7}>BOOK</label>  
+        
+      {formFlag==false &&<div name="Book_MyBookings" className={css`position: absolute; left: 44%; font-size: 20px; ` }>
+      <label className={css`&:hover{cursor: pointer;} `} onClick={handleclick7}>Book</label>  
       &nbsp; &nbsp; &nbsp;    &nbsp; &nbsp;  
    
-      <label className={css` &:hover{cursor: pointer;}`} onClick={showBookings}>MY BOOKINGS</label> 
+      <label className={css` &:hover{cursor: pointer;}`} onClick={showBookings}>My Bookings</label> 
       &nbsp; &nbsp; &nbsp;    &nbsp; &nbsp;  
-      {guestMode && <button class="btn btn-primary"   onClick={logIn}>LOG IN </button>}
-     </div>
+   
+     </div>}
       
   <div name="ProfileIcon">
-   <AccountCircleRoundedIcon className={css`position: absolute; top:27%;left: 95%; transform: scale(1.5); &:hover{cursor: pointer; `}  ref={anchorRef}
+
+  {guestMode && <button class="btn btn-primary"  style={{ position: 'absolute' , left: '78%'}}  onClick={signIn}>Sign In</button>}
+   <AccountCircleRoundedIcon className={css`position: absolute; top:23%;left: 85%; transform: scale(1.5); &:hover{cursor: pointer; `}  ref={anchorRef}
           id="composition-button"
           aria-controls={open ? 'composition-menu' : undefined}
           aria-expanded={open ? 'true' : undefined}
