@@ -186,7 +186,7 @@ return (
                   {guestMode==false && 
                   <a> <Divider/>
                     <MenuItem onClick={handleclick8}><EditIcon/> &nbsp; Edit Profile</MenuItem>
-                    <MenuItem onClick={handleclick9}>&nbsp;<LogoutIcon/> &nbsp;  Logout</MenuItem>
+                    <MenuItem onClick={handleclick9}>&nbsp;<LogoutIcon/> &nbsp;  Sign Out</MenuItem>
                   </a>}
 
                   </MenuList>
