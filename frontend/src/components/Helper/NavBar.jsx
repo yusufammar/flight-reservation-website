@@ -29,13 +29,17 @@ function NavBar(props){      //for USER & GUEST
     const location = useLocation();
     const history = useHistory();
     const [x,setUser]=useState();
+    const [guestMode,setGuestMode]=useState(false);
     axios.defaults.withCredentials = true;
     
     useEffect(() => {
         axios.get('http://localhost:8000/currentUser').then(res =>{ 
         if (res.data=="0" || res.data.type=="Admin"){
-        alert("Access Denied, Please Sign In First");
-        history.push({pathname:"/SignIn"});                // change this part to go to add guest route & setUser as guest email
+        setGuestMode(true);
+        axios.get('http://localhost:8000/addGuest');
+        
+    /*     alert("Access Denied, Please Sign In First");
+        history.push({pathname:"/SignIn"});                 */// change this part to go to add guest route & setUser as guest email
         }
         else
         setUser(res.data.email);
@@ -55,7 +59,8 @@ function NavBar(props){      //for USER & GUEST
         event.preventDefault();
         axios.get('http://localhost:8000/logout').then(
         history.push({
-            pathname: '/'}))
+            pathname: '/'}));
+            window.location.reload();
     }
     function showBookings(event){
         event.preventDefault();
@@ -88,6 +93,12 @@ function NavBar(props){      //for USER & GUEST
     }
   }
 
+  function logIn(event){
+    event.preventDefault();
+    history.push({
+    pathname: '/SignIn'}); 
+  }
+
   // return focus to the button when we transitioned from !open -> open
   const prevOpen = React.useRef(open);
   React.useEffect(() => {
@@ -102,10 +113,12 @@ function NavBar(props){      //for USER & GUEST
 
 var mode=props.state1;              // "landingPage" or "Page"
 
+//Normal Page NavBar Style
 var style1= css` width: 100%; display:flex; height: 75px; position: fixed; padding-top:15px; 
-z-index:1;  font-family:"Josefin Sans"; color:	#2C85B8; box-shadow: 0px 0px 10px 1px lightGray; ` ;
+z-index:1;  font-family:"Josefin Sans"; color:	#2C85B8; box-shadow: 0px 0px 10px 1px lightGray;  ` ;
 
-var style2= css` width: 100%; display:flex; height: 75px; position: fixed; padding-top:15px; 
+//Landing Page NavBar Style 
+var style2= css` width: 100%; display:flex; height: 75px; position: fixed; padding-top:15px;   
 z-index:1; font-family:"Josefin Sans"; color:white;  `  ;
 
 var style;
@@ -118,23 +131,25 @@ return (
        
      
         
-       <img className={css`position: absolute; left: 10%; &:hover{cursor: pointer; `} onClick={handleclick7} src="/logo.png" />
+       <img className={css`position: absolute; left: 10%; &:hover{cursor: pointer;`} onClick={handleclick7} src="/logo.png" />
       
          
-      <div className={css`position: absolute; left: 70%;` }>
-      <label className={css` font-size: 20px;  &:hover{cursor: pointer;} `} onClick={handleclick7}>BOOK</label>  
+      <div name="Book_MyBookings" className={css`position: absolute; left: 70%; font-size: 20px; ` }>
+      <label className={css`&:hover{cursor: pointer;} `} onClick={handleclick7}>BOOK</label>  
       &nbsp; &nbsp; &nbsp;    &nbsp; &nbsp;  
    
-      <label className={css`   font-size: 20px;  &:hover{cursor: pointer;}`} onClick={showBookings}>MY BOOKINGS</label> 
+      <label className={css` &:hover{cursor: pointer;}`} onClick={showBookings}>MY BOOKINGS</label> 
+      &nbsp; &nbsp; &nbsp;    &nbsp; &nbsp;  
+      {guestMode && <button class="btn btn-primary"   onClick={logIn}>LOG IN </button>}
      </div>
       
-  
-   <AccountCircleRoundedIcon  ref={anchorRef}
+  <div name="ProfileIcon">
+   <AccountCircleRoundedIcon className={css`position: absolute; top:27%;left: 95%; transform: scale(1.5); &:hover{cursor: pointer; `}  ref={anchorRef}
           id="composition-button"
           aria-controls={open ? 'composition-menu' : undefined}
           aria-expanded={open ? 'true' : undefined}
           aria-haspopup="true"
-          onClick={handleToggle} className={css`position: absolute; left: 88%; transform: scale(1.5); &:hover{cursor: pointer; `}/>
+          onClick={handleToggle} />
           <Popper
             open={open}
             anchorEl={anchorRef.current}
@@ -159,21 +174,24 @@ return (
                     aria-labelledby="composition-button"
                     onKeyDown={handleListKeyDown}
                   >
-                     &nbsp;&nbsp;&nbsp;<PersonIcon/>&nbsp; {x} &nbsp;&nbsp;
-                    <Divider/>
+                     &nbsp;&nbsp;&nbsp;<PersonIcon/>
                     
+                    &nbsp; {guestMode && <a>Guest</a>}{x} &nbsp;&nbsp;
+               
+                                     
+                  {guestMode==false && 
+                  <a> <Divider/>
                     <MenuItem onClick={handleclick8}><EditIcon/> &nbsp; Edit Profile</MenuItem>
-                    <MenuItem onClick={showBookings}><ArticleIcon/> &nbsp; My Bookings</MenuItem>
-                  
-                  
-                    
                     <MenuItem onClick={handleclick9}>&nbsp;<LogoutIcon/> &nbsp;  Logout</MenuItem>
+                  </a>}
+
                   </MenuList>
                 </ClickAwayListener>
               </Paper>
             </Grow>
           )}
         </Popper>
+        </div>
 
  </div>
 

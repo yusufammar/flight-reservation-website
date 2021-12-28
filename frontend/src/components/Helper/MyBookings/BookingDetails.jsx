@@ -121,6 +121,8 @@ function handleChangeSeats(event){
     var article= {Flight: GetFlight(bookingActive.ReturnFlightNo) , Booking: bookingActive, FlightDirection: id};
     
     var data4=article;			// state passed (as object) passed to location.state (previously)
+    
+    setHelperShow(true);
     setState1(data4);
     setChangeSeatsClicked(true);
     
@@ -166,6 +168,8 @@ else{
          
     var data4={matchedFlights: res.data, search: input, passed: passedVariable};
     console.log(data4);			// state passed (as object) passed to location.state (previously)
+    
+    setHelperShow(true);
     setState1(data4);
     setChangeFlightClicked(true);
   
@@ -183,19 +187,19 @@ else{
 
 }
 //-----------------------------------------------------------------------
+const [helperShow,setHelperShow]=useState(false);
+
 
 return (
-<div>
+<div name="dialog" >
 
-<div name="content" className={css` position: absolute; left: 10%; top: 10%; width: 100%; padding: 20px; 
-font-family: 'Josefin Sans'; font-size: 15px; font-weight: bold;`}>
-
+{helperShow==false && 
+<div name="bookingDetailsPage">
 <div style={{display:'flex'}} name="flexBig">
-
 <div ref={printRef} name="Itinerary">
-<h1>Booking Details</h1> <br></br>
-    Booking No: {bookingActive.BookingNo}<br />  Cabin: {bookingActive.Cabin}  <br />  Seats: {bookingActive.AdultSeats>0 && bookingActive.AdultSeats + " (Adults)"} {(bookingActive.AdultSeats>0 && bookingActive.ChildrenSeats>0) && " | " } {bookingActive.ChildrenSeats>0 && bookingActive.ChildrenSeats + " (Children)"} 
-    <br />Price: {bookingActive.Price}
+
+    Booking No: {bookingActive.BookingNo} |  Cabin: {bookingActive.Cabin}  | Seats: {bookingActive.AdultSeats>0 && bookingActive.AdultSeats + " (Adults)"} {(bookingActive.AdultSeats>0 && bookingActive.ChildrenSeats>0) && " | " } {bookingActive.ChildrenSeats>0 && bookingActive.ChildrenSeats + " (Children)"} 
+     | Price: {bookingActive.Price}
     <br></br><br /> <br></br>
 
 
@@ -227,15 +231,13 @@ font-family: 'Josefin Sans'; font-size: 15px; font-weight: bold;`}>
     {bookingActive.Cabin=="Economy" && GetFlight(bookingActive.ReturnFlightNo).Economy_Class_BaggageAllowance}
     </div>
     
-    { changeSeatsClicked && <ChangeSeats state={state1}/> }
-    { changeFlightClicked && <ChangeFlight state={state1}/> }
-   
+  
  
 </div>
 
 <div name="Buttons" style={{paddingLeft:"50px"}}>
 
-<br></br> <br></br><br></br><br></br> <br></br><br></br><br></br> <br></br><br></br><br></br>
+<br></br> <br></br><br></br><br></br><br></br>
 <button class="btn btn-primary" id="DepartureFlight" onClick={handleChangeSeats}> Change Seats </button>  <br></br><br></br> 
 <button class="btn btn-primary" id="DepartureFlight" onClick={handleChangeFlight} > Change Departure Flight </button> <br></br> <br></br><br></br>
 
@@ -262,10 +264,17 @@ font-family: 'Josefin Sans'; font-size: 15px; font-weight: bold;`}>
                     
                                 
 </div>
+</div>
+}
+
+<div name="helperPages" >
+{ changeSeatsClicked && <ChangeSeats state={state1}/> }
+{ changeFlightClicked && <ChangeFlight state={state1}/> }
+</div> 
 
 </div>
     
-</div>
+
 
 );
 }

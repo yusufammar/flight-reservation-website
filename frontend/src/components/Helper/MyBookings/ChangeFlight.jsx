@@ -47,8 +47,8 @@ function handleclick2(event){ //select flight
 	const [clicked,setClicked]= useState(false); 
 	const [state1,setState1]= useState({});
 
-   function handleclick4(event){ // choose seats button
- event.preventDefault();
+function handleclick4(event){ // choose seats button
+    event.preventDefault();
 
     if(selectedFlight!= undefined){
 
@@ -59,7 +59,8 @@ function handleclick2(event){ //select flight
          passed: passedVariable
      };			// state passed (as object) passed to location.state (previously)
     
-   setState1(data4);         // set data first to ensure redering wont occur with empty data
+    setHelperShow(true);
+    setState1(data4);         // set data first to ensure redering wont occur with empty data
     setClicked(true);
 
 
@@ -80,18 +81,15 @@ function handleclick2(event){ //select flight
    
 
 }
-
+const [helperShow,setHelperShow]=useState(false);
 return (
 <div>
-    
- 
-    <div  name="content" className={css`
-    position: absolute; left: 10%; top: 10%; border-radius: 20px; padding: 20px; 
-    font-family: 'Josefin Sans'; font-size: 15px; ` }>
-    
-    <h1 >Matching Flights</h1> <br></br>
+
+   { helperShow==false &&
+   <div name="Similar Flights" >
+    <h3>Similar Flights</h3> <br></br>
        {Flights.map((flight,i) =>
-       <div>
+         <div>
        <button id={i} onClick={handleclick2} className={css`
        background-color: dodgerblue; border-radius: 20px; padding: 10px;
        font-family: 'Josefin Sans'; font-size: 15px; font-weight: normal;  &:hover{background-color: green;} &:focus{background-color: orange; `}>
@@ -104,23 +102,23 @@ return (
      
 </button>
 <br></br><br></br><br></br>
-</div>
+         </div>
        )}
 	   <br></br>
-   
-
-       <button onClick={handleclick4}>ChooseSeats</button>
-
-       { clicked && <NewFlightSeats state={state1}/> }
-	   
-
-    
-   
+      <button class="btn btn-primary" onClick={handleclick4}>Choose Seats</button>
+   </div>
+}
+       { clicked  && 
+        <div name="helperDialog" > 
        
-     
-    </div> 
- </div>
+        <div className={css` height:600px; overflow:auto; `}>
+        <NewFlightSeats state={state1}/>
+        </div>
 
+        </div>
+        }
+	   
+       </div> 
 );
 }
 export default ChangeFlight;

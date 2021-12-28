@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';                  // rendering in return statement (responsible for session checking & returning of current user email)
 import { Modal} from 'react-bootstrap';
 import { css} from '@emotion/css'
-import NavBar from './Helper/NavBar';                     // rendering in return statement (responsible for session checking & returning of current user email)
+import NavBar from '../Helper/NavBar';                     // rendering in return statement (responsible for session checking & returning of current user email)
 require("react-bootstrap/ModalHeader");
 
 function EditProfile(){            

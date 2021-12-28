@@ -50,12 +50,19 @@ const [clicked,setClicked]= useState(false);
 const [state1,setState1]= useState({});
 
 function handleShow(event){             // redirect to page to show  booking details of booking selected (gets it by bokking no passed by id)
+   
     event.preventDefault();
     var bookingNumber= event.target.id;
-    var data4={bookingNo: bookingNumber, depFlights: depFlights} // state (as object) passed to location.state (previously)
-    setState1(data4);
-    setClicked(true);
+    if (clicked==true && bookingNumber==state1.bookingNo){
+        setClicked(false); 
+    }
+    else{
     
+        var data4={bookingNo: bookingNumber, depFlights: depFlights} // state (as object) passed to location.state (previously)
+        
+    setState1(data4); console.log(data4);
+    setClicked(true);
+    }
 }
 
 
@@ -70,19 +77,20 @@ return (
 <NavBar state1="Page"/>
 
   <div name="content" className={css`
-  position: absolute; left: 10%; top: 10%; border-radius: 20px; width: 50%; padding: 20px; 
+  position: absolute; left: 10%; top: 10%; border-radius: 20px; width: 75%;  padding: 20px; 
   font-family: 'Josefin Sans'; font-size: 15px; font-weight: bold; `
   }>
-        <h1>Bookings</h1>
-        
-        
-        {bookings.length==0 &&  <h6> <br></br> No Bookings To Show! </h6>}
-        
-       
+    <h1 className={css`
+text-align: center; `}
+  >Bookings</h1>
+   <br></br>  <br></br> 
+    
+         {bookings.length==0 &&  <h6> <br></br> No Bookings To Show! </h6>}
+         
         {bookings[0] !=undefined && bookings.map(booking =>
            
         <div>
-            <div id={booking.BookingNo} onClick={handleShow} className={css`
+            <div name="BookingEntry" id={booking.BookingNo} onClick={handleShow} className={css`
             background-color: dodgerblue; border-radius: 20px; padding: 10px; 
             font-family: 'Josefin Sans'; font-size: 15px; font-weight: normal;  &:hover{background-color: green;}`}>
             
@@ -92,12 +100,22 @@ return (
             <br />
 
         </div><br></br> 
-         { clicked && <BookingDetails state={state1}/>
-}
+        
+        
+        { (clicked && booking.BookingNo==state1.bookingNo)  && 
+        <div name="helperDialog"  style={{ boxShadow: "0px 0px 100px 1px lightGray", padding:'20px', borderRadius: '20px'}}> 
+       
+        <div className={css` height:600px; overflow:auto; `}>
+        <BookingDetails  state={state1}/>
+        </div>
+
+        </div>
+        } 
+        <br></br> 
         </div>  
-     
+
 )}
-         
+          
      </div>
     
 

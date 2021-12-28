@@ -54,7 +54,7 @@ router.route("/SignIn").post(async(req, res) => {
 });
 
 router.route("/currentUser").get((req, res) => {
-   if (req.session.email){
+   if (req.session.email && req.session.type!="Guest"){
      const user= {email: req.session.email, type: req.session.type  }
      res.send(user);  
    }
@@ -72,16 +72,23 @@ router.route("/addGuest").get((req,res) => { //get becuase no input
      //req.session.email= guestEmail;
    
      const newGuest = new user({
-      Name : "Guest",
+      FirstName : "-",
+      LastName: "-",
       Email : guestEmail,
-      Password : "guest",
-      Type: "Guest", 
+      Password : "-",
       
+      PassportNo: "-",
+      Address: "-",
+      CountryCode: 0,
+      PhoneNo: 0,
+      Type: "Guest" 
        });
+      
+      
 
       newGuest.save();
       req.session.email = guestEmail; req.session.type="Guest"; res.send(req.session);
-      //res.send(guestEmail); 
+  
     })
  });
 
@@ -739,7 +746,7 @@ console.log(pdfObject)
     to: req.session.email,
     subject: 'Itenerary',
     attachments:[{
-      filename: 'filename.pdf',
+      filename: 'Itinerary.pdf',
       content: pdfObject.data,     // the buffer of data of the file
       contentType: 'application/pdf'
   }]

@@ -129,21 +129,12 @@ history.push({pathname:'MyBookings'});   // after seats change action (remove & 
 
 //---------------------------------------------------
   return( 
-<div>
+
+<div name="SeatSelector" style={{ textAlign:'center', padding:'20px'}}>
    
-
-   <div  name="content" className={css`
-  position: absolute; left: 5%; top: 10%;  text-align: center; 
-  font-family: 'Josefin Sans'; font-size: 15px; `
-  }>
-
-      <h1>Choose Seats</h1>
-
-      <div name="SeatSelector">
-      <label>Number of seats to  be chosen: {totalseats}</label>
       
 {cabin=="First" &&
-<div  name="First Class Format Seat Selector" style={{outline: '5px solid black', textAlign:'center', padding:'30px', borderRadius: '8px'}}>
+<div  name="First Class Format Seat Selector" >
 
 <img src="/F.jpg" /> <br></br> <br></br> <h3 >First Class</h3> <br></br> 
 
@@ -164,20 +155,17 @@ history.push({pathname:'MyBookings'});   // after seats change action (remove & 
     return (<a><Checkbox id={i} onChange={checkChange} disabled={seat==1}/> </a>)
     }
 )} 
-<br></br> <br></br>
-<button className="btn btn-primary" onClick={handleClick}>Confirm</button>
+
 </div>
 
 </div>
 }
 
 {cabin=="Business" &&
-      <div  name="Business Class Format Seat Selector" style={{outline: '5px solid black', textAlign:'center', padding:'30px', borderRadius: '8px'}}>
+      <div  name="Business Class Format Seat Selector" >
        
        <img src="/B.jpg" /> <br></br> <br></br> <h3 >Business Class</h3> <br></br> 
-      
-
-       
+            
         <div name="Flight"  style={{ width:'100%'}}>
       
         <br></br>
@@ -199,19 +187,17 @@ history.push({pathname:'MyBookings'});   // after seats change action (remove & 
             return (<a><Checkbox id={i} onChange={checkChange} disabled={seat==1}/> </a>)
             }
       )} 
-      <br></br> <br></br>
-<button className="btn btn-primary" onClick={handleClick}>Confirm</button>
+
         </div>
     
       </div>
 }
 
 {cabin=="Economy" &&
-      <div  name="Economy Class Format Seat Selector" style={{outline: '5px solid black', textAlign:'center', padding:'30px', borderRadius: '8px'}}>
+      <div  name="Economy Class Format Seat Selector" >
        
        <img src="/E.jpg" /> <br></br> <br></br> <h3 >Economy Class</h3> <br></br> 
         
-       
         <div name="Flight"  style={{ width:'100%'}}>
          <br></br>
             
@@ -233,19 +219,22 @@ history.push({pathname:'MyBookings'});   // after seats change action (remove & 
             return (<a><Checkbox id={i} onChange={checkChange} disabled={seat==1}/> </a>)
             }
       )} 
-        <br></br> <br></br>
-<button className="btn btn-primary" onClick={handleClick}>Confirm</button>
+
         </div>
 
       </div>
 }
 
 
+<br></br> <br></br>
+      <label style={{color: 'red'}}>*Number of seats to  be chosen (per flight): {totalseats}</label> <br></br>
+      <button className="btn btn-primary" onClick={handleClick}>Confirm</button>
+      
        
         </div>
-    </div>  
+   
 
-</div>
+
    
 
        

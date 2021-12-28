@@ -14,11 +14,10 @@ import SearchFlight from './components/Admin/SearchFlight';
 import SearchResults from './components/Admin/SearchResults';
 import UpdatePage from './components/Admin/UpdatePage';
 
-
-import Main from './components/Main';                                 //Main Components
-import SignUp from './components/SignUp';
-import SignIn from './components/SignIn';
-import EditProfile from './components/EditProfile';
+                       
+import SignUp from './components/Others/SignUp';                               //Main (Others) Components
+import SignIn from './components/Others/SignIn';
+import EditProfile from './components/Others/EditProfile';
 
 import LandingPage from './components/LandingPage';                                 //Main Components
 import FlightSelector from './components/FlightSelector';
@@ -39,10 +38,7 @@ function App() {
   return (
     <Router>
      
-     <Route exact path="/main">          
-      <Main/>
-      </Route>
-     
+          
       <Route exact path="/SignUp">
       <SignUp/>
       </Route>
@@ -51,26 +47,28 @@ function App() {
       <SignIn/>
       </Route>
 
-      <Route exact path="/">
-      <LandingPage/>
-      </Route>
-
       <Route exact path="/EditProfile">
         <EditProfile/>
       </Route>
 
+
+
+      <Route exact path="/">
+      <LandingPage/>
+      </Route>
+
+      <Route exact path ="/FlightSelector">
+        <FlightSelector/>
+      </Route>
+     
       <Route exact path="/MyBookings">
       <MyBookings/>
       </Route>
       
-      <Route exact path ="/FlightSelector">
-        <FlightSelector/>
-      </Route>
-      
+     
 
 
 
-      
       <Route exact path="/admin">
       <Admin/>
       </Route>
