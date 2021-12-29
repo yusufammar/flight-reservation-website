@@ -22,9 +22,11 @@ Our vision was to create user-friendly website using MERN stack
 Locally:
 -	Clone the link of repository from github.
 -	Open new terminal.
--	Cd src -> node app “wait until MongoDB connected”.
+-	`Cd src`
+-	 `node app` “wait until MongoDB connected”.
 -	Open new terminal.
--	Cd frontend -> npm start “wait until your browser open automatically”.
+-	`Cd frontend`
+-	`npm start` “wait until your browser open automatically”.
 
 
 # Tests:
@@ -34,11 +36,12 @@ For Admin:
 -	Searching criteria.
 -	Editing flights.
 -	Adding/deleting flights
+-	
 For User/Guest:
 -	Booking flights. “you can go with LAX->JFK on 12 .jan.2022 and 22.jan.2022 as example” 
 -	Editing flights seats.
 -	Cancelling his booked flights
--	The ticket email after reservation and cancelling 
+-	The ticket as PDF attachment email after reservation and cancelling 
 
 
 
