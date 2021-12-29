@@ -116,7 +116,7 @@ var mode=props.state1;              // "landingPage" or "Page" or "form ->sign i
 
 //Normal Page NavBar Style
 var style1= css` width: 100%; display:flex; height: 75px; position: fixed; padding-top:15px; 
-z-index:1;  font-family:"Josefin Sans"; color:	#2C85B8; box-shadow: 0px 0px 10px 1px lightGray;  ` ;
+z-index:1;  font-family:"Josefin Sans"; color:	#2C85B8; box-shadow: 0px 0px 10px 1px lightGray; background-color:white;  ` ;
 
 //Landing Page NavBar Style 
 var style2= css` width: 100%; display:flex; height: 75px; position: fixed; padding-top:15px;   
