@@ -47,20 +47,9 @@ For User/Guest:
 
 # code example.
 
-import { BrowserRouter as Router, useParams } from "react-router-dom";
-import react, {useEffect,useState} from "react";
-import React from "react";
-import { Link } from "react-router-dom";
-import { Route, Redirect, useLocation } from "react-router-dom";
-import axios from "axios";
-import { useHistory } from "react-router-dom";
 
-const UpdatePage = () => {
+NODEJS: 
 
-    const location = useLocation();
-    const history = useHistory();
-    axios.defaults.withCredentials = true;
-    
     useEffect(() => {
         
      axios.get('http://localhost:8000/currentUser').then(res =>{ 
@@ -83,58 +72,23 @@ const UpdatePage = () => {
     const [FlightEco, setFlightEco] = useState("");
     const [checked, setChecked] = useState(false);
 
-    let { id } = useParams();
-    const baseURL = `http://localhost8000/FlightsList/update/${id}`;
-
-    function ChangeValues(event) {
-        console.log(checked);
-        if (checked) {
-
-            const values = {
-                FlightNo_: FlightNo,
-                FlightFrom_: FlightFrom,
-                FlightTo_: FlightTo,
-                FlightDate_: FlightDate,
-                FlightDep_: FlightDep,
-                FlightArr_: FlightArr,
-                FlightFirst_: FlightFirst,
-                FlightBus_: FlightBus,
-                FlightEco_: FlightEco,
-            };
-            console.log(values);
-            axios.post('http://localhost:3000/UpdatePage', values);
-            
-
-    history.push({
-    pathname: '/FlightsList'
-    //state: {flightNo : input.flightNo, type: "flightNo"}
-});
-
-        }
-        else {
-            console.log("Not Checked!");
-        }
-    }
+      
 
 
-#Screenshots
+# Screenshots
 
-	Booking/Landing Page:
--	https://drive.google.com/file/d/1fftq5zoOo5O8TV-YwnW70RbGmQNRGjk-/view?usp=sharing
+<img width="1304" alt="Screenshot 2021-12-29 at 8 43 27 PM" src="https://user-images.githubusercontent.com/68854085/147696994-7da18324-41ef-4821-bffb-845b754f59f9.png">
+<img width="1304" alt="Screenshot 2021-12-29 at 8 43 52 PM" src="https://user-images.githubusercontent.com/68854085/147696984-ba478207-7cfa-43e8-8f1a-65e023b0c79b.png">
+<img width="1440" alt="Screenshot 2021-12-29 at 8 44 20 PM" src="https://user-images.githubusercontent.com/68854085/147696976-a09d26e9-a758-40af-a9b3-a470e8e3f92f.png">
+<img width="1440" alt="Screenshot 2021-12-29 at 8 45 03 PM" src="https://user-images.githubusercontent.com/68854085/147696974-c55ba003-4dad-4fc3-aca5-7fdbe5e665ff.png">
+<img width="1440" alt="Screenshot 2021-12-29 at 8 45 41 PM" src="https://user-images.githubusercontent.com/68854085/147696970-1a79449a-5098-43fe-961b-598bf4abf617.png">
+<img width="1440" alt="Screenshot 2021-12-29 at 8 46 02 PM" src="https://user-images.githubusercontent.com/68854085/147696963-36f11a4b-05cd-49f7-bb40-444c0b118156.png">
 
-	Sign up page
--	https://drive.google.com/file/d/1lv6DWDBAOO5Bz7ikbK9tQtBmox-zAFTQ/view?usp=sharing
 
-	Sign In page:
--	https://drive.google.com/file/d/1lmNsSIZR8OI-D_Fh-71CY9fkD7UZJBnu/view?usp=sharing
 
-	Flights selection page:
--	https://drive.google.com/file/d/1uTfqov9rmFPZaUbEijL8z0Kflg7HgYdD/view?usp=sharing
 
-Seats selection page:
--	https://drive.google.com/file/d/1gwUIPCb_nuWCdrgQoisJOuJqFM8G-Anh/view?usp=sharing
+# contributions 
 
-#contributions 
 The project is created with the contribution of 5 members.
 * https://github.com/yusufammar
 * https://github.com/MayarEzzeldin
