@@ -7,15 +7,22 @@ import { Link } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';                  // rendering in return statement (responsible for session checking & returning of current user email)
 import { Modal} from 'react-bootstrap';
 import { css} from '@emotion/css'
-import NavBar from '../Helper/NavBar';                     // rendering in return statement (responsible for session checking & returning of current user email)
+import NavBar from '../Helper/NavBar';   
+
+import AccountCircle from '@mui/icons-material/AccountCircle';
+import Input from '@mui/material/Input';
+import InputAdornment from '@mui/material/InputAdornment';
+import LockIcon from '@mui/icons-material/Lock';
+// rendering in return statement (responsible for session checking & returning of current user email)
 require("react-bootstrap/ModalHeader");
+
 
 function EditProfile(){            
     const location = useLocation();
     const history = useHistory();
  
 //Inputs
-    const [input, setInput] = useState({ firstName: "", lastName: "" , email:"" , password:"" , oldPassword:"" });
+    const [input, setInput] = useState({ firstName: "", lastName: "" , email:"" , password:"" , oldPassword:"", password:"" });
 
     function handleChange(event){
         const {name,value}=event.target;
@@ -38,16 +45,17 @@ function EditProfile(){
 
     function handleclick1(event){
         event.preventDefault();
-        if (input.firstName!="" && input.lastName!="" && input.email!="" && input.password!="" && input.oldPassword!=""){
+        if (input.firstName!="" && input.lastName!="" && input.email!="" && input.password!="" && input.oldPassword!="" && input.password!=""){
             
             console.log(input);     
             axios.post('http://localhost:8000/Updateinfo', input).then(res =>{
             if (res.data==0)  alert("Email already used, use a different email")  // email already used
             
-            else if (res.data==1){        // succesful update
+            else if (res.data.status==1){        // succesful update
            
             alert('Account Info Updated Successfully')
-            axios.post('http://localhost:8000/UpdateBookingUser').then(history.push({pathname: '/user'}))  // post request nead old email (get from backend)
+            var article2={oldEmail: res.data.oldEmail }
+            axios.post('http://localhost:8000/UpdateBookingUser',article2).then(history.push({pathname: '/'}))  // post request nead old email (get from backend)
             }
             else if (res.data==2)  alert("Wrong Old Password");  // wrong old password
           
@@ -59,30 +67,61 @@ function EditProfile(){
        
 //------------------------------------------------------------
 
+
 return (
-<div className='container'>
+    <div className={css` font-family: 'Josefin Sans'; `} > 
+    
+    <div style={{display:"flex", height:"875px"}}>
+    
+    
+    <div name="SignIn" className={css` width: 70%; `}> 
+    
+    <NavBar state1="Page"/>
+    
+    <form className={css` box-shadow: 0px 0px 100px 1px lightGray; position: absolute; left: 28%; top:17%; 
+    background-color:white; border-radius: 20px; padding: 40px; font-family: 'Josefin Sans';  font-size: 10px; 
+    transform:scale(1.2); color:#2C85B8; `} >
+    <h1>Edit Profile</h1>    <br></br> <br></br> <br></br>  
+    
+   
+    <Input className={css` width: 300px; `} startAdornment={<InputAdornment position="start"> <AccountCircle  /> </InputAdornment> }
+        onChange={handleChange} name="firstName" type="text" placeholder="First Name" value={input.firstName} /> <br></br> <br></br> <br></br><br></br>
+      
+    <Input className={css` width: 300px; `} startAdornment={<InputAdornment position="start"> <LockIcon /> </InputAdornment> }
+        onChange={handleChange} name="lastName" type="text" value={input.lastName} placeholder="Last Name" /><br></br> <br></br> <br></br> <br></br> 
+     
+     <Input className={css` width: 300px; `} startAdornment={<InputAdornment position="start"> <LockIcon /> </InputAdornment> }
+       onChange={handleChange} name="email" type="text" value={input.email} placeholder="Email" /> <br></br> <br></br> <br></br> <br></br> 
+        
+   
+    <Input className={css` width: 300px; `} startAdornment={<InputAdornment position="start"> <AccountCircle  /> </InputAdornment> }
+        onChange={handleChange} name="oldPassword" type="password" value={input.oldPassword} placeholder="Old Password"/> <br></br> <br></br> <br></br><br></br>
+      
+    <Input className={css` width: 300px; `} startAdornment={<InputAdornment position="start"> <LockIcon /> </InputAdornment> }
+       onChange={handleChange} name="password" type="password" value={input.password} placeholder="New Password" /><br></br> <br></br> <br></br> <br></br> 
+        
+    <br></br><br></br>
+    <input className="btn btn-primary btn-lg" style={{borderRadius: "40px",  width:"300px"}} type="submit" value="Update" onClick={handleclick1} /> 
+    
+    </form>
 
-<NavBar props="Page"/>
+
+  
+    
+    </div>
+    
+    <div n class="c" >
+    <div style={{transform:'scale(1.3)', width:'400px'}}>
+    </div>
+    </div>
+    
+    
+    </div>
+    
+    </div>
+    )
 
 
-
-<form>
-      <label>First Name <br></br>     <input onChange={handleChange} name="firstName" type="text" value={input.name} />  </label> <br></br> <br></br>
-      <label>Last Name  <br></br>    <input onChange={handleChange} name="lastName" type="text" value={input.name} />  </label> <br></br> <br></br>
-      <label>Email <br></br>     <input onChange={handleChange} name="email" type="text" value={input.email} />  </label> <br></br> <br></br>
-      <br></br>
-      <label>Old Password <br></br>   <input onChange={handleChange} name="oldPassword" type="password" value={input.oldPassword}/>  </label>
-      <br></br>
-      <label>New Password <br></br>   <input onChange={handleChange} name="password" type="password" value={input.password}/>  </label> <br></br> 
-      <br></br> <br></br> 
-
-      <input type="submit" value="Update" onClick={handleclick1} /> 
-</form>
-
-
-
-</div>
-)
 } 
 
 export default  EditProfile;

@@ -103,10 +103,12 @@ function handleClick(){   // confirm button of choosing seats --> make booking
     //2)update booking with new departure/return newFlight & the chosen seats
     //Needed-> Booking No, flightdirection (to know which to update departure /return newFlight (newFlight no & chosen seats))
  console.log(article);
-    axios.post('http://localhost:8000/changeFlight', article).then(
-        alert("Flight Changed Successfully")
-        );
-        history.push({pathname:'MyBookings'});
+    axios.post('http://localhost:8000/changeFlight', article).then( res => {
+        if (res.data==1) { alert ("Flight Changed Successfully"); window.location.reload();} 
+      })
+
+    
+       
 }
 }
 

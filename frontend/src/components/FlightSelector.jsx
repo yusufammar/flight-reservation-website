@@ -24,14 +24,16 @@ function FlightSelector(){           //for USER & GUEST
     axios.defaults.withCredentials = true;
     
     var flag=false;
-   
+ 
     if (location.state!=null){           //checking if user searched for a flight & variables were passed, //passed state variable (search criteria)
         flag=true;   
      }
    else{
    alert("Please search for a flight to book first");
    history.push({ pathname: '/' });
+   window.location.reload();
    }
+
 
 // --------------------------------------------------------------------------------------------------
 
@@ -316,7 +318,7 @@ className= { (i == retButtonID) && css`background-color: #2C85B8;` }
     
 
 
-<button class="btn btn-primary" onClick={handleclick4}>Select Seats</button> <br></br> <br></br><br></br>
+<button class="btn btn-primary" onClick={handleclick4}>Select Seat(s)</button> <br></br> <br></br><br></br>
 {clicked && <SeatSelector state1={state1}/>} 
     
 

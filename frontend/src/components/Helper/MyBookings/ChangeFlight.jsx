@@ -8,6 +8,12 @@ import { css} from '@emotion/css'
 import Checkbox from '@mui/material/Checkbox';
 import NewFlightSeats from "./NewFlightSeats";
 
+import Divider from '@mui/material/Divider';
+
+import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
+import FlightLandIcon from '@mui/icons-material/FlightLand';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import LuggageIcon from '@mui/icons-material/Luggage';
 
 
 function ChangeFlight(props){           //helperComponent of BookingDetails
@@ -35,15 +41,27 @@ var cabin= search.cabin;
 var totalseats= search.adultSeats + search.childrenSeats;
 
 
-var selectedFlight;
+
+const [selectedFlight,setSelectedFlight]=useState();
+
+const [buttonID,setButtonID]=useState(-1);    // for div styling of departure flight selected
 
 
-function handleclick2(event){ //select flight
+function handleclick2(event){    
+    console.log(Flights);          // handle click of departure flight
     event.preventDefault();
-    selectedFlight= Flights[event.target.id];
-   // console.log(event.target.id);   // to get id of the button clicked (jsx/react/frontend)
+    var id = event.target.id;             //contains the index of matched flights
+                     
+    setSelectedFlight(Flights[id]); // the whole flight object
+    setButtonID(id);
+
+    console.log(id + "D");
+    console.log(selectedFlight +"D");//  
    }
+
  
+
+
 	const [clicked,setClicked]= useState(false); 
 	const [state1,setState1]= useState({});
 
@@ -83,29 +101,77 @@ function handleclick4(event){ // choose seats button
 }
 const [helperShow,setHelperShow]=useState(false);
 return (
-<div>
+<div className={css`  text-align: center; color: #2C85B8;
+ `}>
 
    { helperShow==false &&
    <div name="Similar Flights" >
     <h3>Similar Flights</h3> <br></br>
-       {Flights.map((flight,i) =>
-         <div>
-       <button id={i} onClick={handleclick2} className={css`
-       background-color: dodgerblue; border-radius: 20px; padding: 10px;
-       font-family: 'Josefin Sans'; font-size: 15px; font-weight: normal;  &:hover{background-color: green;} &:focus{background-color: orange; `}>
+       
+      
+       
+     {Flights.map((flight,i) =>
+       <a>
+
+<label name="everyFlight"  className={css`  border-radius: 20px; padding: 20px; font-size: 20px; font-weight: normal;  
+       box-shadow: 0px 0px 10px 1px lightGray; text-align:left; width:900px; height:150px;
+ `}>
+<div className={css`  display:flex;`}> 
+
+<div className={css`  width:77%;`}> 
+
+<div className={css`  display:flex; padding:10px; `}> 
+
+<div className={css`   width: 24%;`}> <FlightTakeoffIcon className={css`  color:#2C85B8; transform: scale(2.5);`}/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a className={css` font-size: 30px;`} >{flight.FlightDetails.Departure}</a> </div>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+<div className={css`  text-align:center; color:gray; width: 33%; `}> <AccessTimeIcon/> <br></br>
+{flight.FlightDetails.Duration}  </div>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+<div> <FlightLandIcon className={css` color:#2C85B8; transform: scale(2.5);`}/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ <a className={css` font-size: 30px;`} >{flight.FlightDetails.Arrival} </a> </div>
+
+</div>
+
+ 
+<div className={css`  display:flex; color:gray; text-align:center;`}> 
+
+<div className={css`   width: 60%;  `}> # {flight.FlightDetails.Flight_No} </div>
+<div> 
+<LuggageIcon className={css`  transform: scale(1.3);`}/> {flight.FlightDetails.First_Class_BaggageAllowance} </div>
+
+
+</div>  
+
+         
+</div>
+&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+<div name="price_selection" id={i}  style={{boxShadow: '0px 0px 10px 1px lightGray', borderRadius:'20px', padding:'10px', width:'20%', height:'120px', textAlign:'center' }}  
+className= { (i == buttonID) && css`background-color: #2C85B8;` }
+ > 
+<a>{flight.TotalPrice} EGP </a> <br></br> <br></br>
+<button class='btn btn-primary' style={{borderRadius:'20px', width:"150px"}} id={i} onClick={handleclick2}> Select </button>
+</div>
+
+
+</div>
         
-        <label id={flight.FlightDetails.Flight_No} onClick={handleclick2} style={{fontWeight:"bold"}} > {flight.FlightDetails.From} &#10140; {flight.FlightDetails.To} </label>    <br></br> 
-        FlightDetails No: {flight.FlightDetails.Flight_No}  &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; Date: {flight.FlightDetails.FlightDate.substr(0,10)} &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Departure Time: {flight.FlightDetails.Departure}  &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Arrival Time: {flight.FlightDetails.Arrival} &nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp; Duration: {flight.FlightDetails.Duration}   <br></br>        
-        First Class: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Seats Available ({flight.FlightDetails.First_Class_Seats}) | Baggage Allowance ({flight.FlightDetails.First_Class_BaggageAllowance}) | Price ({flight.FlightDetails.First_Class_Price}) <br></br>        
-        Business Class: &nbsp;&nbsp;Seats Available ({flight.FlightDetails.Business_Class_Seats}) | Baggage Allowance ({flight.FlightDetails.Business_Class_BaggageAllowance}) | Price ({flight.FlightDetails.Business_Class_Price})   <br></br> 
-        Economy Class: &nbsp;Seats Available ({flight.FlightDetails.Economy_Class_Seats}) | Baggage Allowance ({flight.FlightDetails.Economy_Class_BaggageAllowance}) | Price ({flight.FlightDetails.Economy_Class_Price})  
-     
-</button>
-<br></br><br></br><br></br>
-         </div>
+               
+        
+        </label>
+        <br></br> <br></br>
+      
+      
+      </a>
        )}
+
+
 	   <br></br>
-      <button class="btn btn-primary" onClick={handleclick4}>Choose Seats</button>
+      <button class="btn btn-primary" onClick={handleclick4}>Select Seat(s)</button>
    </div>
 }
        { clicked  && 

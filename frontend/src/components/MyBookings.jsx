@@ -81,8 +81,8 @@ return (
   font-family: 'Josefin Sans'; font-size: 15px; font-weight: bold; `
   }>
     <h1 className={css`
-text-align: center; `}
-  >Bookings</h1>
+text-align: center; color:#2C85B8; `}
+  >BOOKINGS</h1>
    <br></br>  <br></br> 
     
          {bookings.length==0 &&  <h6> <br></br> No Bookings To Show! </h6>}
@@ -91,13 +91,39 @@ text-align: center; `}
            
         <div>
             <div name="BookingEntry" id={booking.BookingNo} onClick={handleShow} className={css`
-            background-color: dodgerblue; border-radius: 20px; padding: 10px; 
-            font-family: 'Josefin Sans'; font-size: 15px; font-weight: normal;  &:hover{background-color: green;}`}>
+           box-shadow: 0px 0px 10px 1px lightGray; border-radius: 20px; padding: 10px; 
+            font-family: 'Josefin Sans'; font-size: 15px; font-weight: normal; text-align:center; color: #2C85B8; `}>
+           <label>
+            <div style={{display:'flex' , fontWeight:"bold", textAlign:"center"}} >
+
+            <div name="From Label" className={css`  text-align:center ` }>
+    <label className={css` font-size: 30px; font-weight: bold; ` }>{(""+ GetFlight(booking.DepartureFlightNo).From).substr(0,3)}</label> <br></br>
+    <label className={css` font-size: 20px;`}> {( ""+ GetFlight(booking.DepartureFlightNo) .From ).substr(4)} </label>
+    </div>
+    
+    <div name="plane_date"> 
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+    <img src="/airplane.png"/>   
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+
+    </div>
+
+     <div name="To Label" className={css`  text-align:center ` }>
+    <label className={css` font-size: 30px; font-weight: bold; ` }>{(""+ GetFlight(booking.ReturnFlightNo).From).substr(0,3)}</label> <br></br>
+    <label className={css` font-size: 20px;`}>{( ""+ GetFlight(booking.ReturnFlightNo) .From ).substr(4)} </label>
+    </div>      
             
-            <label id={booking.BookingNo} onClick={handleShow} style={{fontWeight:"bold"}} >{GetFlight(booking.DepartureFlightNo).From}  &#8596; {GetFlight(booking.DepartureFlightNo).To} </label> 
+            </div>
+            </label> 
+
             <br />
+            <label className={css`color:gray;`}> 
             Booking No: {booking.BookingNo}   &nbsp;&nbsp;&nbsp;|  &nbsp;&nbsp;&nbsp; Departure Date: {(""+ GetFlight(booking.DepartureFlightNo).FlightDate).substr(0,10)}  &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Return Date: {(""+ GetFlight(booking.ReturnFlightNo).FlightDate).substr(0,10)}
+            </label>
             <br />
+            <div className={css` padding-right:25px;` } > <br></br>
+     <button class="btn btn-primary" id={booking.BookingNo} onClick={handleShow} >View Details</button>
+     </div>
 
         </div><br></br> 
         

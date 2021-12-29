@@ -37,7 +37,7 @@ function handleChange(event){
 
 function handleclick(event){
     event.preventDefault();
-
+console.log(input);
     if (input.firstname!="" && input.lastname!="" && input.email!= "" && input.password!= "" && input.countryCode!="" && 
     input.phoneNo!="" && input.passportNo!="" && input.address!="" ) { 
     axios.post('http://localhost:8000/addUser', input).then( res => {
@@ -85,7 +85,7 @@ return (
 
     <div>
     <Input className={css` width: 300px; `} startAdornment={<InputAdornment position="start"> <AccountCircle  /> </InputAdornment> }
-       onChange={handleChange} name="firstName" type="text" value={input.firstName} placeholder='First Name'/> 
+       onChange={handleChange} name="firstname" type="text" value={input.firstname} placeholder='First Name'/> 
        <br></br> <br></br> <br></br><br></br>
        <Input className={css` width: 300px; `} startAdornment={<InputAdornment position="start"> <HomeRoundedIcon/> </InputAdornment> }
      onChange={handleChange} name="address" type="text" value={input.address} placeholder='Address' />  
@@ -103,7 +103,7 @@ return (
     &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       <div>
       <Input className={css` width: 300px; `} startAdornment={<InputAdornment position="start"> <AccountCircle /> </InputAdornment> }
-        onChange={handleChange} name="lastName" type="text" value={input.lastName} placeholder='Last Name' />
+        onChange={handleChange} name="lastname" type="text" value={input.lastname} placeholder='Last Name' />
         <br></br> <br></br> <br></br> <br></br> 
  
         <Input className={css` width: 300px; `} startAdornment={<InputAdornment position="start"> <NumbersRoundedIcon  /> </InputAdornment> }
