@@ -45,7 +45,7 @@ function EditProfile(){
 
     function handleclick1(event){
         event.preventDefault();
-        if (input.firstName!="" && input.lastName!="" && input.email!="" && input.password!="" && input.oldPassword!="" && input.password!=""){
+        if (input.email!="" && input.password!="" && input.oldPassword!="" ){
             
             console.log(input);     
             axios.post('http://localhost:8000/Updateinfo', input).then(res =>{
@@ -74,35 +74,29 @@ return (
     <div style={{display:"flex", height:"875px"}}>
     
     
-    <div name="SignIn" className={css` width: 70%; `}> 
+    <div name="SignIn" className={css` width: 100%; background-color:#2C85B8;`}> 
     
     <NavBar state1="Page"/>
     
-    <form className={css` box-shadow: 0px 0px 100px 1px lightGray; position: absolute; left: 28%; top:17%; 
+    <form className={css`  position: absolute; left: 30%; top:30%; 
     background-color:white; border-radius: 20px; padding: 40px; font-family: 'Josefin Sans';  font-size: 10px; 
     transform:scale(1.2); color:#2C85B8; `} >
-    <h1>Edit Profile</h1>    <br></br> <br></br> <br></br>  
-    
-   
-    <Input className={css` width: 300px; `} startAdornment={<InputAdornment position="start"> <AccountCircle  /> </InputAdornment> }
-        onChange={handleChange} name="firstName" type="text" placeholder="First Name" value={input.firstName} /> <br></br> <br></br> <br></br><br></br>
-      
-    <Input className={css` width: 300px; `} startAdornment={<InputAdornment position="start"> <LockIcon /> </InputAdornment> }
-        onChange={handleChange} name="lastName" type="text" value={input.lastName} placeholder="Last Name" /><br></br> <br></br> <br></br> <br></br> 
-     
-     <Input className={css` width: 300px; `} startAdornment={<InputAdornment position="start"> <LockIcon /> </InputAdornment> }
-       onChange={handleChange} name="email" type="text" value={input.email} placeholder="Email" /> <br></br> <br></br> <br></br> <br></br> 
+    <h1>Edit Profile</h1>    <br></br> <br></br>  
+ 
+     <Input className={css` width: 300px; `} startAdornment={<InputAdornment position="start">  <AccountCircle  /></InputAdornment> }
+       onChange={handleChange} name="email" type="text" value={input.email} placeholder="New Email" /> <br></br> <br></br> <br></br><br></br>
         
    
-    <Input className={css` width: 300px; `} startAdornment={<InputAdornment position="start"> <AccountCircle  /> </InputAdornment> }
-        onChange={handleChange} name="oldPassword" type="password" value={input.oldPassword} placeholder="Old Password"/> <br></br> <br></br> <br></br><br></br>
+    <Input className={css` width: 300px; `} startAdornment={<InputAdornment position="start">  <LockIcon /> </InputAdornment> }
+        onChange={handleChange} name="oldPassword" type="password" value={input.oldPassword} placeholder="Old Password"/>  &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
       
     <Input className={css` width: 300px; `} startAdornment={<InputAdornment position="start"> <LockIcon /> </InputAdornment> }
-       onChange={handleChange} name="password" type="password" value={input.password} placeholder="New Password" /><br></br> <br></br> <br></br> <br></br> 
+       onChange={handleChange} name="password" type="password" value={input.password} placeholder="New Password" />  <br></br> <br></br> <br></br><br></br>
         
-    <br></br><br></br>
+    <br></br>
+    <div style={{textAlign: "center"}}>
     <input className="btn btn-primary btn-lg" style={{borderRadius: "40px",  width:"300px"}} type="submit" value="Update" onClick={handleclick1} /> 
-    
+    </div>
     </form>
 
 
@@ -110,10 +104,7 @@ return (
     
     </div>
     
-    <div n class="c" >
-    <div style={{transform:'scale(1.3)', width:'400px'}}>
-    </div>
-    </div>
+ 
     
     
     </div>

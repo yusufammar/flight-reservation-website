@@ -99,7 +99,15 @@ function handleclick4(event){ // choose seats button
    
 
 }
+
+function handleCancel(event){
+  event.preventDefault();
+  window.location.reload();
+}
+
 const [helperShow,setHelperShow]=useState(false);
+
+
 return (
 <div className={css`  text-align: center; color: #2C85B8;
  `}>
@@ -141,7 +149,11 @@ return (
 
 <div className={css`   width: 60%;  `}> # {flight.FlightDetails.Flight_No} </div>
 <div> 
-<LuggageIcon className={css`  transform: scale(1.3);`}/> {flight.FlightDetails.First_Class_BaggageAllowance} </div>
+<LuggageIcon className={css`  transform: scale(1.3);`}/> 
+{cabin.First_Class_BaggageAllowance} 
+{cabin.FlightDetails.First_Class_BaggageAllowance} 
+{cabin.FlightDetails.First_Class_BaggageAllowance} 
+</div>
 
 
 </div>  
@@ -172,6 +184,8 @@ className= { (i == buttonID) && css`background-color: #2C85B8;` }
 
 	   <br></br>
       <button class="btn btn-primary" onClick={handleclick4}>Select Seat(s)</button>
+      &nbsp; &nbsp;
+      <button className="btn btn-danger" onClick={handleCancel}>Cancel</button>
    </div>
 }
        { clicked  && 

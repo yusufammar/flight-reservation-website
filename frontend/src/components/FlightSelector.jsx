@@ -129,7 +129,7 @@ function handleclick4(event){
 return (
 <div>
     <NavBar state1="Page"/>
- 
+
     <div  name="content" className={css`
     position: absolute; left: 7%; top: 15%; border-radius: 20px; 
     font-family: 'Josefin Sans'; font-size: 15px; width:1500px;  text-align:center;  ` }>
@@ -141,21 +141,22 @@ return (
     
     <div name="From Label">
     <label className={css` font-size: 30px; font-weight: bold; ` }>{fromCode}</label> <br></br>
-    <label> {fromFull} </label>
+    <label className={css` width:450px; ` }> {fromFull} </label>
     </div>
     
-    <div name="plane_data"> 
-    <img src="/airplane.png"/>  <br></br> <br></br>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-   
-    <a className={css` color:grey;` }> {  (new Date(search.departure)+"").substr(0,15) } </a>
-    &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br></br>
- 
-    </div>
+    <div name="plane_date" style={{color:'grey'}}> 
+    
+    <img src="/airplane.png"/>  <br></br><br></br>
+    <label>Departure Flight</label> <br></br>
+    <label>{  (new Date(search.departure)+"").substr(0,15) }</label>
+       
+     </div>
+     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
     
     <div name="To Label">
     <label className={css` font-size: 30px; font-weight: bold; ` }>{toCode}</label> <br></br>
-    <label> {toFull} </label>
+    <label className={css` width:450px; ` }> {toFull} </label>
     </div>
      
     
@@ -195,7 +196,11 @@ return (
 
 <div className={css`   width: 60%;  `}> # {flight.FlightDetails.Flight_No} </div>
 <div> 
-<LuggageIcon className={css`  transform: scale(1.3);`}/> {flight.FlightDetails.First_Class_BaggageAllowance} </div>
+<LuggageIcon className={css`  transform: scale(1.3);`}/> 
+{cabin=="First" && flight.FlightDetails.First_Class_BaggageAllowance}
+{cabin=="Business" && flight.FlightDetails.Business_Class_BaggageAllowance} 
+{cabin=="Economy" && flight.FlightDetails.Economy_Class_BaggageAllowance}  
+</div>
 
 
 </div>  
@@ -233,22 +238,24 @@ className= { (i == depButtonID) && css`background-color: #2C85B8;` }
    <div name="from->to" style={{display:"flex"}}>
    
    <div name="From Label">
-   <label className={css` font-size: 30px; font-weight: bold; ` }>{fromCode}</label> <br></br>
-   <label> {fromFull} </label>
+   <label className={css` font-size: 30px; font-weight: bold; ` }>{toCode}</label> <br></br>
+   <label className={css` width:450px; ` }> {toFull} </label>
    </div>
    
-   <div name="plane_data"> 
-    <img src="/airplane2.png"/>  <br></br> <br></br>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-   
-    <a className={css` color:grey;` }> {  (new Date(search.return)+"").substr(0,15) } </a>
-    &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br></br>
- 
-    </div>
+  
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+    <div name="plane_date" style={{color:'grey'}}> 
+    
+    <img src="/airplane.png"/>  <br></br><br></br>
+    <label>Return Flight</label> <br></br>
+    <label>{  (new Date(search.return)+"").substr(0,15) }</label>
+       
+     </div>
+     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
    
    <div name="To Label">
-   <label className={css` font-size: 30px; font-weight: bold; ` }>{toCode}</label> <br></br>
-   <label> {toFull} </label>
+   <label className={css` font-size: 30px; font-weight: bold; ` }>{fromCode}</label> <br></br>
+   <label className={css` width:450px; ` }> {fromFull} </label>
    </div>
     
    
@@ -287,7 +294,11 @@ className= { (i == depButtonID) && css`background-color: #2C85B8;` }
 
 <div className={css`   width: 60%;  `}> # {flight.FlightDetails.Flight_No} </div>
 <div> 
-<LuggageIcon className={css`  transform: scale(1.3);`}/> {flight.FlightDetails.First_Class_BaggageAllowance} </div>
+<LuggageIcon className={css`  transform: scale(1.3);`}/> 
+{cabin=="First" && flight.FlightDetails.First_Class_BaggageAllowance}
+{cabin=="Business" && flight.FlightDetails.Business_Class_BaggageAllowance} 
+{cabin=="Economy" && flight.FlightDetails.Economy_Class_BaggageAllowance}  
+</div>
 
 
 </div>  

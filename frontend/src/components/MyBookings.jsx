@@ -10,6 +10,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';                  // rendering in 
 import { Modal} from 'react-bootstrap';
 
 import BookingDetails from './Helper/MyBookings/BookingDetails';
+import EventNoteIcon from '@mui/icons-material/EventNote';
 
 require("react-bootstrap/ModalHeader");
 
@@ -80,9 +81,11 @@ return (
   position: absolute; left: 10%; top: 10%; border-radius: 20px; width: 75%;  padding: 20px; 
   font-family: 'Josefin Sans'; font-size: 15px; font-weight: bold; `
   }>
-    <h1 className={css`
-text-align: center; color:#2C85B8; `}
-  >BOOKINGS</h1>
+    
+    <div className={css` text-align: center; color:#2C85B8; `}>  <br></br> <EventNoteIcon className={css` transform: scale(3); `}/> <br></br> <br></br> <br></br>  <h1>MY BOOKINGS</h1> </div>
+   
+
+
    <br></br>  <br></br> 
     
          {bookings.length==0 &&  <h6> <br></br> No Bookings To Show! </h6>}
@@ -101,12 +104,11 @@ text-align: center; color:#2C85B8; `}
     <label className={css` font-size: 20px;`}> {( ""+ GetFlight(booking.DepartureFlightNo) .From ).substr(4)} </label>
     </div>
     
-    <div name="plane_date"> 
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-    <img src="/airplane.png"/>   
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
 
-    </div>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+    <div name="plane_date"> 
+    <img src="/airplane.png"/> <br></br> <img src="/airplane2.png"/>   
+       </div> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
 
      <div name="To Label" className={css`  text-align:center ` }>
     <label className={css` font-size: 30px; font-weight: bold; ` }>{(""+ GetFlight(booking.ReturnFlightNo).From).substr(0,3)}</label> <br></br>
@@ -114,6 +116,7 @@ text-align: center; color:#2C85B8; `}
     </div>      
             
             </div>
+            <br></br>
             </label> 
 
             <br />
@@ -131,7 +134,7 @@ text-align: center; color:#2C85B8; `}
         { (clicked && booking.BookingNo==state1.bookingNo)  && 
         <div name="helperDialog"  style={{ boxShadow: "0px 0px 100px 1px lightGray", padding:'20px', borderRadius: '20px'}}> 
        
-        <div className={css` height:600px; overflow:auto; `}>
+        <div className={css` height:900px; overflow:auto; `}>
         <BookingDetails  state={state1}/>
         </div>
 

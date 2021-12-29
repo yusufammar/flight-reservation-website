@@ -128,9 +128,14 @@ axios.post('http://localhost:8000/changeSeats',article).then( res=> {
 
 }
 
+function handleCancel(event){
+  event.preventDefault();
+  window.location.reload();
+}
 
 //---------------------------------------------------
-  return( 
+
+return( 
 
 <div name="SeatSelector" style={{ textAlign:'center', padding:'20px'}}>
    
@@ -230,7 +235,8 @@ axios.post('http://localhost:8000/changeSeats',article).then( res=> {
 
 <br></br> <br></br>
       <label style={{color: 'red'}}>*Number of seats to  be chosen (per flight): {totalseats}</label> <br></br>
-      <button className="btn btn-primary" onClick={handleClick}>Confirm</button>
+      <button className="btn btn-primary" onClick={handleClick}>Confirm</button> &nbsp; &nbsp;
+      <button className="btn btn-danger" onClick={handleCancel}>Cancel</button>
       
        
         </div>

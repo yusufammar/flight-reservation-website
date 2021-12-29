@@ -136,7 +136,11 @@ function handleclick3(event){
  }
 }
 */
- 
+
+function handleCancel(event){
+    event.preventDefault();
+    window.location.reload();
+}
 
    return( 
 <div name="SeatSelector" style={{ textAlign:'center', padding:'20px'}}>
@@ -237,8 +241,8 @@ function handleclick3(event){
    
    <br></br> <br></br>
          <label style={{color: 'red'}}>*Number of seats to  be chosen (per flight): {totalseats}</label> <br></br>
-         <button className="btn btn-primary" onClick={handleClick}>Confirm</button>
-         
+         <button className="btn btn-primary" onClick={handleClick}>Confirm</button> &nbsp;&nbsp;
+         <button className="btn btn-danger" onClick={handleCancel}>Cancel</button>
           
            </div>
 

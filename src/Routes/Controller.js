@@ -684,8 +684,7 @@ router.route("/UpdateBookingUser").post((req, res) => {
 router.route("/Updateinfo").post(async(req, res) => {
 //Inputs
 console.log(req.body);
-var newFirstName = req.body.firstName;
-var newLastName = req.body.lastName;
+
 var newEmailInput = req.body.email;  var newEmail=  newEmailInput.toLowerCase();
 
 var newPassword = req.body.password; const encryptedNewPassword = await bcrypt.hash(newPassword, 10);  //Encrypt user new password
@@ -707,8 +706,7 @@ user.find({Email: newEmail}).then(foundUser=>{
       //encrypt pass
       
       if(user){                   //user found/exists/true
-       user.FirstName = newFirstName;
-       user.LastName = newLastName;
+      
        user.Password = encryptedNewPassword;
        user.Email = newEmail;
        
@@ -1154,7 +1152,7 @@ var FRA= "FRA (Frankfurt Airport, Frankfurt, Germany)";
   });
    newFlight1.save();
 
-   d= "10:00"; a= "14:00";
+   d= "14:00"; a= "18:00";
    const newFlight2 = new flight({
     Flight_No: 2,
     From: JFK,

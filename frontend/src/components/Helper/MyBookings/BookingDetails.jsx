@@ -13,7 +13,13 @@ import { jsPDF } from 'jspdf';            // for generating pdf files (of elemen
 // helper components of this page (BookingDetails)
 import ChangeSeats from './ChangeSeats';   
 import ChangeFlight from './ChangeFlight';
+import Divider from '@mui/material/Divider';
 
+import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
+import FlightLandIcon from '@mui/icons-material/FlightLand';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import LuggageIcon from '@mui/icons-material/Luggage';
+import AirlineSeatLegroomExtraIcon from '@mui/icons-material/AirlineSeatLegroomExtra';
 //-------
 //import { Modal} from 'react-bootstrap';
 //require("react-bootstrap/ModalHeader");
@@ -103,12 +109,24 @@ async function SendItineraryPDF(event){
   file2.append('file',pdfFile);
   //console.log(pdfFile);
   axios.post('http://localhost:8000/SendEmail', file2).then(res => {
-      if (res.data==1) alert ("Intinerary sent to your email")
+      if (res.data==1){ alert ("Intinerary sent to your email")
+    window.location.reload();}
+
       //add loading while waiting for email to be sent
   })
   
 };
 
+var from= GetFlight(bookingActive.DepartureFlightNo).From +""; var fromCode= from.substr(0,3); var fromFull= from.substr(5,from.length-6);
+var to= GetFlight(bookingActive.DepartureFlightNo).To +""; var toCode= to.substr(0,3); var toFull= to.substr(5,to.length-6);
+
+var departureFlight= GetFlight(bookingActive.DepartureFlightNo); 
+var returnFlight= GetFlight(bookingActive.ReturnFlightNo); 
+
+console.log(departureFlight);
+console.log(returnFlight);
+
+//------------------------------------------------------------------------
 const [changeSeatsClicked,setChangeSeatsClicked]= useState(false); 
 const [state1,setState1]= useState({});
 
@@ -194,66 +212,203 @@ return (
 <div name="dialog" >
 
 {helperShow==false && 
+
 <div name="bookingDetailsPage">
-<div style={{display:'flex'}} name="flexBig">
+
 <div ref={printRef} name="Itinerary">
 
     Booking No: {bookingActive.BookingNo} |  Cabin: {bookingActive.Cabin}  | Seats: {bookingActive.AdultSeats>0 && bookingActive.AdultSeats + " (Adults)"} {(bookingActive.AdultSeats>0 && bookingActive.ChildrenSeats>0) && " | " } {bookingActive.ChildrenSeats>0 && bookingActive.ChildrenSeats + " (Children)"} 
      | Price: {bookingActive.Price}
     <br></br><br /> <br></br>
 
+<div>
+<label name="depFlight"  className={css`  padding: 20px; font-size: 20px; font-weight: normal;  
+      
+       text-align:center; width:1200px; height:150px; `}>
 
-    <div name="DepartureFlight">
-    <h5>Departure Flight</h5>
-    Flight No: {GetFlight(bookingActive.DepartureFlightNo).Flight_No}  &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Date: { (""+GetFlight(bookingActive.DepartureFlightNo).FlightDate).substr(0,10)}<br></br>
-    From: {GetFlight(bookingActive.DepartureFlightNo).From}  <br></br>
-    To: {GetFlight(bookingActive.DepartureFlightNo).To} <br/>
-    Departure: {GetFlight(bookingActive.DepartureFlightNo).Departure} &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Arrival: {GetFlight(bookingActive.DepartureFlightNo).Arrival} &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-    Duration: {GetFlight(bookingActive.DepartureFlightNo).Duration} <br/>
-    Baggage Allowance:  &nbsp; 
-    {bookingActive.Cabin=="First" && GetFlight(bookingActive.DepartureFlightNo).First_Class_BaggageAllowance}
-    {bookingActive.Cabin=="Business" && GetFlight(bookingActive.DepartureFlightNo).Business_Class_BaggageAllowance}
-    {bookingActive.Cabin=="Economy" && GetFlight(bookingActive.DepartureFlightNo).Economy_Class_BaggageAllowance}
-    </div>
-
-    <br></br><br /> <br></br>
-
-    <div name="ReturnFlight">
-    <h5>Return Flight</h5>
-    Flight No: {GetFlight(bookingActive.ReturnFlightNo).Flight_No}  &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Date: { (""+GetFlight(bookingActive.ReturnFlightNo).FlightDate).substr(0,10)}<br></br>
-    From: {GetFlight(bookingActive.ReturnFlightNo).From}  <br></br>
-    To: {GetFlight(bookingActive.ReturnFlightNo).To} <br/>
-    Departure: {GetFlight(bookingActive.ReturnFlightNo).Departure} &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Arrival: {GetFlight(bookingActive.ReturnFlightNo).Arrival} &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-    Duration: {GetFlight(bookingActive.ReturnFlightNo).Duration} <br/>
-    Baggage Allowance:  &nbsp; 
-    {bookingActive.Cabin=="First" && GetFlight(bookingActive.ReturnFlightNo).First_Class_BaggageAllowance}
-    {bookingActive.Cabin=="Business" && GetFlight(bookingActive.ReturnFlightNo).Business_Class_BaggageAllowance}
-    {bookingActive.Cabin=="Economy" && GetFlight(bookingActive.ReturnFlightNo).Economy_Class_BaggageAllowance}
+<label name="upper">
+    <div name="from->to" style={{display:"flex"}} className={css`  
+      
+      text-align:center; `}>
+    
+    <div name="From Label">
+    <label className={css` font-size: 30px; font-weight: bold; ` }>{fromCode}</label> <br></br>
+    <label className={css` width:450px; ` }> {fromFull} </label>
     </div>
     
-  
- 
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+    <div name="plane_data" style={{color:'grey'}}> 
+    
+    <img src="/airplane.png"/>  <br></br><br></br>
+    <label>Departure Flight</label>
+    <label>{  (new Date(departureFlight.FlightDate)+"").substr(0,15) }</label>
+       
+     </div>
+     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+    
+    <div name="To Label">
+    <label className={css` font-size: 30px; font-weight: bold; ` }>{toCode}</label> <br></br>
+    <label className={css` width:450px; ` }> {toFull} </label>
+    </div>
+     
+    
+     </div>
+     </label>
+
+     <br></br><br></br>
+<div  name="Dtime_Atime" className={css`  width:100%; display:flex; padding-left:13%; `}> 
+
+<div className={css`   width: 22%;`}> <FlightTakeoffIcon className={css`  color:#2C85B8; transform: scale(2.5);`}/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a className={css` font-size: 30px;`} >{departureFlight.Departure}</a> </div>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+<div className={css`  text-align:center; color:gray; width: 33%; `}> <AccessTimeIcon/> <br></br>
+{departureFlight.Duration}  </div>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+<div> <FlightLandIcon className={css` color:#2C85B8; transform: scale(2.5);`}/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ <a className={css` font-size: 30px;`} >{departureFlight.Arrival} </a> </div>
+
 </div>
 
-<div name="Buttons" style={{paddingLeft:"50px"}}>
+ 
+<div name="Baggage_flightNo_Seats" className={css`  display:flex; color:gray; text-align:center;`}> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<div>  # {departureFlight.Flight_No} </div>
+<div className={css`   width: 33%;  `}> 
+<LuggageIcon className={css`  transform: scale(1.3);`}/>  
+{bookingActive.Cabin=="First" && departureFlight.First_Class_BaggageAllowance}
+{bookingActive.Cabin=="Business" && departureFlight.Business_Class_BaggageAllowance} 
+{bookingActive.Cabin=="Economy" && departureFlight.Economy_Class_BaggageAllowance} 
+</div>
 
-<br></br> <br></br><br></br><br></br><br></br>
-<button class="btn btn-primary" id="DepartureFlight" onClick={handleChangeSeats}> Change Seats </button>  <br></br><br></br> 
-<button class="btn btn-primary" id="DepartureFlight" onClick={handleChangeFlight} > Change Departure Flight </button> <br></br> <br></br><br></br>
+<div><AirlineSeatLegroomExtraIcon/> {bookingActive.DepartureChosenSeats} </div>
+
+
+<div>
+
+</div>
+
+
+</div>  
+
+</label>        
+ 
+ <br></br><br></br><Divider/> <br></br><br></br>
+<label name="retFlight"  className={css`  padding: 20px; font-size: 20px; font-weight: normal;  
+      
+       text-align:center; width:1200px; height:150px; `}>
+
+<label name="upper">
+    <div name="from->to" style={{display:"flex"}} className={css`  
+      
+      text-align:center; `}>
+    
+    <div name="From Label">
+    <label className={css` font-size: 30px; font-weight: bold; ` }>{toCode}</label> <br></br>
+    <label className={css` width:450px; ` }> {toFull} </label>
+    </div>
+    
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+    <div name="plane_date" style={{color:'grey'}}> 
+    
+    <img src="/airplane.png"/>  <br></br><br></br>
+    <label>Return Flight</label>
+    <label>{  (new Date(returnFlight.FlightDate)+"").substr(0,15) }</label>
+       
+     </div>
+     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+    
+    <div name="To Label">
+    <label className={css` font-size: 30px; font-weight: bold; ` }>{fromCode}</label> <br></br>
+    <label className={css` width:450px; ` }> {fromFull} </label>
+    </div>
+     
+    
+     </div>
+     </label>
+
+     <br></br><br></br>
+<div  name="Dtime_Atime" className={css`  width:100%; display:flex; padding-left:13%; `}> 
+
+<div className={css`   width: 22%;`}> <FlightTakeoffIcon className={css`  color:#2C85B8; transform: scale(2.5);`}/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a className={css` font-size: 30px;`} >{returnFlight.Departure}</a> </div>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+<div className={css`  text-align:center; color:gray; width: 33%; `}> <AccessTimeIcon/> <br></br>
+{returnFlight.Duration}  </div>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+<div> <FlightLandIcon className={css` color:#2C85B8; transform: scale(2.5);`}/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ <a className={css` font-size: 30px;`} >{returnFlight.Arrival} </a> </div>
+
+</div>
+
+ 
+<div name="Baggage_flightNo_Seats" className={css`  display:flex; color:gray; text-align:center;`}> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<div>  # {returnFlight.Flight_No} </div>
+<div className={css`   width: 33%;  `}> 
+<LuggageIcon className={css`  transform: scale(1.3);`}/>  
+{bookingActive.Cabin=="First" && returnFlight.First_Class_BaggageAllowance}
+{bookingActive.Cabin=="Business" && returnFlight.Business_Class_BaggageAllowance} 
+{bookingActive.Cabin=="Economy" && returnFlight.Economy_Class_BaggageAllowance} 
+</div>
+
+<div><AirlineSeatLegroomExtraIcon/> {bookingActive.ReturnChosenSeats} </div>
+
+
+<div>
+
+</div>
+
+
+</div>  
+
+
+</label>                
+ </div>       
+
+</div>
+
 
 <br></br> <br></br><br></br>
+<div name="Buttons" style={{textAlign:"center", paddingRight:'40px'}}>
+
+
+<button  class="btn btn-success" onClick={SendItineraryPDF}>Send Itineray By Email </button> <br></br> <br></br> <br></br>
+
+
+
+<Divider/>
+<br></br>
+<label style={{color:'grey'}}>Edit / Cancel Booking</label> <br></br>
+<div name="editBooking" className={css`  display: flex`} >
+
+<div name="editDeparture" className={css`  width: 50%`}>
+
+<label style={{color:'grey'}}>Departure Flight</label> <br></br>
+<button class="btn btn-primary" id="DepartureFlight" onClick={handleChangeSeats}> Change Seats </button>  <br></br><br></br> 
+<button class="btn btn-primary" id="DepartureFlight" onClick={handleChangeFlight} > Change Flight </button> <br></br> <br></br><br></br>
+</div>
+
+<div  name="editReturn" className={css`  width: 50%`}>
+<label style={{color:'grey'}}>Return Flight</label> <br></br>
 <button class="btn btn-primary" id="ReturnFlight" onClick={handleChangeSeats}> Change Seats </button>  <br></br><br></br> 
-<button class="btn btn-primary" id="ReturnFlight" onClick={handleChangeFlight} > Change Return Flight </button>
+<button class="btn btn-primary" id="ReturnFlight" onClick={handleChangeFlight} > Change Flight </button>
          
 </div>
 
 </div>
-
-<div name="Cancel & Send Button">         
+<div name="Cancel Button">         
                                
 <br /> 
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
-<button  class="btn btn-success" onClick={SendItineraryPDF}>Send Itineray By Email </button> <br></br> <br></br> <br></br>
 
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
 <label> Are you sure you want to cancel this booking?</label> &nbsp; &nbsp; 
@@ -264,6 +419,12 @@ return (
                     
                                 
 </div>
+
+
+
+</div>
+
+
 </div>
 }
 

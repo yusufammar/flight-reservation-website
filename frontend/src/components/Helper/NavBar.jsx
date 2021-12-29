@@ -131,18 +131,18 @@ return (
        <img className={css`position: absolute; left: 10%; &:hover{cursor: pointer;`} onClick={handleclick7} src="/logo.png" />
       
         
-      {formFlag==false &&<div name="Book_MyBookings" className={css`position: absolute; left: 44%; font-size: 20px; ` }>
+      {formFlag==false &&<div name="Book_MyBookings" className={css`position: absolute; left: 71%; top:22%; font-size: 22px; ` }>
       <label className={css`&:hover{cursor: pointer;} `} onClick={handleclick7}>Book</label>  
-      &nbsp; &nbsp; &nbsp;    &nbsp; &nbsp;  
+      &nbsp; &nbsp; &nbsp;    
    
       <label className={css` &:hover{cursor: pointer;}`} onClick={showBookings}>My Bookings</label> 
-      &nbsp; &nbsp; &nbsp;    &nbsp; &nbsp;  
+      &nbsp; &nbsp; &nbsp;  
    
      </div>}
       
   <div name="ProfileIcon">
 
-  {guestMode && <button class="btn btn-primary"  style={{ position: 'absolute' , left: '78%'}}  onClick={signIn}>Sign In</button>}
+  {guestMode && <button class="btn btn-primary"  style={{ position: 'absolute' , left: '89%', top:'13%'}}  onClick={signIn}>Sign In</button>}
    <AccountCircleRoundedIcon className={css`position: absolute; top:23%;left: 85%; transform: scale(1.5); &:hover{cursor: pointer; `}  ref={anchorRef}
           id="composition-button"
           aria-controls={open ? 'composition-menu' : undefined}
