@@ -75,10 +75,17 @@ function deleteFlight(event){                        // deletes booking and send
 
     const article = { booking: bookingActive};               // sends cancellation email
     axios.post('http://localhost:8000/SendCancelEmail', article).then(res => {
-    if (res.data==1){
+    if (res.data==0){//guest account type
+        
+        alert("Booking Canceled Successfully");
+        history.push({ pathname: '/MyBookings'});  
+    }
+
+    else if (res.data==1){
     alert("Booking Canceled Successfully \nYou'll recieve an email with the cancelation details along with the refund amount");
     history.push({ pathname: '/MyBookings'});   // or handle in main page (Booking Details)
     }
+
     });
     
     }

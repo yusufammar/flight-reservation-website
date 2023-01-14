@@ -633,7 +633,7 @@ router.route("/confirmBooking").post((req,res)=>{ // update available seats in f
       
         // Seats Available Update
         DEconomyAvailableSeats = DEconomyAvailableSeats- seats;
-        REconomyAvailableSeats = DEconomyAvailableSeats- seats;
+        REconomyAvailableSeats = REconomyAvailableSeats- seats;
         
         // Seats Array Update
         for (var i=1;i<DEconomySeats.length; i++){
@@ -735,7 +735,7 @@ console.log(pdfObject)
     service: 'gmail',
     auth: {
       user: 'fakeEmailACL@gmail.com',
-      pass: 'Fake1234' // naturally, replace both with your real credentials or an application-specific password
+      pass: 'bqnqkwlytwnrhroq' // naturally, replace both with your real credentials or an application-specific password
     }
   });
   
@@ -768,15 +768,21 @@ console.log(pdfObject)
 //mayar & shorouk
 router.route("/SendCancelEmail").post( async (req, res) => {
 
+  if(req.session.type=="Guest"){ //guest account type -> dont send email
+    console.log("guest");
+    res.send("0");
+  }
+  else{ // send email
+
   const booking = req.body.booking;
-  //console.log(booking)
-;
+
+  console.log("email: "+ req.session.email);
 
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
       user: 'fakeEmailACL@gmail.com',
-      pass: 'Fake1234' // naturally, replace both with your real credentials or an application-specific password
+      pass: 'ieghtxlpuhjckxum' // naturally, replace both with your real credentials or an application-specific password
     }
   });
   
@@ -796,7 +802,7 @@ router.route("/SendCancelEmail").post( async (req, res) => {
       res.send("1");
     }
   });
-
+  }
 })
 
 var selectedFlightID = "";
