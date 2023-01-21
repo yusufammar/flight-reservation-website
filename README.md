@@ -11,11 +11,11 @@ A user friendly website for airline called “SAMYH” to make reservations for 
 Our vision was to create user-friendly website using MERN stack 
 
 # Technologies:
-*Node Js <br>
-*React <br>
-*Express <br>
-*Mongo DB <br>
-*REST API <br>
+-	Node Js <br>
+-	React <br>
+-	Express <br>
+-	Mongo DB <br>
+-	REST API <br>
 
 # Installation:
 
@@ -77,15 +77,15 @@ Locally:
 
 # Tests:
 
-1-Sign Up & Sign In
+1- Sign Up & Sign In
 
-2-For User/Guest:
+2- For User/Guest:
 -	Booking flights “Try LAX (Jan 12 2022) -> JFK (Jan 22 2022)” 
 -	Editing flight seats of a booking.
 -	Cancelling bookings and email notification
 -	Sending ticket as pdf by email
 
-3-For Admin:
+3- For Admin:
 -	Showing a list of all flights on the DB.
 -	Searching criteria.
 -	Editing flights.
