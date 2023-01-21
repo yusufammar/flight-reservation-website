@@ -18,15 +18,24 @@ Our vision was to create user-friendly website using MERN stack
 -	REST API <br>
 
 # Installation:
+-	Clone repository locally using github desktop or download repository zip folder and extract it.
+-	Download backend node modules 
+	-	Link: https://drive.google.com/file/d/1B6XWEM-3bsJCZXyqjczUiZuGhVnvZLWX/view?usp=sharing
+	-	Extract File and move "node_modules" folder to repository in "backend" folder
+-	Download frontend node modules 
+	-	Link: https://drive.google.com/file/d/1ayfIaY0WBtonf4d7UH8G4wh0xmQetCUu/view?usp=sharing
+	-	Extract File and move "node_modules" folder to repository in "frontend" folder
 
-Locally:
--	Clone the link of repository from github.
--	Open new terminal.
--	`Cd src`
--	 `node app` “wait until MongoDB connected”.
--	Open new terminal.
--	`Cd frontend`
--	`npm start` “wait until your browser open automatically”.
+# Running:
+-	Run backend:
+	-	Open cmd/terminal in repository directory 
+	-	`cd backend`
+	-	`cd src`
+	-	`node app` -> wait until "MongoDB connected"
+	
+-	Run frontend:
+	-	Open cmd/terminal in repository directory 
+	-	`npm start` -> wait until your browser opens automatically
 
 
 # MongoDB Personal Notes (Developer 'yusufammar' Notes) 
