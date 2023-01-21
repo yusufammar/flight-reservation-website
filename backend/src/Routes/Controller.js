@@ -38,7 +38,7 @@ router.route("/SignIn").post(async(req, res) => {
 
   const User = await user.findOne({ Email: email }); // user with same email 
   
-  if (User.Type=="Admin"){ //admin signed in
+  if (User.Type=="Admin" & User.Password==password){ //admin signed in
     req.session.email = email; req.session.type = User.Type; req.session.save();res.send("2");
  
 } 
