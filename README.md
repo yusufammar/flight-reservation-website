@@ -31,7 +31,7 @@ Our vision was to create user-friendly website using MERN stack
 	-	Open cmd/terminal in repository directory 
 	-	`cd backend`
 	-	`cd src`
-	-	`node app` -> wait until "MongoDB connected"
+	-	`node app` -> wait until "MongoDB connected" else make sure mongodb databse is live
 	
 -	Run frontend:
 	-	Open cmd/terminal in repository directory
