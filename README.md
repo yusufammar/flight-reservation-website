@@ -1,4 +1,4 @@
-# SAMYH
+# SAMYH (MERN Stack)
 
 
 # Project Title:
@@ -28,6 +28,11 @@ Locally:
 -	`Cd frontend`
 -	`npm start` “wait until your browser open automatically”.
 
+# Personal Notes (Developer 'yusufammar' Notes):
+-	This is a forked repo of the original repo to avoid further changes from contributors, as this forked repo has no contributors (contributors are the only ones allows to push code into the repo
+-	If the original (public) repo gets deleted nothing will happened to this forked repo
+-	No license in a repo means that it is not allowed to be used by other people 
+-	Under insights tab -> contributors, you can find the rate of contribution of each member to the 'main' branch	
 
 # Tests:
 
