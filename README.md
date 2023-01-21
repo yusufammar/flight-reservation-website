@@ -46,8 +46,9 @@ Locally:
 -	Adding/deleting flights
 
 Admin Credentials:
-Username: admin
-password: admin
+	
+	Username: admin
+	password: admin
 
 
 # Code Example.
