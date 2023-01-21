@@ -8,8 +8,13 @@ const port = process.env.PORT || "8000";         // Initializing Backend Server 
 app.listen(port, () => { console.log(`Listening to requests on http://localhost:${port}`);  });
 
 const mongoose = require('mongoose');            // Database Connection
-const MongoURI = 'mongodb+srv://Adham:1234@acl.tpg5t.mongodb.net/Airline?retryWrites=true&w=majority' ;  // database mongodb url
-mongoose.connect(MongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+
+// database mongodb url (adham account) (accessible to all team members)
+const MongoURI1 = 'mongodb+srv://Adham:1234@acl.tpg5t.mongodb.net/Airline' ;  
+// database mongodb url (yusuf account) (not accessible to other team members)
+const MongoURI2 = 'mongodb+srv://Yusuf:pass1234@cluster0.qzglopr.mongodb.net/Airline' ;  
+
+mongoose.connect(MongoURI2, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(result => console.log("MongoDB is now connected"))
   .catch(err => console.log(err));
 
