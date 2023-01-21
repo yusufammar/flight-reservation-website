@@ -100,7 +100,7 @@ Our vision was to create user-friendly website using MERN stack
 -	Showing a list of all flights on the DB.
 -	Searching criteria.
 -	Editing flights.
--	Adding/deleting flights
+-	Adding/deleting flights (to be fixed)
 
 Admin Credentials:
 	
