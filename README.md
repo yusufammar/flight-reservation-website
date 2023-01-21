@@ -31,18 +31,23 @@ Locally:
 
 # Tests:
 
-For Admin:
--	The list of all flights on the DB.
+*Sign Up & Sign In
+
+*For User/Guest:
+-	Booking flights “Try LAX (Jan 12 2022) -> JFK (Jan 22 2022)” 
+-	Editing flight seats of a booking.
+-	Cancelling bookings and email notification
+-	Sending ticket as pdf by email
+
+*For Admin:
+-	Showing a list of all flights on the DB.
 -	Searching criteria.
 -	Editing flights.
 -	Adding/deleting flights
--	
-For User/Guest:
--	Booking flights. “you can go with LAX->JFK on 12 .jan.2022 and 22.jan.2022 as example” 
--	Editing flights seats.
--	Cancelling his booked flights
--	The ticket as PDF attachment email after reservation and cancelling 
 
+Admin Credentials:
+Username: admin
+password: admin
 
 
 # Code Example.
