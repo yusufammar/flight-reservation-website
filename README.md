@@ -28,6 +28,7 @@ Locally:
 -	`Cd frontend`
 -	`npm start` “wait until your browser open automatically”.
 
+
 # MongoDB Personal Notes (Developer 'yusufammar' Notes) 
 -	Periodically check if the cluster is live and do a database reload if needed (if there are a lot of bookings done by guests while testing the website)
 -	Note there are 2 clusters that can be used on 2 different organizations: GUC (accesible to all contributors using adham's account) & GUC_Yusuf (accessible only by yusufammar's mongodb account to avoid changes done by other contributors)
@@ -36,7 +37,28 @@ Locally:
 	MongoDb Accounts:
 	-	Adham.elsheikh@student.guc.edu.eg (GUC)
 	-	yousifammar.ya@gmail.com (GUC & GUC_Yusuf)
-	
+
+-	To do database backup and restores we use mongodump and mongorestore instruction in cmd/terminal but first you need to install mongodb tools
+
+
+MongoDB Database Backup (mongodump)
+-	Open cmd/terminal and run this code
+	-	mongodump --uri="mongodb+srv://Yusuf:pass1234@cluster0.qzglopr.mongodb.net/Airline_Backup"
+		-	(backup database for 'Airline_Backup' database in your mongoDb cluster will be saved in a folder named 'dump' in your users folder)
+	-	mongodump code explanation: mongodump --uri="[connection string of cluster]/[name of database to create backup for]"
+
+
+
+
+MongoDB Database Reload (mongorestore)
+
+-	Delete Airline Database in mongodb
+-	Download file (save in downloads) and extract file
+	-	Link: https://drive.google.com/file/d/1cjuWPF2IJkrEUxqiuJVG_3a0VlUbMYjb/view?usp=sharing
+-	Open command prompt / terminal in downloads (by opening downloads folder and typing address bar -> cmd) and run this code
+	-	mongorestore --uri="mongodb+srv://Yusuf:pass1234@cluster0.qzglopr.mongodb.net/Airline" Airline_Backup
+	-	mongorestore code explanation: mongorestore --uri="[connection string of cluster]/[database restore name]" [path (relative path) of backup folder ]	
+
 	
 
 # Personal Notes (Developer 'yusufammar' Notes) :
