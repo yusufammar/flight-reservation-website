@@ -28,11 +28,24 @@ Locally:
 -	`Cd frontend`
 -	`npm start` “wait until your browser open automatically”.
 
-# Personal Notes (Developer 'yusufammar' Notes):
--	This is a forked repo of the original repo to avoid further changes from contributors, as this forked repo has no contributors (contributors are the only ones allows to push code into the repo
+# MongoDB Personal Notes (Developer 'yusufammar' Notes) 
+-	Periodically check if the cluster is live and do a database reload if needed (if there are a lot of bookings done by guests while testing the website)
+-	Note there are 2 clusters that can be used on 2 different organizations: GUC (accesible to all contributors using adham's account) & GUC_Yusuf (accessible only by yusufammar's mongodb account to avoid changes done by other contributors)
+-	Currently the cluster being using in backend code is the one in GUC_Yusuf 
+
+	MongoDb Accounts:
+	-	Adham.elsheikh@student.guc.edu.eg (GUC)
+	-	yousifammar.ya@gmail.com (GUC & GUC_Yusuf)
+	
+	
+
+# Personal Notes (Developer 'yusufammar' Notes) :
+-	This is a forked repo of the original repo to avoid further changes from contributors, as this forked repo has no contributors (contributors are the only ones allows to push code into the repo)
 -	If the original (public) repo gets deleted nothing will happened to this forked repo
 -	No license in a repo means that it is not allowed to be used by other people 
--	Under insights tab -> contributors, you can find the rate of contribution of each member to the 'main' branch	
+-	Under insights tab -> contributors, you can find the rate of contribution of each member to the 'main' branch, considering this you can share this repo's link with your contributors if they want and save yourself the hassle of telling them how to fix the original repo
+
+
 
 # Tests:
 
