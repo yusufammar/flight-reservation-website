@@ -1,4 +1,4 @@
-# SAMYH2
+# SAMYH
 
 
 # Project Title:
