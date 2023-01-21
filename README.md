@@ -78,7 +78,8 @@ Our vision was to create user-friendly website using MERN stack
 
 # Personal Notes (Developer 'yusufammar' Notes) :
 -	This is a forked repo of the original repo to avoid further changes from contributors, as this forked repo has no contributors (contributors are the only ones allows to push code into the repo)
--	If the original (public) repo gets deleted nothing will happened to this forked repo
+-	If the original (public) repo gets deleted nothing will happened to this forked repo.
+-	From now on don't do or export any changes to original repo. Also, don't import any changes from original repo. All changes should only be done exclusively to this repo and work as if the original repo doesn't exist any more.
 -	No license in a repo means that it is not allowed to be used by other people 
 -	Under insights tab -> contributors, you can find the rate of contribution of each member to the 'main' branch, considering this you can share this repo's link with your contributors if they want and save yourself the hassle of telling them how to fix the original repo
 
