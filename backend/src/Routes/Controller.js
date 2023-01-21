@@ -38,23 +38,30 @@ router.route("/SignIn").post(async(req, res) => {
 
   const User = await user.findOne({ Email: email }); // user with same email 
   
-  if ( (User) && (await bcrypt.compare(password, User.Password))) {        // (user) = user found/exists/true
+  if (User.Type=="Admin"){ //admin signed in
+    req.session.email = email; req.session.type = User.Type; req.session.save();res.send("2");
+ 
+} 
 
+  else {
+    if ( (User) && (await bcrypt.compare(password, User.Password))) {        // (user) = user found/exists/true
+      console.log(User.type);
     if (User.type!="Guest") {
   
         switch (User.Type){
           case("Customer"): {req.session.email = email;  req.session.type = User.Type; req.session.save();res.send("1"); break;};  // customer signed in
-          case("Admin"): {req.session.email = x; req.session.type = founduser[0].Type; req.session.save();res.send("2"); break;};  //admin signed in
+      
           default:  {res.send("0"); break;};     
         }
     }
   }
   else  
     res.send("0");  // wrong email/password or guest type-> don't sign in 
+  }
 });
 
 router.route("/currentUser").get((req, res) => {
-   if (req.session.type=="Customer" || req.session.type=="Guest"){
+   if (req.session.type=="Customer" || req.session.type=="Guest" || req.session.type=="Admin"){
      const user= {email: req.session.email, type: req.session.type  }
      res.send(user);  
    }
