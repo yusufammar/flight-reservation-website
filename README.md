@@ -34,7 +34,8 @@ Our vision was to create user-friendly website using MERN stack
 	-	`node app` -> wait until "MongoDB connected"
 	
 -	Run frontend:
-	-	Open cmd/terminal in repository directory 
+	-	Open cmd/terminal in repository directory
+	-	`cd frontend` 
 	-	`npm start` -> wait until your browser opens automatically
 
 
