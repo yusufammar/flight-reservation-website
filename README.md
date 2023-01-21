@@ -11,11 +11,11 @@ A user friendly website for airline called “SAMYH” to make reservations for 
 Our vision was to create user-friendly website using MERN stack 
 
 # Technologies:
-*Node Js
-*React
-*Express
-*Mongo DB
-*REST API
+*Node Js <br>
+*React <br>
+*Express <br>
+*Mongo DB <br>
+*REST API <br>
 
 # Installation:
 
@@ -39,18 +39,22 @@ Locally:
 	-	yousifammar.ya@gmail.com (GUC & GUC_Yusuf)
 
 -	To do database backup and restores we use mongodump and mongorestore instruction in cmd/terminal but first you need to install mongodb tools
+-	More Details: https://stackoverflow.com/questions/60302137/how-do-i-copy-all-data-from-one-mongodb-cloud-project-to-another
 
+<br><br>
 
-MongoDB Database Backup (mongodump)
+**MongoDB Database Backup (mongodump)**
+
 -	Open cmd/terminal and run this code
 	-	mongodump --uri="mongodb+srv://Yusuf:pass1234@cluster0.qzglopr.mongodb.net/Airline_Backup"
 		-	(backup database for 'Airline_Backup' database in your mongoDb cluster will be saved in a folder named 'dump' in your users folder)
 	-	mongodump code explanation: mongodump --uri="[connection string of cluster]/[name of database to create backup for]"
 
 
+<br><br>
 
 
-MongoDB Database Reload (mongorestore)
+**MongoDB Database Reload (mongorestore)**
 
 -	Delete Airline Database in mongodb
 -	Download file (save in downloads) and extract file
@@ -60,6 +64,7 @@ MongoDB Database Reload (mongorestore)
 	-	mongorestore code explanation: mongorestore --uri="[connection string of cluster]/[database restore name]" [path (relative path) of backup folder ]	
 
 	
+<br><br>
 
 # Personal Notes (Developer 'yusufammar' Notes) :
 -	This is a forked repo of the original repo to avoid further changes from contributors, as this forked repo has no contributors (contributors are the only ones allows to push code into the repo)
@@ -69,17 +74,18 @@ MongoDB Database Reload (mongorestore)
 
 
 
+
 # Tests:
 
-*Sign Up & Sign In
+1-Sign Up & Sign In
 
-*For User/Guest:
+2-For User/Guest:
 -	Booking flights “Try LAX (Jan 12 2022) -> JFK (Jan 22 2022)” 
 -	Editing flight seats of a booking.
 -	Cancelling bookings and email notification
 -	Sending ticket as pdf by email
 
-*For Admin:
+3-For Admin:
 -	Showing a list of all flights on the DB.
 -	Searching criteria.
 -	Editing flights.
