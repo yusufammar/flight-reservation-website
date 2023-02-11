@@ -83,7 +83,11 @@ Our vision was to create user-friendly website using MERN stack
 -	No license in a repo means that it is not allowed to be used by other people 
 -	Under insights tab -> contributors, you can find the rate of contribution of each member to the 'main' branch, considering this you can share this repo's link with your contributors if they want and save yourself the hassle of telling them how to fix the original repo
 
-
+# Features To Be Added:
+-	Loading Screens when sending emails (cancellation booking & sending itineraries)
+-	Online Payment
+-	Improve Booking Details Look & Itinerary email
+-	User sign up tab entries (switching between entries using tab key)
 
 
 # Tests:
