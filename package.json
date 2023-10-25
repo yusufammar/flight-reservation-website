@@ -8,6 +8,12 @@
     "heroku-postbuild": "cd client && npm install && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "engines": {
+    "node": "18.8.2", 
+    "npm": "9.8.1"    
+  }
+,  
+
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ahmedalaaseif/ACL_Tasks.git"
