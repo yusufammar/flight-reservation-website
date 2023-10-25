@@ -15,8 +15,10 @@ const fileUpload= require('express-fileupload');   // to accept files (blob) fro
 router.use(fileUpload());
 
 
-router.use(cors({                          // for axios post to not destroy session (credentials is where the sessions is saved as cookie)
-  origin:['http://localhost:3000'],     // is the origin of the axios requests (frontend url port)
+router.use(cors({    
+                        // for axios post to not destroy session (credentials is where the sessions is saved as cookie)
+  //origin:['http://localhost:3000'],       //is the origin of the axios requests (frontend url port)
+  origin:['https://dry-basin-40948-521225186519.herokuapp.com/'],      //
   methods:['GET','POST'],
   credentials: true // enable set cookie
 }));
