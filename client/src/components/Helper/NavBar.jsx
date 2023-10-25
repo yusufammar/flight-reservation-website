@@ -33,7 +33,7 @@ function NavBar(props){      //for USER & GUEST
     axios.defaults.withCredentials = true;
     
     useEffect(() => {
-        axios.get('http://localhost:8000/currentUser').then(res =>{ 
+        axios.get('https://dry-basin-40948-521225186519.herokuapp.com/currentUser').then(res =>{ 
         if (res.data==0){                                    // no guest logged in or user logged in
         axios.get('http://localhost:8000/addGuest'); setGuestMode(true); console.log(res.data);}
         else if (res.data.type=="Guest") setGuestMode(true); // guest looged in
