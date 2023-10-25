@@ -31,6 +31,7 @@ function NavBar(props){      //for USER & GUEST
     const [x,setUser]=useState();
     const [guestMode,setGuestMode]=useState(false);
     axios.defaults.withCredentials = true;
+    print(process.env.NODE_ENV);
     
     useEffect(() => {
         axios.get('kk/currentUser').then(res =>{ 
