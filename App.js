@@ -1,7 +1,17 @@
+require("dotenv").config({path:".env"});
+const path= require("path");
 const express = require("express");
 const app = express();
 app.use(express.json());
 app.use("/", require("./Routes/Controller"));
+
+
+if (process.env.NODE_ENV === ‘production’ || process.env.NODE_ENV === ‘staging’) {
+  app.use(express.static(‘client/build’));
+  app.get(‘*’, (req, res) => {
+  res.sendFile(path.join(__dirname + ‘/client/build/index.html’));
+  });
+ }
 
 
 const port = process.env.PORT || "8000";         // Initializing Backend Server (specifying port no)
@@ -14,7 +24,7 @@ const MongoURI1 = 'mongodb+srv://Adham:1234@acl.tpg5t.mongodb.net/Airline' ;
 // database mongodb url (yusuf account) (not accessible to other team members)
 const MongoURI2 = 'mongodb+srv://Yusuf:pass1234@acl.tpg5t.mongodb.net/Airline' ;  
 
-mongoose.connect(MongoURI2, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.MongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(result => console.log("MongoDB is now connected"))
   .catch(err => console.log(err));
 
