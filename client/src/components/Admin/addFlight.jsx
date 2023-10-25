@@ -1,3 +1,4 @@
+import App from '../../App';
 import React, {useState} from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -28,7 +29,7 @@ function handleclick(event){
     console.log(input);
 
     const newFlight= {flightNo: input.flightNo, from: input.from , to: input.to , date: input.date , departure: input.departure, arrival: input.arrival, firstSeats: input.firstSeats, businessSeats: input.businessSeats , economySeats: input.economySeats }  ;
-    axios.post('http://localhost:8000/addFlight', newFlight)
+    axios.post(App.url + '/addFlight', newFlight)
 
     history.push({
         pathname: '/FlightsList'

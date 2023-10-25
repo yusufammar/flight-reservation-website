@@ -1,3 +1,4 @@
+import App from '../../App';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import react, {useEffect,useState} from "react";
 import { Route, Redirect, useLocation } from "react-router-dom";
@@ -48,14 +49,14 @@ function EditProfile(){
         if (input.email!="" && input.password!="" && input.oldPassword!="" ){
             
             console.log(input);     
-            axios.post('http://localhost:8000/Updateinfo', input).then(res =>{
+            axios.post(App.url + '/Updateinfo', input).then(res =>{
             if (res.data==0)  alert("Email already used, use a different email")  // email already used
             
             else if (res.data.status==1){        // succesful update
            
             alert('Account Info Updated Successfully')
             var article2={oldEmail: res.data.oldEmail }
-            axios.post('http://localhost:8000/UpdateBookingUser',article2).then(history.push({pathname: '/'}))  // post request nead old email (get from backend)
+            axios.post(App.url + '/UpdateBookingUser',article2).then(history.push({pathname: '/'}))  // post request nead old email (get from backend)
             }
             else if (res.data==2)  alert("Wrong Old Password");  // wrong old password
           

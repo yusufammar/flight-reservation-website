@@ -1,3 +1,4 @@
+import App from '../../App';
 import '../css/style2.css';
 import React, {useState} from "react";
 import axios from "axios";
@@ -40,7 +41,7 @@ function handleclick(event){
 console.log(input);
     if (input.firstname!="" && input.lastname!="" && input.email!= "" && input.password!= "" && input.countryCode!="" && 
     input.phoneNo!="" && input.passportNo!="" && input.address!="" ) { 
-    axios.post('http://localhost:8000/addUser', input).then( res => {
+    axios.post(App.url + '/addUser', input).then( res => {
         if (res.data==1){
         alert("E-Mail Address Already Exists!  \nPlease use another E-Mail address");  // alert message with line break
         history.push({

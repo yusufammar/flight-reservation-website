@@ -1,3 +1,4 @@
+import App from '../App';
 import './css/style.css'
 import react, {useEffect,useState} from "react";
 import { Route, Redirect, useLocation } from "react-router-dom";
@@ -111,7 +112,7 @@ var r= convertDate(returnDate);
 var input= {from: from , to: to , departure: d , return: r, cabin: cabin , adultSeats: adults, childrenSeats: children };
 
 //Getting departure flights, return flights, & price for each all at once (passed to other front end pages using history.push)
-axios.post('http://localhost:8000/searchFlightUser', input).then(res =>{ 
+axios.post(App.url + '/searchFlightUser', input).then(res =>{ 
     if (res.data == 1)
        alert("No results, Please Search again");
        else{

@@ -46,21 +46,21 @@ function SearchResults(){
     if (type=="flightNo"){
     var x= location.state.flightNo;
     const article = { flightNo: x };
-    axios.post('http://localhost:8000/getFlightByNo', article)
+    axios.post(App.url + '/getFlightByNo', article)
     .then(jsonRes => (setflights(jsonRes.data)) );
     }
 
     if (type=="from"){
         var x= location.state.from;
         const article = { from : x };
-        axios.post('http://localhost:8000/getFlightByFrom', article)
+        axios.post(App.url + '/getFlightByFrom', article)
         .then(jsonRes => (setflights(jsonRes.data)) );
      }
 
     if (type=="to"){
         var x= location.state.to;
         const article = { to : x };
-        axios.post('http://localhost:8000/getFlightByTo', article)
+        axios.post(App.url + '/getFlightByTo', article)
         .then(jsonRes => (setflights(jsonRes.data)) );
      }
 
@@ -68,21 +68,21 @@ function SearchResults(){
         var x= location.state.date;
         const article = { date : x };
         console.log(article);
-        axios.post('http://localhost:8000/getFlightByDate', article)
+        axios.post(App.url + '/getFlightByDate', article)
         .then(jsonRes => (setflights(jsonRes.data)) );
      }
      if (type=="departure"){
         var x= location.state.departure;
         const article = { departure : x };
         console.log(article);
-        axios.post('http://localhost:8000/getFlightByDeparture', article)
+        axios.post(App.url + '/getFlightByDeparture', article)
         .then(jsonRes => (setflights(jsonRes.data)) );
      }
      if (type=="arrival"){
         var x= location.state.arrival;
         const article = { arrival : x };
         console.log(article);
-        axios.post('http://localhost:8000/getFlightByArrival', article)
+        axios.post(App.url + '/getFlightByArrival', article)
         .then(jsonRes => (setflights(jsonRes.data)) );
      }
    }

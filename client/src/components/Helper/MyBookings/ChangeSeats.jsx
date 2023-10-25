@@ -1,3 +1,4 @@
+import App from '../../../App';
 import react, {useEffect,useState} from "react";
 import { Route, Redirect, useLocation } from "react-router-dom";
 import { useHistory } from "react-router-dom";
@@ -119,7 +120,7 @@ function handleClick(){   // confirm button of choosing seats --> make change
     BookingNo: booking.BookingNo, FlightDirection: flightDirection, NewChosenSeats: ChosenSeats  // for updating booking collection with new chosen seats arrau based on booking no & flightdirection (departure/return)
 };
 console.log(article);
-axios.post('http://localhost:8000/changeSeats',article).then( res=> {
+axios.post(App.url + '/changeSeats',article).then( res=> {
   if (res.data==1) { alert ("Seat Change Done Successfully"); window.location.reload();} 
 })
   // after seats change action (remove & handle in bookingDetails)

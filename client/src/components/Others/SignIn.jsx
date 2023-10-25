@@ -1,3 +1,4 @@
+import App from '../../App';
 import '../css/style2.css';
 import React, {useState} from "react";
 import axios from "axios";
@@ -15,7 +16,7 @@ import LockIcon from '@mui/icons-material/Lock';
 
 function SignIn(){
     axios.defaults.withCredentials = true; // (write inside big function of component/page) instead of adding  {withCredentials: true} (beside url request) to each axios request
-    // Like this ->  axios.post('http://localhost:8000/SignIn', user, {withCredentials: true})
+    // Like this ->  axios.post(App.url + '/SignIn', user, {withCredentials: true})
 
     const history = useHistory();
     const [input, setInput] = useState({     //attribute names should be lowercase (for handle change to work & accept inputs) 
@@ -42,7 +43,7 @@ function handleclick(event){
     if(input.email!="" && input.password!="") {
     const user= {Email : input.email , Password : input.password  }  ;
     
-    axios.post('http://localhost:8000/SignIn', user)
+    axios.post(App.url + '/SignIn', user)
     .then(res => {
         console.log(res.data);
         if (res.data==0)

@@ -1,3 +1,4 @@
+import App from '../../../App';
 import React from 'react';
 import {useEffect,useState} from "react";
 import { Route, Redirect, useLocation } from "react-router-dom";
@@ -42,7 +43,7 @@ useEffect(() => {
 
 console.log(bookingNo);
 var article= {bookingNo: bookingNo};
-axios.post('http://localhost:8000/getBooking',article).        // gets booking selected
+axios.post(App.url + '/getBooking',article).        // gets booking selected
 then(res =>{  setBookingActive(res.data);  })
 console.log(depFlights);  console.log(bookingNo);
 console.log(bookingActive);
@@ -74,7 +75,7 @@ function deleteFlight(event){                        // deletes booking and send
     axios.post(`http://localhost:8000/cancel`,art);           // removes booking from booking collection & update flight collection with new available seats
 
     const article = { booking: bookingActive};               // sends cancellation email
-    axios.post('http://localhost:8000/SendCancelEmail', article).then(res => {
+    axios.post(App.url + '/SendCancelEmail', article).then(res => {
     if (res.data==0){//guest account type
         
         alert("Booking Canceled Successfully");
@@ -115,7 +116,7 @@ async function SendItineraryPDF(event){
   var file2=new FormData(); 
   file2.append('file',pdfFile);
   //console.log(pdfFile);
-  axios.post('http://localhost:8000/SendEmail', file2).then(res => {
+  axios.post(App.url + '/SendEmail', file2).then(res => {
       if (res.data==1){ alert ("Intinerary sent to your email")
     window.location.reload();}
 
@@ -178,7 +179,7 @@ else{
     }
 
 //Getting matching flights & price for each all at once (passed to other front end pages using history.push)
-    axios.post('http://localhost:8000/getMatchingFlights', input).then(res =>{ 
+    axios.post(App.url + '/getMatchingFlights', input).then(res =>{ 
         var data1= res.data; // array of objects {FlightDetails: x, TotalPrice: x} ->flights that meet the search criteria (FlightDetails & Price) sent from  bookingDetails (when change flight is pressed)
         var data=[];
         var oldFlightNo= passedVariable.Flight.Flight_No; 

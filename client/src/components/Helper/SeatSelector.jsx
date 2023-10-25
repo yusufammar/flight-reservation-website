@@ -1,3 +1,4 @@
+import App from '../../App';
 import react, {useEffect,useState} from "react";
 import { Route, Redirect, useLocation } from "react-router-dom";
 import { useHistory } from "react-router-dom";
@@ -141,7 +142,7 @@ function handleClick(){   // confirm button of choosing seats --> make booking
     departureChosenSeats: departureChosenSeats,
     returnChosenSeats: returnChosenSeats,
 };
-  axios.post('http://localhost:8000/confirmBooking', article).then(
+  axios.post(App.url + '/confirmBooking', article).then(
       history.push({pathname:"/"})
   );
 }
@@ -157,7 +158,7 @@ function handleclick3(event){
     var article5= {departureFlightNo: dflightNo, returnFlightNo: rflightNo, cabin: input.cabin,  
         adults: input.adults, children: input.children, price: price};
     
-        axios.post('http://localhost:8000/confirmBooking',article5)
+        axios.post(App.url + '/confirmBooking',article5)
        .then(res =>{ 
         if (res.data==1){
         alert("Booking Done Successfully");
