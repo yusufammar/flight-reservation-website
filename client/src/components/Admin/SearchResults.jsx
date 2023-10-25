@@ -1,3 +1,4 @@
+import App from '../../App';
 import react, {useEffect,useState} from "react";
 import React from "react";
 import { Link } from "react-router-dom";
@@ -14,7 +15,7 @@ function SearchResults(){
     
     useEffect(() => {
         
-     axios.get('http://localhost:8000/currentUser').then(res =>{ 
+     axios.get(App.url + '/currentUser').then(res =>{ 
         if (res.data=="0" || res.data.type=="Customer" || res.data.type=="Guest" ){
         alert("Access Denied, Please Sign In First");
         history.push({pathname:"/SignIn"});

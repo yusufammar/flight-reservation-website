@@ -1,3 +1,4 @@
+import App from '../App';
 import React from 'react';
 import {useEffect,useState} from "react";
 import { Route, Redirect, useLocation } from "react-router-dom";
@@ -26,7 +27,7 @@ const [depFlights, setDepFlights] = useState([]);     // all flights
 
   
 useEffect(() => {
-    axios.get('http://localhost:8000/MyBookings').then(jsonRes => {
+    axios.get(App.url + '/MyBookings').then(jsonRes => {
     console.log(jsonRes.data); setbookings(jsonRes.data); console.log(bookings)});
 
     fetch("/FlightsList").then(res => {              // gets all flights (& sets it to depFlights)

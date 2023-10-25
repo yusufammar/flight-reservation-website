@@ -1,5 +1,6 @@
 //import Form from 'react-bootstrap/Form'
 //import Button from 'react-bootstrap/Button';
+import App from '../../App';
 import { BrowserRouter as Router, useParams } from "react-router-dom";
 import react, {useEffect,useState} from "react";
 import React from "react";
@@ -17,7 +18,7 @@ const UpdatePage = () => {
     
     useEffect(() => {
         
-     axios.get('http://localhost:8000/currentUser').then(res =>{ 
+     axios.get(App.url + '/currentUser').then(res =>{ 
         if (res.data=="0" || res.data.type=="Customer" || res.data.type=="Guest" ){
         alert("Access Denied, Please Sign In First");
         history.push({pathname:"/SignIn"});

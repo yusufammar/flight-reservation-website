@@ -1,3 +1,4 @@
+import App from '../../App';
 import react, {useEffect,useState} from "react";
 import { Route, Redirect, useLocation } from "react-router-dom";
 import { useHistory } from "react-router-dom";
@@ -31,12 +32,15 @@ function NavBar(props){      //for USER & GUEST
     const [x,setUser]=useState();
     const [guestMode,setGuestMode]=useState(false);
     axios.defaults.withCredentials = true;
-    print(process.env.NODE_ENV);
-    
+   
+   
+    console.log(App.url);
+
+
     useEffect(() => {
-        axios.get('kk/currentUser').then(res =>{ 
+        axios.get(App.url + '/currentUser').then(res =>{ 
         if (res.data==0){                                    // no guest logged in or user logged in
-        axios.get('http://localhost:8000/addGuest'); setGuestMode(true); console.log(res.data);}
+        axios.get(App.url + '/addGuest'); setGuestMode(true); console.log(res.data);}
         else if (res.data.type=="Guest") setGuestMode(true); // guest looged in
         else {setUser(res.data.email); setGuestMode(false)};   //user logged in
      })
@@ -53,7 +57,7 @@ function NavBar(props){      //for USER & GUEST
     }
     function handleclick9(event){
         event.preventDefault();
-        axios.get('http://localhost:8000/logout').then(
+        axios.get(App.url + '/logout').then(
         history.push({
             pathname: '/'}));
             window.location.reload();

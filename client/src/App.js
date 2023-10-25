@@ -26,6 +26,13 @@ import MyBookings from './components/MyBookings';
 
 
 function App() {
+
+  if (process.env.NODE_ENV=='production')
+    App.url= '';
+  else
+    App.url= 'http://localhost:8000';
+  
+
   
   useEffect(() => {
     WebFont.load({
@@ -35,7 +42,9 @@ function App() {
     });
    }, []);
 
+ 
   return (
+    
     <Router>
      
           
@@ -101,3 +110,4 @@ function App() {
 )}
 
 export default App;
+
