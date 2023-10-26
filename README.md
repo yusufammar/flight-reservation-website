@@ -36,12 +36,12 @@ https://dry-basin-40948-521225186519.herokuapp.com/
  	
 
 # Running (Locally):
--	Run backend:
+-	Run server/backend:
 	-	Open cmd/terminal in repository directory 
 	-	`node app` -> wait until "MongoDB connected" else make sure mongodb databse is live
 		-	Note: if mongo db is not connecting make sure its activated on mongo db atlas
 	
--	Run frontend:
+-	Run client/frontend:
 	-	Open cmd/terminal in repository directory
 	-	`cd client` 
 	-	`npm start` -> wait until your browser opens automatically
