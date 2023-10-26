@@ -23,15 +23,16 @@ https://dry-basin-40948-521225186519.herokuapp.com/
 -	To apply any changes done to the deployed website:
 	-	`git commit -am "make it better"`
 	-	`git push heroku main` OR `git push heroku {branch name}:main`
+-	Push to main branch after deploying  
 
 
 # Installation (Locally):
 -	Clone repository locally using github desktop or download repository zip folder and extract it.
 -	Download server node modules 
-	-	Link: https://drive.google.com/file/d/1B6XWEM-3bsJCZXyqjczUiZuGhVnvZLWX/view?usp=sharing
+	-	Link: https://drive.google.com/file/d/1Ojb26t1PXVD8xfyPyAagFDxx1oGE7H8J/view?usp=drive_link
 	-	Extract File and move "node_modules" folder to repository 
 -	Download client node modules 
-	-	Link: https://drive.google.com/file/d/1ayfIaY0WBtonf4d7UH8G4wh0xmQetCUu/view?usp=sharing
+	-	Link: https://drive.google.com/file/d/1IZm8kX-ZUHPLVi-7MMOSEXIfqYhrEGXb/view?usp=drive_link
 	-	Extract File and move "node_modules" folder to repository in "client" folder
  	
 
