@@ -17,25 +17,33 @@ Our vision was to create user-friendly website using MERN stack
 -	Mongo DB <br>
 -	REST API <br>
 
-# Installation:
--	Clone repository locally using github desktop or download repository zip folder and extract it.
--	Download backend node modules 
-	-	Link: https://drive.google.com/file/d/1B6XWEM-3bsJCZXyqjczUiZuGhVnvZLWX/view?usp=sharing
-	-	Extract File and move "node_modules" folder to repository in "backend" folder
--	Download frontend node modules 
-	-	Link: https://drive.google.com/file/d/1ayfIaY0WBtonf4d7UH8G4wh0xmQetCUu/view?usp=sharing
-	-	Extract File and move "node_modules" folder to repository in "frontend" folder
+# Deployed On Heroku
+https://dry-basin-40948-521225186519.herokuapp.com/
 
-# Running:
+To apply any changes done to the deployed website
+$ git commit -am "make it better"
+$ git push heroku main OR $ git push heroku {branch name}:main
+
+
+# Installation (Locally):
+-	Clone repository locally using github desktop or download repository zip folder and extract it.
+-	Download server node modules 
+	-	Link: https://drive.google.com/file/d/1B6XWEM-3bsJCZXyqjczUiZuGhVnvZLWX/view?usp=sharing
+	-	Extract File and move "node_modules" folder to repository 
+-	Download client node modules 
+	-	Link: https://drive.google.com/file/d/1ayfIaY0WBtonf4d7UH8G4wh0xmQetCUu/view?usp=sharing
+	-	Extract File and move "node_modules" folder to repository in "client" folder
+ -	
+
+# Running (Locally):
 -	Run backend:
 	-	Open cmd/terminal in repository directory 
-	-	`cd backend`
-	-	`cd src`
 	-	`node app` -> wait until "MongoDB connected" else make sure mongodb databse is live
+*Note: if mongo db is not connecting make sure its activated on mongo db atlas
 	
 -	Run frontend:
 	-	Open cmd/terminal in repository directory
-	-	`cd frontend` 
+	-	`cd client` 
 	-	`npm start` -> wait until your browser opens automatically
 
 
