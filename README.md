@@ -20,9 +20,9 @@ Our vision was to create user-friendly website using MERN stack
 # Deployed On Heroku
 https://dry-basin-40948-521225186519.herokuapp.com/
 
-To apply any changes done to the deployed website
-$ git commit -am "make it better"
-$ git push heroku main OR $ git push heroku {branch name}:main
+-	To apply any changes done to the deployed website:
+	-	`git commit -am "make it better"`
+	-	`git push heroku main` OR `git push heroku {branch name}:main`
 
 
 # Installation (Locally):
@@ -39,7 +39,7 @@ $ git push heroku main OR $ git push heroku {branch name}:main
 -	Run backend:
 	-	Open cmd/terminal in repository directory 
 	-	`node app` -> wait until "MongoDB connected" else make sure mongodb databse is live
-*Note: if mongo db is not connecting make sure its activated on mongo db atlas
+		-	Note: if mongo db is not connecting make sure its activated on mongo db atlas
 	
 -	Run frontend:
 	-	Open cmd/terminal in repository directory
