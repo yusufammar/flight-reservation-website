@@ -33,7 +33,7 @@ https://dry-basin-40948-521225186519.herokuapp.com/
 -	Download client node modules 
 	-	Link: https://drive.google.com/file/d/1ayfIaY0WBtonf4d7UH8G4wh0xmQetCUu/view?usp=sharing
 	-	Extract File and move "node_modules" folder to repository in "client" folder
- -	
+ 	
 
 # Running (Locally):
 -	Run backend:
