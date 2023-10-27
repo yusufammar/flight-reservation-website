@@ -1,6 +1,5 @@
-# SAMYH (MERN Stack)
-(Yusuf Ammar's Repository) 
-
+# SAMYH (Yusuf Ammar's Repository) 
+- MERN Stack
 
 # Project Title:
 SAMYH-Airline Reservation System
