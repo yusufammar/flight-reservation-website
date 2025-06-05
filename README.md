@@ -1,8 +1,8 @@
-# SAMYH (Yusuf Ammar's Repository) 
+# Flight Reservation Website - SAMYH (Yusuf Ammar's Repository) 
 - MERN Stack
 
 # Project Title:
-SAMYH-Airline Reservation System
+Flight Reservation Website - SAMYH 
 
 # Project description: 
 A user friendly website for airline called “SAMYH” to make reservations for flights on the system for users and guests by searching for flights, reserve it and they have more functionalities as edit their reservations and cancelling it. also allowing the administers to edit on it the flights system between adding, deleting and editing flights details.
