@@ -33,11 +33,12 @@ function App() {
    // console.log(App.url)
   }
   else{
-    App.url= process.env.REACT_APP_API_URL;
+    App.url= 'http://localhost:8000';
+    //App.url= process.env.REACT_APP_API_URL;
     console.log(App.url)
   }
   
-    //App.url= 'http://localhost:8000';
+   
   
 
  //------------------------------------------ 
