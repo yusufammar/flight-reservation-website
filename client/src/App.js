@@ -1,3 +1,4 @@
+// require("dotenv").config({path:"//.env"});
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {BrowserRouter as Router, Route} from "react-router-dom";  // react-router & react-router-dom v5.1.2
@@ -28,8 +29,11 @@ import MyBookings from './components/MyBookings';
 function App() {
 
   if (process.env.NODE_ENV=='production')
-    App.url= '';
+    App.url= process.env.REACT_APP_API_URL;
+
   else
+  // App.url=process.env.REACT_APP_API_URL;
+  // console.log(App.url)
     App.url= 'http://localhost:8000';
   
 
