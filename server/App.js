@@ -6,12 +6,13 @@ app.use(express.json());
 app.use("/", require("./Routes/Controller"));
 
 
-if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
-  app.use(express.static('client/build'));
-  app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname + '/client/build/index.html'));
-  });
- }
+//**Used when deployed frontend and backend on HEROKU together */
+// if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
+//   app.use(express.static('client/build'));
+//   app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname + '/client/build/index.html'));
+//   });
+//  }
 
 
 const port = process.env.PORT || "8000";         // Initializing Backend Server (specifying port no)

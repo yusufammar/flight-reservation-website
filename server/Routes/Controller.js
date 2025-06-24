@@ -21,12 +21,20 @@ router.use(fileUpload());
 //   credentials: true // enable set cookie
 // }));
 
-const allowedOrigins = process.env.NODE_ENV === 'production'
-  ? ['https://flight-reservation-website.vercel.app']
-  : ['http://localhost:3000'];
+// const allowedOrigins = process.env.NODE_ENV === 'production'
+//   ? ['https://flight-reservation-website.vercel.app']
+//   : ['http://localhost:3000'];
+
+const allowedOrigins = ['https://flight-reservation-website.vercel.app', 'http://localhost:3000'];
 
 router.use(cors({
-  origin: allowedOrigins,
+  origin: function(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST'],
   credentials: true,
 }));

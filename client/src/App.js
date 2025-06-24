@@ -28,16 +28,19 @@ import MyBookings from './components/MyBookings';
 
 function App() {
 
-  if (process.env.NODE_ENV=='production')
+  if (process.env.NODE_ENV=='production'){
     App.url= process.env.REACT_APP_API_URL;
-
-  else
-  // App.url=process.env.REACT_APP_API_URL;
-  // console.log(App.url)
-    App.url= 'http://localhost:8000';
+   // console.log(App.url)
+  }
+  else{
+    App.url= process.env.REACT_APP_API_URL;
+    console.log(App.url)
+  }
+  
+    //App.url= 'http://localhost:8000';
   
 
-  
+ //------------------------------------------ 
   useEffect(() => {
     WebFont.load({
       google: {
