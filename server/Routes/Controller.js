@@ -64,8 +64,8 @@ router.route("/SignIn").post(async(req, res) => {
 
   else {
     if ( (User) && (await bcrypt.compare(password, User.Password))) {        // (user) = user found/exists/true
-      console.log(User.type);
-    if (User.type!="Guest") {
+      console.log(User.Type);
+    if (User.Type!="Guest") {
   
         switch (User.Type){
           case("Customer"): {req.session.email = email;  req.session.type = User.Type; req.session.save();res.send("1"); break;};  // customer signed in
