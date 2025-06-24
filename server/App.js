@@ -24,6 +24,7 @@ const MongoURI1 = 'mongodb+srv://Adham:1234@acl.tpg5t.mongodb.net/Airline' ;
 // database mongodb url (yusuf account) (not accessible to other team members)
 const MongoURI2 = 'mongodb+srv://Yusuf:pass1234@acl.tpg5t.mongodb.net/Airline' ;  
 
+mongoose.set('strictQuery', false);
 mongoose.connect(process.env.MongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(result => console.log("MongoDB is now connected"))
   .catch(err => console.log(err));
