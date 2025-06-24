@@ -41,7 +41,10 @@ router.use(cors({
 
 
 const session=require("express-session");
-router.use(session({secret:'secret', resave:false , saveUninitialized:false}));
+router.use(session({secret:'secret', resave:false , saveUninitialized:false, cookie: {
+    secure: true,
+    sameSite: 'none'
+  }}));
 
 const nodemailer = require("nodemailer");
 
