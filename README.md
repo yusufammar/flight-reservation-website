@@ -1,127 +1,119 @@
-# Flight Reservation Website - SAMYH (Yusuf Ammar's Repository) 
-- MERN Stack
+# ✈️ Flight Reservation Website - **SAMYH**
 
-# Project Title:
-Flight Reservation Website - SAMYH 
-
-# Project description: 
-A user friendly website for airline called “SAMYH” to make reservations for flights on the system for users and guests by searching for flights, reserve it and they have more functionalities as edit their reservations and cancelling it. also allowing the administers to edit on it the flights system between adding, deleting and editing flights details.
-
-# Motivation:
-Our vision was to create user-friendly website using MERN stack 
-
-# Technologies:
--	Node Js <br>
--	React <br>
--	Express <br>
--	Mongo DB <br>
--	REST API <br>
-
-# Deployed On Heroku
-https://dry-basin-40948-521225186519.herokuapp.com/
-
--	To apply any changes done to the deployed website:
-	-	`git commit -am "make it better"`
-	-	`git push heroku main` OR `git push heroku {branch name}:main`
--	Push to main branch after deploying  
+**MERN Stack | Yusuf Ammar's Repository**
 
 
-# Installation (Locally):
--	Clone repository locally using github desktop or download repository zip folder and extract it.
--	Download server node modules 
-	-	Link: https://drive.google.com/file/d/1Ojb26t1PXVD8xfyPyAagFDxx1oGE7H8J/view?usp=drive_link
-	-	Extract File and move "node_modules" folder to repository 
--	Download client node modules 
-	-	Link: https://drive.google.com/file/d/1IZm8kX-ZUHPLVi-7MMOSEXIfqYhrEGXb/view?usp=drive_link
-	-	Extract File and move "node_modules" folder to repository in "client" folder
- 	
+## 📝 Project Description
 
-# Running (Locally):
--	Run server/backend:
-	-	Open cmd/terminal in repository directory 
-	-	`node app` -> wait until "MongoDB connected" else make sure mongodb databse is live
-		-	Note: if mongo db is not connecting make sure its activated on mongo db atlas
-	
--	Run client/frontend:
-	-	Open cmd/terminal in repository directory
-	-	`cd client` 
-	-	`npm start` -> wait until your browser opens automatically
+A user-friendly flight reservation website for the fictional airline **SAMYH**. Users and guests can search for flights, reserve seats, edit or cancel reservations. Admins have full control over the flight system, including adding, editing, and deleting flights.
 
 
-# MongoDB Personal Notes (Developer 'yusufammar' Notes) 
--	Periodically check if the cluster is live and do a database reload if needed (if there are a lot of bookings done by guests while testing the website)
--	Note there are 2 clusters that can be used on 2 different organizations: GUC (accesible to all contributors using adham's account) & GUC_Yusuf (accessible only by yusufammar's mongodb account to avoid changes done by other contributors)
--	Currently the cluster being using in backend code is the one in GUC_Yusuf 
 
-	MongoDb Accounts:
-	-	Adham.elsheikh@student.guc.edu.eg (GUC)
-	-	yousifammar.ya@gmail.com (GUC & GUC_Yusuf)
+## 🎯 Motivation
 
--	To do database backup and restores we use mongodump and mongorestore instruction in cmd/terminal but first you need to install mongodb tools
--	More Details: https://stackoverflow.com/questions/60302137/how-do-i-copy-all-data-from-one-mongodb-cloud-project-to-another
-
-<br><br>
-
-**MongoDB Database Backup (mongodump)**
-
--	Open cmd/terminal and run this code
-	-	mongodump --uri="mongodb+srv://Yusuf:pass1234@cluster0.qzglopr.mongodb.net/Airline_Backup"
-		-	(backup database for 'Airline_Backup' database in your mongoDb cluster will be saved in a folder named 'dump' in your users folder)
-	-	mongodump code explanation: mongodump --uri="[connection string of cluster]/[name of database to create backup for]"
+To create a complete, responsive MERN stack application that simulates a real-world airline reservation system.
 
 
-<br><br>
+
+## ⚙️ Technologies Used
+
+- React
+- Node.js
+- Express.js
+- MongoDB
+- REST API
+- Axios
 
 
-**MongoDB Database Reload (mongorestore)**
 
--	Delete Airline Database in mongodb
--	Download file (save in downloads) and extract file
-	-	Link: https://drive.google.com/file/d/1cjuWPF2IJkrEUxqiuJVG_3a0VlUbMYjb/view?usp=sharing
--	Open command prompt / terminal in downloads (by opening downloads folder and typing address bar -> cmd) and run this code
-	-	mongorestore --uri="mongodb+srv://Yusuf:pass1234@cluster0.qzglopr.mongodb.net/Airline" Airline_Backup
-	-	mongorestore code explanation: mongorestore --uri="[connection string of cluster]/[database restore name]" [path (relative path) of backup folder ]	
+## 🚀 Live Demo
 
-	
-<br><br>
-
-# Personal Notes (Developer 'yusufammar' Notes) :
--	This is a forked repo of the original repo to avoid further changes from contributors, as this forked repo has no contributors (contributors are the only ones allows to push code into the repo)
--	If the original (public) repo gets deleted nothing will happened to this forked repo.
--	From now on don't do or export any changes to original repo. Also, don't import any changes from original repo. All changes should only be done exclusively to this repo and work as if the original repo doesn't exist any more.
--	No license in a repo means that it is not allowed to be used by other people 
--	Under insights tab -> contributors, you can find the rate of contribution of each member to the 'main' branch, considering this you can share this repo's link with your contributors if they want and save yourself the hassle of telling them how to fix the original repo
-
-# Features To Be Added:
--	Loading Screens when sending emails (cancellation booking & sending itineraries)
--	Online Payment
--	Improve Booking Details Look & Itinerary email
--	User sign up tab entries (switching between entries using tab key)
+> **Frontend:** Deployed on Vercel: [https://flight-reservation-website.vercel.app/](https://flight-reservation-website.vercel.app/)
+> 
+> 
+> **Backend**: Hosted on Render: [https://flight-reservation-website-ltkz.onrender.com/](https://flight-reservation-website-ltkz.onrender.com/)
+> 
 
 
-# Tests:
 
-1- Sign Up & Sign In
+## 💻 Installation (Local Development)
 
-2- For User/Guest:
--	Booking flights “Try LAX (Jan 12 2022) -> JFK (Jan 22 2022)” 
--	Editing flight seats of a booking.
--	Cancelling bookings and email notification
--	Sending ticket as pdf by email
+1. **Install dependencies:**
+    - **Backend (Inside `/server` folder):**
+        
+        ```
+        cd server
+        npm install
+        ```
+        
+    - **Frontend (Inside `/client` folder):**
+        
+        ```
+        cd client
+        npm install
+        ```
+        
+2. **Start the development servers:**
+    - **Backend:**
+        
+        ```
+        cd server
+		node App.js
+        ```
+        
+        > Wait for MongoDB connected log message.
+        > 
+    - **Frontend:**
+        
+        ```
+        cd client
+        npm start
+        ```
+        
 
-3- For Admin:
--	Showing a list of all flights on the DB.
--	Searching criteria.
--	Editing flights.
--	Adding/deleting flights (to be fixed)
 
-Admin Credentials:
-	
-	Username: admin
-	password: admin
+## ✨ Features
+
+- Sign up, Sign in for customers
+- Flight search (filter by date, location)
+- Flight booking (guest or registered user)
+- Email confirmation and itinerary (PDF)
+- Admin dashboard to manage flights
+- Reservation management (edit, cancel)
 
 
-# Code Example.
+
+## ✅ Functional Tests (Manual)
+
+### 1. Auth
+
+- Sign up with a new user
+- Sign in with an existing user
+
+### 2. User/Guest
+
+- Booking flights “Try LAX (Jan 12 2022) -> JFK (Jan 22 2022)”
+- Editing flight seats of a booking.
+- Cancelling bookings and email notification
+- Sending ticket as pdf by email
+
+### 3. Admin
+
+- Showing a list of all flights on the DB.
+- Searching criteria.
+- Editing flights.
+- Adding/deleting flights (to be fixed)
+
+**🔐 Admin Credentials**
+
+```
+Username: admin
+Password: admin
+```
+
+
+
+## Code Example
 
 NODEJS: 
 
@@ -150,7 +142,7 @@ NODEJS:
       
 
 
-# Screenshots
+## 📷 Screenshots
 
 <img width="1304" alt="Screenshot 2021-12-29 at 8 43 27 PM" src="https://user-images.githubusercontent.com/68854085/147696994-7da18324-41ef-4821-bffb-845b754f59f9.png">
 
@@ -172,7 +164,9 @@ NODEJS:
 
 
 
-# Contributors 
+
+
+## Contributors 
 
 The project is created with the contribution of 5 members.
 * https://github.com/yusufammar
@@ -181,7 +175,7 @@ The project is created with the contribution of 5 members.
 * https://github.com/hossammeligy
 * https://github.com/Shorook1
 
-# Credits
+## Credits
 
 	 https://mui.com
 	 https://www.codecademy.com/learn/react-101	
