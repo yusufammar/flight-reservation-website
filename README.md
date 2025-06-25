@@ -28,10 +28,7 @@ To create a complete, responsive MERN stack application that simulates a real-wo
 
 ## 🚀 Live Demo
 
-> **Frontend:** Deployed on Vercel: [https://flight-reservation-website.vercel.app/](https://flight-reservation-website.vercel.app/)
-> 
-> 
-> **Backend**: Hosted on Render: [https://flight-reservation-website-ltkz.onrender.com/](https://flight-reservation-website-ltkz.onrender.com/)
+> **Hosted on Render**: [https://flight-reservation-website-ltkz.onrender.com/](https://flight-reservation-website-ltkz.onrender.com/)
 > 
 
 

@@ -15,15 +15,6 @@ const fileUpload= require('express-fileupload');   // to accept files (blob) fro
 router.use(fileUpload());
 
 
-// router.use(cors({                          // for axios post to not destroy session (credentials is where the sessions is saved as cookie)
-//   origin:['http://localhost:3000'],     // is the origin of the axios requests (frontend url port)
-//   methods:['GET','POST'],
-//   credentials: true // enable set cookie
-// }));
-
-// const allowedOrigins = process.env.NODE_ENV === 'production'
-//   ? ['https://flight-reservation-website.vercel.app']
-//   : ['http://localhost:3000'];
 
 const allowedOrigins = ['https://flight-reservation-website.vercel.app', 'http://localhost:3000',
   "https://flight-reservation-website-ltkz.onrender.com"
@@ -43,12 +34,7 @@ router.use(cors({
 
 
 const session=require("express-session");
-router.use(session({secret:'secret', resave:false , saveUninitialized:false, 
-  // cookie: {
-  //   secure: true,
-  //   sameSite: 'none'
-  // }
-}));
+router.use(session({secret:'secret', resave:false , saveUninitialized:false}));
 
 const nodemailer = require("nodemailer");
 

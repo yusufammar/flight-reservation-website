@@ -1,12 +1,11 @@
 ## 🚀 Deployment Notes
 
-> 🔁 Main branch is connected to Vercel and Render. Committing to main automatically redeploys both frontend and backend.
+> 🔁 Main branch is connected to Render. Committing to main automatically redeploys both frontend and backend.
 > 
 
 ### Deployment Strategy
 
-- **Frontend (React)** → Deployed on **Vercel**
-- **Backend (Node/Express)** → Deployed on **Render**
+- **Frontend(React) + Backend (Node/Express)** → Deployed on **Render** as single app
 
 ---
 
@@ -42,7 +41,7 @@
 ### 🔀 Single vs. Separate Deployment
 
 - **Single App (e.g. Heroku):**
-    - React build served by backend
+    - Backend serves React build as static files
     - Needs:
         
         ```jsx
