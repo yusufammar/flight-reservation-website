@@ -25,7 +25,9 @@ router.use(fileUpload());
 //   ? ['https://flight-reservation-website.vercel.app']
 //   : ['http://localhost:3000'];
 
-const allowedOrigins = ['https://flight-reservation-website.vercel.app', 'http://localhost:3000'];
+const allowedOrigins = ['https://flight-reservation-website.vercel.app', 'http://localhost:3000',
+  "https://flight-reservation-website-ltkz.onrender.com"
+];
 
 router.use(cors({
   origin: function(origin, callback) {
