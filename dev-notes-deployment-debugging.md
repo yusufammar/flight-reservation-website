@@ -185,7 +185,7 @@ There are **2 MongoDB clusters** hosted under **2 different organizations**:
 2. Run the command:
     
     ```bash
-    mongodump --uri="mongodb+srv://Yusuf:pass1234@cluster0.qzglopr.mongodb.net/Airline_Backup"
+    mongodump --uri="mongodb+srv://Yusuf:pass1234@acl.tpg5t.mongodb.net/Airline"
     ```
     
 3. A folder named `dump` will be created in your user directory containing the backup.
@@ -214,7 +214,7 @@ mongodump --uri="[cluster connection string]/[target database name]"
 5. Run:
     
     ```bash
-    mongorestore --uri="mongodb+srv://Yusuf:pass1234@cluster0.qzglopr.mongodb.net/Airline" Airline_Backup
+    mongorestore --uri="mongodb+srv://Yusuf:pass1234@acl.tpg5t.mongodb.net/Airline" Airline_Backup
     ```
     
 
