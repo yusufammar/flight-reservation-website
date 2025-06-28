@@ -45,31 +45,31 @@ router.route("/logout").get((req, res) => {
    });
 
 router.route("/SignIn").post(async(req, res) => {
-   var emailInput = req.body.Email;  
-  const email=emailInput.toLowerCase();  const password = req.body.Password;
-
+   var email = req.body.Email.toLowerCase();  
+   const password = req.body.Password;
+  
+   
   const User = await user.findOne({ Email: email }); // user with same email 
-  
-  if (User.Type=="Admin" & User.Password==password){ //admin signed in
-    req.session.email = email; req.session.type = User.Type; req.session.save();res.send("2");
- 
-} 
+  //console.log(User);
 
-  else {
-    if ( (User) && (await bcrypt.compare(password, User.Password))) {        // (user) = user found/exists/true
-      console.log(User.Type);
-    if (User.Type!="Guest") {
+
+  if ((User)){ //User Found
+    
+      if (User.Type=="Admin" && User.Password==password ) { //Admin signed in
+        req.session.email = email; req.session.type = User.Type; req.session.save();res.send("2");
+      } 
+
+      else if (User.Type=="Customer" && (await bcrypt.compare(password, User.Password)) ) { //Customer signed in
+        req.session.email = email; req.session.type = User.Type; req.session.save();res.send("1");  
+      } 
+
+      else //wrong password
+        res.send("0");
+
+  }
+  else // User Not Found 
+    res.send("0");
   
-        switch (User.Type){
-          case("Customer"): {req.session.email = email;  req.session.type = User.Type; req.session.save();res.send("1"); break;};  // customer signed in
-      
-          default:  {res.send("0"); break;};     
-        }
-    }
-  }
-  else  
-    res.send("0");  // wrong email/password or guest type-> don't sign in 
-  }
 });
 
 router.route("/currentUser").get((req, res) => {
